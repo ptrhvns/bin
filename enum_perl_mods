@@ -1,0 +1,11 @@
+#!/usr/bin/env perl
+
+use ExtUtils::Installed;
+
+$i = ExtUtils::Installed->new(); 
+
+foreach $m ($i->modules()) 
+{ 
+    $v = $i->version($m) || "UNKNOWN"; 
+    print "$m version $v\n";
+}

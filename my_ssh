@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+trap exit 1 INT
+
+if [ -z "$2" ]; then
+    ruser=117931
+else
+    ruser=$2
+fi
+
+if [ -z "$3" ]; then
+    sshport=22
+else
+    sshport=$3
+fi
+
+cpath="-o ControlPath=/tmp/.ssh_%r@%h:%p"
+
+rm_files=".aliases .profile .login .sh_history local.cshrc local.login local.profile .mailrc ~/bin/diskinfo"
+
+function cp_file {
+    scp -P $sshport $cpath $2 ${ruser}@${1}:${3}
+    ssh -p $sshport -l $ruser $cpath $1 "chmod $4 $3"
+}
+
+host=$1
+echo ">>> host $host, remote user $ruser"
+master_started=0
+ssh -p $sshport -l $ruser $cpath -O check $host &> /dev/null
+
+if [ $? != 0 ]; then
+    ssh -p $sshport -l $ruser $cpath -MNf $host
+
+    if [ $? != 0 ]; then
+        echo ">>> ERROR: failed ssh execution (master)"
+        exit 1
+    fi
+
+    master_started=1
+fi
+
+lver=$(< $HOME/etc/env_version)
+rver=$(ssh -p $sshport -l $ruser $cpath $host "cat .env_version 2>/dev/null")
+
+if [ ${lver:-0} -gt ${rver:-0} ]; then
+    echo ">>> updating remote environment"
+    ssh -p $sshport -l $ruser $cpath $host "rm -rf $rm_files"
+    ssh -p $sshport -l $ruser $cpath $host "mkdir -p .ssh bin tmp"
+    cp_file $host $HOME/.ssh/id_dsa.pub .ssh/authorized_keys 644
+    cp_file $host $HOME/src/rc_files/bash_profile .bash_profile 644
+    cp_file $host $HOME/src/rc_files/bashrc .bashrc 644
+    cp_file $host $HOME/src/rc_files/bash_completions .bash_completions 644
+    cp_file $host $HOME/src/rc_files/vimrc .vimrc 644
+    cp_file $host $HOME/src/rc_files/screenrc .screenrc 644
+    cp_file $host $HOME/src/rc_files/inputrc .inputrc 644
+    cp_file $host $HOME/src/rc_files/pythonrc .pythonrc 644
+    cp_file $host $HOME/bin/ipcalc bin/ipcalc 755
+    cp_file $host $HOME/bin/ifns bin/ifns 755
+    cp_file $host $HOME/etc/env_version .env_version 644
+fi
+
+if [[ $master_started == 1 ]]; then
+    ssh -p $sshport -l $ruser $cpath -O exit $host 2> /dev/null
+fi
+
+ssh -p $sshport -l $ruser $host

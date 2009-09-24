@@ -1,0 +1,4 @@
+#!/bin/sh
+
+/usr/bin/rdesktop -u 117931 -Pg 1400x1050 l4ap56 &
+

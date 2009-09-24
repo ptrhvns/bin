@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+source ~/.keychain/plectrum-sh
+
+# Access a remote instance of the VCS GUI.
+ssh -CX 117931@$1 hagui

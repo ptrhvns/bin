@@ -1,0 +1,106 @@
+#!/usr/bin/env perl
+
+require 5;
+use strict;
+use Getopt::Std;
+use Socket;
+
+my $MYNAME = (split m{/}, $0)[-1];
+
+my $USAGE =<<EOT;
+usage: $MYNAME <options>
+
+This program extracts the most useful information from ifconfig and
+prints it out, plus network and DNS information if requested.
+
+options:
+    -D        do not print DNS names for IP addresses
+    -g        only print Solaris global zone data if zones exist
+    -h        print this message
+    -I        do not print IPMP group names
+    -n        print network (CIDR) data with IP addresses
+EOT
+
+my %opts;
+getopts("DghIn", \%opts) || die $USAGE;
+
+die $USAGE if (exists $opts{'h'});
+open(IFCONFIG, "ifconfig -a|") or die "Can't open pipe to ifconfig: $!\n";
+my @records;
+my $record = {};
+
+while (<IFCONFIG>) {
+    chomp;
+
+    if (/^(\S+)/) {
+        if (%{$record}) {
+            push @records, $record;
+            $record = {};
+        }
+
+        $record->{'interface'} = $1;
+        $record->{'interface'} =~ s/:$//;
+    } elsif (/^\s+groupname\s+(\S+)/) {
+        $record->{'ipmp_group'} = $1;
+    } elsif (/^\s*zone\s+(\S+)/) {
+      $record->{'zone'} = $1;
+    } elsif (/inet\s+(\S+)\s+netmask\s+(\S+)/) {
+        $record->{'ip'} = $1;
+        $record->{'netmask'} = $2;
+    } elsif (/inet\s+addr:(\S+).*Mask:(\S+)/) {
+        $record->{'ip'} = $1;
+        $record->{'netmask'} = $2;
+    }
+}
+
+push(@records, $record) if %{$record};
+close IFCONFIG;
+my ($interface_max, $ipmp_max, $zone_max, $ip_max);
+$interface_max = $ipmp_max = $zone_max = $ip_max = 0;
+
+sub max_of {
+    my ($length_0, $length_1) = (length($_[0]), $_[1]);
+    return ($length_0 > $length_1) ? $length_0 : $length_1;
+}
+
+for $record (@records) {
+    $interface_max = max_of $record->{'interface'}, $interface_max;
+    $ipmp_max = max_of $record->{'ipmp_group'}, $ipmp_max;
+    $zone_max = max_of $record->{'zone'}, $zone_max;
+    $ip_max = max_of $record->{'ip'}, $ip_max;
+}
+
+my ($ipcalc, $cidr);
+
+for $record (@records) {
+    next if ($record->{'zone'} and exists $opts{'g'});
+    printf "%-${interface_max}s ", $record->{'interface'};
+
+    unless (exists $opts{'I'}) {
+        printf "%-${ipmp_max}s ", $record->{'ipmp_group'};
+    }
+
+    if (exists $opts{'n'}) {
+        if ($record->{'netmask'} !~ /\./) {
+            if ($record->{'netmask'} =~ /(..)(..)(..)(..)/) {
+                $record->{'netmask'} = join(".", map(hex(), ($1, $2, $3, $4)));
+            }
+        }
+
+        $ipcalc = (grep /network/i,
+            `ipcalc -n $record->{'ip'} $record->{'netmask'}`)[0];
+        $cidr = $1 if $ipcalc =~ /network:\s+\S+(\/\d+)/i;
+        printf "%${ip_max}s%-3s ", $record->{'ip'}, $cidr;
+    }
+    else {
+        printf "%${ip_max}s ", $record->{'ip'};
+    }
+
+    printf("%-${zone_max}s ", $record->{'zone'}) if ($record->{'zone'});
+
+    unless (exists $opts{'D'}) {
+        printf "%s", gethostbyaddr(inet_aton($record->{'ip'}), AF_INET);
+    }
+
+    print "\n";
+}

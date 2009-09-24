@@ -1,0 +1,26 @@
+#!/bin/sh
+
+MYNAME=`basename $0`
+
+# print usage message and exit
+
+usage() {
+    cat <<EOT
+usage v$VERSION: $MYNAME <options> <title>
+
+This program sets the title on an xterm to the given string.
+options:
+        -h              print this message
+EOT
+}
+
+while getopts hl: OPT; do
+    case $OPT in
+        h) usage
+	   exit
+           ;;
+    esac
+done
+
+
+/bin/echo -n '\[\033]0;'$1'\007\]'
