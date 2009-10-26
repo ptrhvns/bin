@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+userid=117931
+desktop_ip=10.34.4.94 # l4ap56
+rdp_port=3389
+ssh_portal=riverstyx.thechildrenshospital.org
+ssh_portal_port=5280
+rdp_ok_code=0
+rdp_window_closed_code=2
+
+keychain ~/.ssh/id_dsa
+source ~/.keychain/$(hostname)-sh
+
+/usr/bin/ssh -TNCL ${rdp_port}:${desktop_ip}:${rdp_port} \
+    -p $ssh_portal_port -l is${userid} $ssh_portal &
+
+tunnel_pid=$!
+sleep 3
+
+if [ $? != 0 ]; then
+    /usr/bin/xmessage "ssh tunnel failed" &
+else
+    /usr/bin/rdesktop -u $userid -Pg 1280x800 localhost
+    code=$?
+
+    if [ $code != $rdp_ok_code -a $code != $rdp_window_closed_code ]; then
+        /usr/bin/xmessage "rdesktop failed" &
+    fi
+fi
+
+/bin/kill -9 $tunnel_pid
