@@ -1,4 +1,13 @@
 #!/bin/sh
 
-/usr/bin/rdesktop -u 117931 -Pg 1400x1050 l4ap56 &
+userid=117931
+desktop=l4ap56
+rdp_ok_code=0
+rdp_window_closed_code=2
 
+/usr/bin/rdesktop -u $userid -Pg 1400x1050 $desktop
+code=$?
+
+if [ $code != $rdp_ok_code -a $code != $rdp_window_closed_code ]; then
+    /usr/bin/xmessage "rdesktop failed" &
+fi
