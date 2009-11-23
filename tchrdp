@@ -15,7 +15,7 @@ source ~/.keychain/$(hostname)-sh
     -p $ssh_portal_port -l is${userid} $ssh_portal &
 
 tunnel_pid=$!
-sleep 3
+sleep 5
 
 if [ $? != 0 ]; then
     /usr/bin/xmessage "ssh tunnel failed" &
