@@ -63,4 +63,4 @@ if [[ $master_started == 1 ]]; then
     ssh -p $sshport -l $ruser $cpath -O exit $host 2> /dev/null
 fi
 
-ssh -p $sshport -l $ruser $host
+ssh -Xp $sshport -l $ruser $host
