@@ -1,7 +1,8 @@
 #!/bin/sh
 
 userid=117931
-desktop=l4ap56
+#desktop=l4ap56
+desktop=l117931 # 10.34.4.104
 rdp_ok_code=0
 rdp_window_closed_code=2
 
