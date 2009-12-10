@@ -1,12 +1,14 @@
 #!/bin/sh
 
-userid="childrens\117931"
+userid=117931
+domain=childrens
 #desktop=l4ap56
 desktop=l117931 # 10.34.4.104
 rdp_ok_code=0
 rdp_window_closed_code=2
 
-/usr/bin/rdesktop -u $userid -Pg 1280x800 $desktop
+/usr/bin/rdesktop -u $userid -d $domain -g 1280x800 -P $desktop 
+
 code=$?
 
 if [ $code != $rdp_ok_code -a $code != $rdp_window_closed_code ]; then
