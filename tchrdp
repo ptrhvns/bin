@@ -2,8 +2,11 @@
 
 userid="117931"
 domain="childrens"
-desktop_ip=10.34.4.94 # l4ap56
-#desktop_ip=10.34.4.104 # l117931 
+
+#desktop=10.34.4.94     # l4ap56; old
+#desktop=10.221.65.160  # l4ap80; new wireless
+desktop=10.34.4.104     # l4ap80; new lan
+
 rdp_port=3389
 ssh_portal=riverstyx.thechildrenshospital.org
 ssh_portal_port=5280
@@ -13,7 +16,7 @@ rdp_window_closed_code=2
 keychain ~/.ssh/id_dsa
 source ~/.keychain/$(hostname)-sh
 
-/usr/bin/ssh -TNCL ${rdp_port}:${desktop_ip}:${rdp_port} \
+/usr/bin/ssh -TNCL ${rdp_port}:${desktop}:${rdp_port} \
     -p $ssh_portal_port -l is${userid} $ssh_portal &
 
 tunnel_pid=$!
