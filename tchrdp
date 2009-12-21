@@ -10,8 +10,8 @@ desktop=10.34.4.104     # l4ap80; new lan
 rdp_port=3389
 ssh_portal=riverstyx.thechildrenshospital.org
 ssh_portal_port=5280
-rdp_ok_code=0
-rdp_window_closed_code=2
+rdp_ok=0
+rdp_window_closed=2
 
 keychain ~/.ssh/id_dsa
 source ~/.keychain/$(hostname)-sh
@@ -24,13 +24,14 @@ sleep 5
 
 if [ $? != 0 ]; then
     /usr/bin/xmessage "ssh tunnel failed" &
-else
-    /usr/bin/rdesktop -d $domain -u $userid -Pg 1280x800 localhost
-    code=$?
+    /bin/kill -9 $tunnel_pid
+    exit 1
+fi
 
-    if [ $code != $rdp_ok_code -a $code != $rdp_window_closed_code ]; then
-        /usr/bin/xmessage "rdesktop failed" &
-    fi
+/usr/bin/rdesktop -d $domain -u $userid -Pg 1280x800 localhost
+
+if [ $? != $rdp_ok -a $? != $rdp_window_closed ]; then
+    /usr/bin/xmessage "rdesktop failed" &
 fi
 
 /bin/kill -9 $tunnel_pid
