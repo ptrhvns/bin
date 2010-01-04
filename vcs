@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-source ~/.keychain/plectrum-sh
+HOST=$1
+
+source ~/.keychain/$(hostname)-sh
 
 # Access a remote instance of the VCS GUI.
-ssh -CX 117931@$1 hagui
+ssh -CX 117931@${HOST} hagui
