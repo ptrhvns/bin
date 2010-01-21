@@ -56,6 +56,7 @@ if [ ${lver:-0} -gt ${rver:-0} ]; then
     cp_file $host $HOME/src/rc_files/pythonrc .pythonrc 644
     cp_file $host $HOME/bin/ipcalc bin/ipcalc 755
     cp_file $host $HOME/bin/ifns bin/ifns 755
+    cp_file $host $HOME/bin/stdin_as_file bin/stdin_as_file 755
     cp_file $host $HOME/etc/env_version .env_version 644
 fi
 
