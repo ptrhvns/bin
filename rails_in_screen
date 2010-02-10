@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+if [ ! -d "$1" ]; then
+    echo "ERROR: You picked an invalid directory: '$1'" 1>&2 
+    exit 1
+fi
+
+if [ ! -n "$STY" ]; then
+    echo "ERROR: You're not inside a screen session." 1>&2 
+    exit 1
+fi
+
+cd $1
+screen -t gsvr gem server
+screen -t wsvr
+screen -t log tail -f log/development.log
+screen -t shell
+screen -t edit vim
