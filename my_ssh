@@ -16,7 +16,7 @@ fi
 
 cpath="-o ControlPath=/tmp/.ssh_%r@%h:%p"
 
-rm_files=".aliases .profile .login .sh_history local.cshrc local.login local.profile .mailrc ~/bin/diskinfo"
+rm_files=".aliases .profile .login .sh_history local.cshrc local.login local.profile .mailrc ~/bin/diskinfo .pythonrc ~/bin/stdin_as_file .bash_completions .screenrc"
 
 function cp_file {
     scp -P $sshport $cpath $2 ${ruser}@${1}:${3}
@@ -49,14 +49,10 @@ if [ ${lver:-0} -gt ${rver:-0} ]; then
     cp_file $host $HOME/.ssh/id_dsa.pub .ssh/authorized_keys 644
     cp_file $host $HOME/src/rc_files/bash_profile .bash_profile 644
     cp_file $host $HOME/src/rc_files/bashrc .bashrc 644
-    cp_file $host $HOME/src/rc_files/bash_completions .bash_completions 644
     cp_file $host $HOME/src/rc_files/vimrc .vimrc 644
-    cp_file $host $HOME/src/rc_files/screenrc .screenrc 644
     cp_file $host $HOME/src/rc_files/inputrc .inputrc 644
-    cp_file $host $HOME/src/rc_files/pythonrc .pythonrc 644
     cp_file $host $HOME/bin/ipcalc bin/ipcalc 755
     cp_file $host $HOME/bin/ifns bin/ifns 755
-    cp_file $host $HOME/bin/stdin_as_file bin/stdin_as_file 755
     cp_file $host $HOME/etc/env_version .env_version 644
 fi
 
