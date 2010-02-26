@@ -2,6 +2,13 @@
 
 trap exit 1 INT
 
+if [ -z "$1" ]; then
+    echo ">>> ERROR: no host specified" 2>&1
+    exit 1
+else
+    host=$1
+fi
+
 if [ -z "$2" ]; then
     ruser=117931
 else
@@ -23,7 +30,6 @@ function cp_file {
     ssh -p $sshport -l $ruser $cpath $1 "chmod $4 $3"
 }
 
-host=$1
 echo ">>> host $host, remote user $ruser"
 master_started=0
 ssh -p $sshport -l $ruser $cpath -O check $host &> /dev/null
