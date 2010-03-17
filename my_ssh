@@ -1,69 +1,177 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ruby
 
-trap exit 1 INT
+require "optparse"
+require "set"
+require "stringio"
+require "ostruct"
 
-if [ -z "$1" ]; then
-    echo ">>> ERROR: no host specified" 2>&1
-    exit 1
-else
-    host=$1
-fi
+CPATH='-o ControlPath=/tmp/.ssh_%r@%h:%p'
 
-if [ -z "$2" ]; then
-    ruser=117931
-else
-    ruser=$2
-fi
-
-if [ -z "$3" ]; then
-    sshport=22
-else
-    sshport=$3
-fi
-
-cpath="-o ControlPath=/tmp/.ssh_%r@%h:%p"
-
-rm_files=".aliases .profile .login .sh_history local.cshrc local.login local.profile .mailrc ~/bin/diskinfo .pythonrc ~/bin/stdin_as_file .bash_completions .screenrc"
-
-function cp_file {
-    scp -P $sshport $cpath $2 ${ruser}@${1}:${3}
-    ssh -p $sshport -l $ruser $cpath $1 "chmod $4 $3"
+CLEANFILES = %w{
+  .aliases .profile .login .sh_history local.cshrc local.login local.profile
+  .mailrc bin/diskinfo .pythonrc bin/stdin_as_file .bash_completions .screenrc
 }
 
-echo ">>> host $host, remote user $ruser"
-master_started=0
-ssh -p $sshport -l $ruser $cpath -O check $host &> /dev/null
+SCP = '/usr/bin/scp'
+SSH = '/usr/bin/ssh'
+PREFIX = '>>>'
+ENVVERFILE = File.join(ENV['HOME'], "etc", "env_version")
 
-if [ $? != 0 ]; then
-    ssh -p $sshport -l $ruser $cpath -MNf $host
+ENVFILES = [
+  ["~/.ssh/id_dsa.pub",           ".ssh/authorized_keys", 644],
+  ["~/src/rc_files/bash_profile", ".bash_profile",        644],
+  ["~/src/rc_files/bashrc",       ".bashrc",              644],
+  ["~/src/rc_files/vimrc",        ".vimrc",               644],
+  ["~/src/rc_files/inputrc",      ".inputrc",             644],
+  ["~/bin/ipcalc",                "bin/ipcalc",           755],
+  ["~/bin/ifns",                  "bin/ifns",             755],
+  ["~/etc/env_version",           ".env_version",         644]
+]
 
-    if [ $? != 0 ]; then
-        echo ">>> ERROR: failed ssh execution (master)"
-        exit 1
-    fi
+def say(msg)
+  puts "#{PREFIX} #{msg}"
+end
 
-    master_started=1
-fi
+def parse_arguments
+  parser = OptionParser.new
 
-lver=$(< $HOME/etc/env_version)
-rver=$(ssh -p $sshport -l $ruser $cpath $host "cat .env_version 2>/dev/null")
+  parser.banner = <<-END
+usage: #{File.basename($0)} [options] [arguments]
 
-if [ ${lver:-0} -gt ${rver:-0} ]; then
-    echo ">>> updating remote environment"
-    ssh -p $sshport -l $ruser $cpath $host "rm -rf $rm_files"
-    ssh -p $sshport -l $ruser $cpath $host "mkdir -p .ssh bin tmp"
-    cp_file $host $HOME/.ssh/id_dsa.pub .ssh/authorized_keys 644
-    cp_file $host $HOME/src/rc_files/bash_profile .bash_profile 644
-    cp_file $host $HOME/src/rc_files/bashrc .bashrc 644
-    cp_file $host $HOME/src/rc_files/vimrc .vimrc 644
-    cp_file $host $HOME/src/rc_files/inputrc .inputrc 644
-    cp_file $host $HOME/bin/ipcalc bin/ipcalc 755
-    cp_file $host $HOME/bin/ifns bin/ifns 755
-    cp_file $host $HOME/etc/env_version .env_version 644
-fi
+This program updates the remote shell environment before logging in.
+  END
 
-if [[ $master_started == 1 ]]; then
-    ssh -p $sshport -l $ruser $cpath -O exit $host 2> /dev/null
-fi
+  parser.separator ""
+  parser.separator "options:"
+  opts = {}
+  opts[:clean] = false
+  opts[:force] = false
+  opts[:port] = "22"
+  opts[:user] = ENV['USER']
 
-ssh -Xp $sshport -l $ruser $host
+  parser.on("-c", "--clean", "clean up remote environment") do
+    opts[:clean] = true
+  end
+
+  parser.on("-f", "--force", "force an update of remote environment") do
+    opts[:force] = true
+  end
+
+  parser.on("-h", "--help", "show this message and exit") do
+    puts parser
+    exit
+  end
+
+  parser.on("-p", "--port PORT", "login remotely on PORT") do |port|
+    opts[:port] = port
+  end
+
+  parser.on("-u", "--user USER", "login remotely as USER") do |user|
+    opts[:user] = user
+  end
+
+  parser.parse! ARGV
+  opts
+end
+
+def ssh(opts, code=0)
+  s = OpenStruct.new
+  yield s
+  command = "#{SSH} #{CPATH} -p #{opts[:port]} -l #{opts[:user]}"
+
+  append = proc do |args|
+    if args
+      case args
+      when Array then args.each {|a| command << " #{a}"}
+      when String then command << " #{args}"
+      end
+    end
+  end
+
+  append.call s.args
+  append.call opts[:host]
+  append.call s.command
+  output = %x{#{command}}
+  raise "ssh failed (#{command})" if code != $?
+  output
+end
+
+def scp(opts, lfile, rfile, mode)
+  system(SCP, CPATH, "-P", opts[:port], File.expand_path(lfile),
+         "#{opts[:user]}@#{opts[:host]}:#{rfile}")
+  raise "scp failed (#{lfile} -> #{rfile})" if $? != 0
+  ssh(opts) {|s| s.command = %W{chmod #{mode.to_s} #{rfile}}}
+end
+
+def ssh_master_running?(opts)
+  begin
+    ssh(opts) do |s|
+      s.args = %w{-O check}
+      s.command = %w{&> /dev/null}
+    end
+  rescue
+    return false
+  end
+  true
+end
+
+def start_ssh_master(opts)
+  return if ssh_master_running?(opts)
+  ssh(opts) do |s|
+    s.args = %w{-MNf}
+    s.command = %w{&> /dev/null}
+  end
+end
+
+def stop_ssh_master(opts)
+  return unless ssh_master_running?(opts)
+  ssh(opts) do |s|
+    s.args = %w{-O exit}
+    s.command = %w{&> /dev/null}
+  end
+end
+
+def remote_env_current?(opts)
+  rver = lver = 0
+  open(ENVVERFILE) {|io| lver = io.readline.to_i }
+
+  begin
+    rver = ssh(opts) {|s| s.command = %w{cat .env_version 2>/dev/null}}.to_i
+  rescue
+    nil
+  end
+
+  lver > rver ? false : true
+end
+
+def clean_remote_env(opts)
+  say "cleaning up remote environment"
+  ssh(opts) {|s| s.command = %W{rm -rf #{CLEANFILES.join " "}}}
+end
+
+def update_remote_env(opts)
+  say "updating remote environment"
+  ssh(opts) {|s| s.command = %w{mkdir -p .ssh bin tmp}}
+  ENVFILES.each {|e| scp opts, *e}
+end
+
+def main
+  Signal.trap "INT", "EXIT"
+  opts = parse_arguments
+  opts[:host] = ARGV.shift or raise "no host specified"
+
+  say "host #{opts[:host]}, remote user #{opts[:user]}"
+
+  start_ssh_master opts
+  clean_remote_env(opts) if opts[:clean]
+  update_remote_env(opts) if opts[:force] or not remote_env_current?(opts)
+  stop_ssh_master opts
+
+  exec SSH, "-Xp", opts[:port], "-l", opts[:user], opts[:host]
+  raise "ssh failed (exec)"
+rescue
+  STDERR.puts "#{PREFIX} ERROR: #{$!}"
+  exit 1
+end
+
+main if $0 == __FILE__
