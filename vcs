@@ -5,4 +5,4 @@ HOST=$1
 source ~/.keychain/$(hostname)-sh
 
 # Access a remote instance of the VCS GUI.
-ssh -CX 117931@${HOST} hagui
+ssh -CX 117931@${HOST} /opt/VRTS/bin/hagui
