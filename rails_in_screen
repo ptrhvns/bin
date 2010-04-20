@@ -18,5 +18,5 @@ fi
 
 cd $dir
 screen -t edit vim
-screen -t log tail -f log/development.log
 screen -t server
+screen -t gems gem server
