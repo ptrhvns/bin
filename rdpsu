@@ -9,7 +9,7 @@ server=10.200.20.22
 rdp_ok_code=0
 rdp_window_closed_code=2
 
-echo $password | /usr/bin/rdesktop -p - -u $userid -d $domain -g 1280x800 -P $server
+echo $password | /usr/bin/rdesktop -K -p - -u $userid -d $domain -g 1280x800 -P $server
 
 code=$?
 
