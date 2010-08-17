@@ -12,6 +12,7 @@ CLEANFILES = %w{
   .mailrc bin/diskinfo .pythonrc bin/stdin_as_file .bash_completions .screenrc
 }
 
+HOST = '/usr/bin/host'
 SCP = '/usr/bin/scp'
 SSH = '/usr/bin/ssh'
 PREFIX = '>>>'
@@ -72,6 +73,11 @@ This program updates the remote shell environment before logging in.
 
   parser.parse! ARGV
   opts
+end
+
+def verify_dns_lookup(opts)
+  system("#{HOST} #{opts[:host]} &> /dev/null")
+  raise "DNS lookup failed on address: #{opts[:host]}" if 0 != $?
 end
 
 def ssh(opts, code=0)
@@ -162,6 +168,7 @@ def main
 
   say "host #{opts[:host]}, remote user #{opts[:user]}"
 
+  verify_dns_lookup opts
   start_ssh_master opts
   clean_remote_env(opts) if opts[:clean]
   update_remote_env(opts) if opts[:force] or not remote_env_current?(opts)
