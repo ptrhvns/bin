@@ -17,6 +17,7 @@ CLEANFILES = %w{
 HOST = '/usr/bin/host'
 SCP = '/usr/bin/scp'
 SSH = '/usr/bin/ssh'
+SSH_CONFIG = File.join(ENV["HOME"], ".ssh", "config")
 PREFIX = '>>>'
 ENVVERFILE = File.join(ENV["HOME"], "etc", "env_version")
 
@@ -81,8 +82,14 @@ This program updates the remote shell environment before logging in.
   opts
 end
 
-def verify_dns_lookup(opts)
+def verify_hostname(opts)
   say "verifying hostname"
+
+  if File.exist?(SSH_CONFIG) 
+    return if IO.readlines(SSH_CONFIG).any? do |line|
+      line =~ /^Host\s+#{opts[:host]}\b/
+    end
+  end
 
   system("#{HOST} #{opts[:host]} &> /dev/null")
   raise "DNS lookup failed on address: #{opts[:host]}" if 0 != $?
@@ -181,7 +188,7 @@ def main
 
   say "host #{opts[:host]}, remote user #{opts[:user]}"
 
-  verify_dns_lookup opts
+  verify_hostname opts
   start_ssh_master opts
   clean_remote_env(opts) if opts[:clean]
   update_remote_env(opts) if opts[:force] or not remote_env_current?(opts)
