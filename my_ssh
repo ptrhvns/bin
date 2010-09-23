@@ -73,11 +73,17 @@ This program updates the remote shell environment before logging in.
     opts[:user] = user
   end
 
+  parser.on("-v", "--verbose", "show verbose output") do
+    $verbose = true
+  end
+
   parser.parse! ARGV
   opts
 end
 
 def verify_dns_lookup(opts)
+  say "verifying hostname"
+
   system("#{HOST} #{opts[:host]} &> /dev/null")
   raise "DNS lookup failed on address: #{opts[:host]}" if 0 != $?
 end
@@ -112,6 +118,8 @@ def scp(opts, lfile, rfile, mode)
 end
 
 def ssh_master_running?(opts)
+  say "checking for ssh master"
+
   begin
     ssh(opts) do |s|
       s.args = %w{-O check}
@@ -124,6 +132,7 @@ def ssh_master_running?(opts)
 end
 
 def start_ssh_master(opts)
+  say "starting ssh master"
   return if ssh_master_running?(opts)
   ssh(opts) do |s|
     s.args = %w{-MNf}
@@ -132,6 +141,7 @@ def start_ssh_master(opts)
 end
 
 def stop_ssh_master(opts)
+  say "stopping ssh master"
   return unless ssh_master_running?(opts)
   ssh(opts) do |s|
     s.args = %w{-O exit}
@@ -140,6 +150,7 @@ def stop_ssh_master(opts)
 end
 
 def remote_env_current?(opts)
+  say "checking remote environment version"
   rver = lver = 0
   open(ENVVERFILE) {|io| lver = io.readline.to_i }
 
@@ -176,6 +187,7 @@ def main
   update_remote_env(opts) if opts[:force] or not remote_env_current?(opts)
   stop_ssh_master opts
 
+  say "execing ssh"
   exec SSH, "-Xp", opts[:port], "-l", opts[:user], opts[:host]
   raise "ssh failed (exec)"
 rescue
