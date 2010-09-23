@@ -5,6 +5,8 @@ require "set"
 require "stringio"
 require "ostruct"
 
+$verbose = false
+
 CPATH='-o ControlPath=/tmp/.ssh_%r@%h:%p'
 
 CLEANFILES = %w{
@@ -30,7 +32,7 @@ ENVFILES = [
 ]
 
 def say(msg)
-  puts "#{PREFIX} #{msg}"
+  puts "#{PREFIX} #{msg}" if $verbose
 end
 
 def parse_arguments
