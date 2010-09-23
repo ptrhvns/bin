@@ -140,6 +140,7 @@ def ssh_master_running?(opts)
   rescue
     return false
   end
+
   true
 end
 
