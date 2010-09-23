@@ -21,14 +21,14 @@ PREFIX = '>>>'
 ENVVERFILE = File.join(ENV["HOME"], "etc", "env_version")
 
 ENVFILES = [
-  ["~/.ssh/id_dsa.pub",           ".ssh/authorized_keys", 644],
-  ["~/src/rcfiles/bash_profile", ".bash_profile",        644],
-  ["~/src/rcfiles/bashrc",       ".bashrc",              644],
-  ["~/src/rcfiles/vimrc",        ".vimrc",               644],
-  ["~/src/rcfiles/inputrc",      ".inputrc",             644],
-  ["~/bin/ipcalc",                "bin/ipcalc",           755],
-  ["~/bin/ifns",                  "bin/ifns",             755],
-  ["~/etc/env_version",           ".env_version",         644]
+  ["~/.ssh/id_dsa.pub",           ".ssh/authorized_keys",  644],
+  ["~/src/rcfiles/bash_profile",  ".bash_profile",         644],
+  ["~/src/rcfiles/bashrc",        ".bashrc",               644],
+  ["~/src/rcfiles/vimrc",         ".vimrc",                644],
+  ["~/src/rcfiles/inputrc",       ".inputrc",              644],
+  ["~/bin/ipcalc",                "bin/ipcalc",            755],
+  ["~/bin/ifns",                  "bin/ifns",              755],
+  ["~/etc/env_version",           ".env_version",          644]
 ]
 
 def say(msg)
