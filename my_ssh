@@ -18,7 +18,7 @@ HOST = '/usr/bin/host'
 SCP = '/usr/bin/scp'
 SSH = '/usr/bin/ssh'
 PREFIX = '>>>'
-ENVVERFILE = File.join(ENV['HOME'], "etc", "env_version")
+ENVVERFILE = File.join(ENV["HOME"], "etc", "env_version")
 
 ENVFILES = [
   ["~/.ssh/id_dsa.pub",           ".ssh/authorized_keys", 644],
