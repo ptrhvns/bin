@@ -100,6 +100,13 @@ def verify_hostname(opts)
   raise "DNS lookup failed on address: #{opts[:host]}" if 0 != $?
 end
 
+def run_command(name, command, code=0)
+  say "#{name} command: #{command}"
+  output = %x{#{command}}
+  raise "ssh command failed: #{command}" if code != $?
+  output
+end
+
 def ssh(opts, code=0)
   s = OpenStruct.new
   yield s
@@ -117,15 +124,14 @@ def ssh(opts, code=0)
   append.call s.args
   append.call opts[:host]
   append.call s.command
-  output = %x{#{command}}
-  raise "ssh failed (#{command})" if code != $?
-  output
+  run_command("ssh", command, code)
 end
 
 def scp(opts, lfile, rfile, mode)
-  system(SCP, CPATH, "-P", opts[:port], File.expand_path(lfile),
-         "#{opts[:user]}@#{opts[:host]}:#{rfile}")
-  raise "scp failed (#{lfile} -> #{rfile})" if $? != 0
+  command = "#{SCP} #{CPATH} -P #{opts[:port]} #{File.expand_path(lfile)} " +
+            "#{opts[:user]}@#{opts[:host]}:#{rfile}"
+
+  run_command("scp", command)
   ssh(opts) {|s| s.command = %W{chmod #{mode.to_s} #{rfile}}}
 end
 
