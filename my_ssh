@@ -50,6 +50,7 @@ This program updates the remote shell environment before logging in.
   opts = {}
   opts[:clean] = false
   opts[:force] = false
+  opts[:key] = true
   opts[:port] = "22"
   opts[:user] = ENV['USER']
 
@@ -64,6 +65,10 @@ This program updates the remote shell environment before logging in.
   parser.on("-h", "--help", "show this message and exit") do
     puts parser
     exit
+  end
+
+  parser.on("-K", "--no-key", "don't copy over ssh public key") do
+    opts[:key] = false
   end
 
   parser.on("-p", "--port PORT", "login remotely on PORT") do |port|
@@ -178,7 +183,14 @@ end
 def update_remote_env(opts)
   say "updating remote environment"
   ssh(opts) {|s| s.command = %w{mkdir -p .ssh bin tmp}}
-  ENVFILES.each {|e| scp opts, *e}
+
+  ENVFILES.each do |e|
+    unless opts[:key]
+      next if e[0] =~ /(dsa|rsa)/ or e[1] =~ /keys/
+    end
+
+    scp opts, *e
+  end
 end
 
 def main
