@@ -12,6 +12,7 @@ CPATH='-o ControlPath=/tmp/.ssh_%r@%h:%p'
 CLEANFILES = %w{
   .aliases .profile .login .sh_history local.cshrc local.login local.profile
   .mailrc bin/diskinfo .pythonrc bin/stdin_as_file .bash_completions .screenrc
+  .bash_logout
 }
 
 HOST = '/usr/bin/host'
