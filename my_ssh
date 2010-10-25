@@ -28,6 +28,7 @@ ENVFILES = [
   ["~/src/rcfiles/bashrc",        ".bashrc",               644],
   ["~/src/rcfiles/vimrc",         ".vimrc",                644],
   ["~/src/rcfiles/inputrc",       ".inputrc",              644],
+  ["~/src/rcfiles/screenrc",      ".screenrc",             644],
   ["~/bin/ipcalc",                "bin/ipcalc",            755],
   ["~/bin/ifns",                  "bin/ifns",              755],
   ["~/etc/env_version",           ".env_version",          644]
