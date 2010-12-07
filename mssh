@@ -216,7 +216,7 @@ def main
   stop_ssh_master opts
 
   say "execing ssh"
-  exec SSH, "-Xp", opts[:port], "-l", opts[:user], opts[:host]
+  exec SSH, "-p", opts[:port], "-l", opts[:user], opts[:host]
   raise "ssh failed (exec)"
 rescue
   STDERR.puts "#{PREFIX} ERROR: #{$!}"
