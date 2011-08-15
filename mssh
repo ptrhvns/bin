@@ -30,6 +30,7 @@ ENVFILES = [
   ["~/src/rcfiles/vimrc",         ".vimrc",                644],
   ["~/src/rcfiles/inputrc",       ".inputrc",              644],
   ["~/src/rcfiles/screenrc",      ".screenrc",             644],
+  ["~/src/rcfiles/tmux.conf",     ".tmux.conf",            644],
   ["~/etc/env_version",           ".env_version",          644]
 ]
 
