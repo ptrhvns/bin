@@ -18,5 +18,6 @@ tmux new-window -n "editor" -t $session_name "cd $directory && bash"
 tmux kill-window -t $session_name:0
 tmux move-window -s 1 -t 0
 tmux new-window -t $session_name "cd $directory && bash"
+tmux new-window -t $session_name "cd $directory && bash"
 tmux select-window -t $session_name
 tmux attach-session -t $session_name
