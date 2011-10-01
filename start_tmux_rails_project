@@ -14,10 +14,12 @@ directory="${HOME}/src/${session_name}"
 test -d $directory || { echo "ERROR: no directory: $directory" 1>&2; exit 1; }
 
 tmux new-session -ds $session_name
-tmux new-window -n "command" -t $session_name "cd $directory && bash"
+
+tmux new-window -n "editor" -t $session_name "cd $directory && bash"
 tmux kill-window -t $session_name:0
 tmux move-window -s 1 -t 0
-tmux new-window -n "editor" -t $session_name "cd $directory && bash"
+
 tmux new-window -t $session_name "cd $directory && bash"
+
 tmux select-window -t $session_name
 tmux attach-session -t $session_name
