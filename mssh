@@ -15,9 +15,9 @@ CLEANFILES = %w{
   .bash_logout
 }
 
-HOST = '/usr/bin/host'
-SCP = '/usr/bin/scp'
-SSH = '/usr/bin/ssh'
+HOST = %x{which host}.strip
+SCP = %x{which scp}.strip
+SSH = %x{which ssh}.strip
 SSH_CONFIG = File.join(ENV["HOME"], ".ssh", "config")
 PREFIX = '>>>'
 ENVVERFILE = File.join(ENV["HOME"], "etc", "env_version")
@@ -42,7 +42,7 @@ def parse_arguments
   parser = OptionParser.new
 
   parser.banner = <<-END
-usage: #{File.basename($0)} [options] [arguments]
+usage: #{File.basename($0)} [options] host
 
 This program updates the remote shell environment before logging in.
   END
