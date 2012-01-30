@@ -5,5 +5,7 @@ sudo route delete default 192.168.2.1
 sudo route add default 192.168.2.1
 sudo route add 10.0.0.0/8 10.2.32.1
 sudo route add 207.223.254.179 10.2.32.1
-sudo route add 65.125.146.66 10.2.32.1
-sudo route add 65.125.146.84 10.2.32.1
+sudo route add 65.125.146.0/24 10.2.32.1
+# sudo route add 65.125.146.66 10.2.32.1
+# sudo route add 65.125.146.84 10.2.32.1
+# sudo route add 65.125.146.90 10.2.32.1
