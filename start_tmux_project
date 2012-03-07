@@ -12,11 +12,18 @@ directory=$1
 session_name=$(basename $directory)
 test -d $directory || { echo "ERROR: no directory: $directory" 1>&2; exit 1; }
 cd $directory
+
 tmux new-session -ds $session_name
-tmux new-window -n "debug" -t $session_name
+
+# tmux new-window -n "debug" -t $session_name
+# tmux kill-window -t $session_name:0
+# tmux move-window -s 1 -t 0
+# tmux new-window -n "editor" -t $session_name
+# tmux new-window -n "commands" -t $session_name
+
+tmux new-window -n "editor" -t $session_name
 tmux kill-window -t $session_name:0
 tmux move-window -s 1 -t 0
-tmux new-window -n "editor" -t $session_name
-tmux new-window -n "commands" -t $session_name
+
 tmux select-window -t $session_name
 tmux attach-session -t $session_name
