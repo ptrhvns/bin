@@ -55,9 +55,14 @@ This program updates the remote shell environment before logging in.
   opts[:key] = true
   opts[:port] = "22"
   opts[:user] = ENV['USER']
+  opts[:dns] = true
 
   parser.on("-c", "--clean", "clean up remote environment") do
     opts[:clean] = true
+  end
+
+  parser.on("-D", "--no-dns", "don't use DNS hostname verification") do
+    opts[:dns] = false
   end
 
   parser.on("-f", "--force", "force an update of remote environment") do
@@ -90,6 +95,7 @@ This program updates the remote shell environment before logging in.
 end
 
 def verify_hostname(opts)
+  return unless opts[:dns]
   say "verifying hostname"
 
   if File.exist?(SSH_CONFIG) 
