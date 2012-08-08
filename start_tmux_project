@@ -14,4 +14,3 @@ test -d $directory || { echo "ERROR: no directory: $directory" 1>&2; exit 1; }
 cd $directory
 
 tmux new-session -ds $session_name
-tmux attach-session -t $session_name
