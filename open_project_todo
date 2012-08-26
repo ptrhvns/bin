@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# Open a project's todo file for editing.
+if [[ -e $PWD/todo ]]; then
+    $EDITOR $PWD/todo
+elif [[ "$PWD" = "$HOME/src/personal/project" ]]; then
+    $EDITOR $HOME/doc/project/todo
+else
+    $EDITOR $HOME/doc/work/todos/${PWD##*/}
+fi
