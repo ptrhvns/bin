@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -e
+
+(
+    for directory in $HOME/bin $HOME/doc/computer $HOME/doc/personal $HOME/doc/project $HOME/doc/work $HOME/src/rcfiles; do
+        if [[ -d $directory ]]; then
+            echo ">>> Updating $directory"
+            cd $directory
+            if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
+                echo -n ">>> ..."
+                echo -ne "\033[38;5;124m"
+                echo -n "WARNING"
+                echo -ne "\033[0m"
+                echo ": repository is dirty"
+            else
+                git dn && git up
+            fi
+            echo
+        fi
+    done
+
+    PROJECT_DIR=$HOME/src/personal/project
+    if [[ -d $PROJECT_DIR ]]; then
+        echo ">>> Fetching commits for $PROJECT_DIR"
+        cd $PROJECT_DIR
+        git f
+        if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
+            echo -n ">>> ..."
+            echo -ne "\033[38;5;124m"
+            echo -n "WARNING"
+            echo -ne "\033[0m"
+            echo ": repository is dirty"
+        fi
+    fi
+)
