@@ -24,13 +24,14 @@ ENVVERFILE = File.join(ENV["HOME"], "etc", "env_version")
 
 ENVFILES = [
   ["~/.ssh/id_dsa.pub",           ".ssh/authorized_keys",  644],
+  ["~/src/rcfiles/ackrc",         ".ackrc",                644]
   ["~/src/rcfiles/bash_profile",  ".bash_profile",         644],
   ["~/src/rcfiles/bashrc",        ".bashrc",               644],
   ["~/src/rcfiles/editrc",        ".editrc",               644],
-  ["~/src/rcfiles/vimrc",         ".vimrc",                644],
   ["~/src/rcfiles/inputrc",       ".inputrc",              644],
   ["~/src/rcfiles/screenrc",      ".screenrc",             644],
   ["~/src/rcfiles/tmux.conf",     ".tmux.conf",            644],
+  ["~/src/rcfiles/vimrc",         ".vimrc",                644],
   ["~/etc/env_version",           ".env_version",          644]
 ]
 
