@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -e
+
+DAYS=7
+EXCLUSIONS="dummy"
+
+function usage {
+    echo "$(basename $0) [-d <days>] [-e <exclusions>]"
+}
+
+function show_average_impact {
+    AUTHOR=$(git config --get user.name)
+    echo "Over $DAYS day(s):"
+
+    (
+
+        for n in $(jot $DAYS); do
+            git log --author="$AUTHOR" --after="$n days ago" --before="$(expr $n - 1) days ago" --pretty=format: --shortstat
+        done | \
+        egrep -v "$EXCLUSIONS" | \
+        perl -lne 'if (/(\d+)\s+insertion/) {$sum += $1; $n++} END {printf("\tinsertions:\t%.1f\n", $sum/$n)}'
+
+        for n in $(jot $DAYS); do
+            git log --author="$AUTHOR" --after="$n days ago" --before="$(expr $n - 1) days ago" --pretty=format: --shortstat
+        done | \
+        egrep -v "$EXCLUSIONS" | \
+        perl -lne 'if (/(\d+)\s+deletion/) {$sum += $1; $n++} END {printf("\tdeletions:\t%.1f\n", $sum/$n)}'
+
+    )
+}
+
+while getopts d:e:h opt; do
+    case $opt in
+        d)
+            DAYS=$OPTARG
+            ;;
+        e)
+            EXCLUSIONS=$OPTARG
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+    esac
+done
+
+show_average_impact
