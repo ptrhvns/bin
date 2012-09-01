@@ -2,29 +2,32 @@
 
 set -e
 
+# Number of days starting today, counting backwards in which to do an analysis.
 DAYS=7
-EXCLUSIONS="dummy"
 
-function usage {
-    echo "$(basename $0) [-d <days>] [-e <exclusions>]"
-}
+# The `egrep -v` command won't work correctly with an empty string.
+EXCLUSIONS="dummyexclusion"
 
-function show_average_impact {
+usage() { echo "$(basename $0) [-d <days>] [-e <exclusions>]"; }
+
+show_average_impact() {
     AUTHOR=$(git config --get user.name)
     echo "Over $DAYS day(s):"
 
     (
 
+        # Calculate insertions.
         for n in $(jot $DAYS); do
             git log --author="$AUTHOR" --after="$n days ago" --before="$(expr $n - 1) days ago" --pretty=format: --shortstat
-        done | \
-        egrep -v "$EXCLUSIONS" | \
+        done |
+        egrep -v "$EXCLUSIONS" |
         perl -lne 'if (/(\d+)\s+insertion/) {$sum += $1; $n++} END {printf("\tinsertions:\t%.1f\n", $sum/$n)}'
 
+        # Calculate deletions
         for n in $(jot $DAYS); do
             git log --author="$AUTHOR" --after="$n days ago" --before="$(expr $n - 1) days ago" --pretty=format: --shortstat
-        done | \
-        egrep -v "$EXCLUSIONS" | \
+        done |
+        egrep -v "$EXCLUSIONS" |
         perl -lne 'if (/(\d+)\s+deletion/) {$sum += $1; $n++} END {printf("\tdeletions:\t%.1f\n", $sum/$n)}'
 
     )
