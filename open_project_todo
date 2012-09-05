@@ -2,9 +2,11 @@
 
 # Open a project's todo file for editing.
 if [[ -e $PWD/todo ]]; then
-    $EDITOR $PWD/todo
+    TODO=$PWD/todo
 elif [[ "$PWD" = "$HOME/src/personal/project" ]]; then
-    $EDITOR $HOME/doc/project/todo
+    TODO=$HOME/doc/project/todo
 else
-    $EDITOR $HOME/doc/work/todos/${PWD##*/}
+    TODO=$HOME/doc/work/todos/${PWD##*/}
 fi
+
+$EDITOR -O $TODO $HOME/doc/computer/programming/red_green_refactor
