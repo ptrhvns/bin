@@ -24,7 +24,7 @@ ENVVERFILE = File.join(ENV["HOME"], "etc", "env_version")
 
 ENVFILES = [
   ["~/.ssh/id_dsa.pub",           ".ssh/authorized_keys",  644],
-  ["~/src/rcfiles/ackrc",         ".ackrc",                644]
+  ["~/src/rcfiles/ackrc",         ".ackrc",                644],
   ["~/src/rcfiles/bash_profile",  ".bash_profile",         644],
   ["~/src/rcfiles/bashrc",        ".bashrc",               644],
   ["~/src/rcfiles/editrc",        ".editrc",               644],
