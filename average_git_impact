@@ -8,32 +8,9 @@ DAYS=7
 # The `egrep -v` command won't work correctly with an empty string.
 EXCLUSIONS="dummyexclusion"
 
-usage() { echo "$(basename $0) [-d <days>] [-e <exclusions>]"; }
+LIST=0
 
-show_average_impact() {
-    AUTHOR=$(git config --get user.name)
-    echo "Over $DAYS day(s):"
-
-    (
-
-        # Calculate insertions.
-        for n in $(jot $DAYS); do
-            git log --author="$AUTHOR" --after="$n days ago" --before="$(expr $n - 1) days ago" --pretty=format: --shortstat
-        done |
-        egrep -v "$EXCLUSIONS" |
-        perl -lne 'if (/(\d+)\s+insertion/) {$sum += $1; $n++} END {printf("\tinsertions:\t%.1f\n", $sum/$n)}'
-
-        # Calculate deletions
-        for n in $(jot $DAYS); do
-            git log --author="$AUTHOR" --after="$n days ago" --before="$(expr $n - 1) days ago" --pretty=format: --shortstat
-        done |
-        egrep -v "$EXCLUSIONS" |
-        perl -lne 'if (/(\d+)\s+deletion/) {$sum += $1; $n++} END {printf("\tdeletions:\t%.1f\n", $sum/$n)}'
-
-    )
-}
-
-while getopts d:e:h opt; do
+while getopts d:e:hl opt; do
     case $opt in
         d)
             DAYS=$OPTARG
@@ -45,7 +22,41 @@ while getopts d:e:h opt; do
             usage
             exit 0
             ;;
+        l)
+            LIST=1
+            ;;
     esac
 done
 
-show_average_impact
+usage() { echo "$(basename $0) [-d <days>] [-e <exclusions>]"; }
+
+show_average_impact() {
+    AUTHOR=$(git config --get user.name)
+    echo "Over $DAYS day(s):"
+
+    # Calculate insertions.
+    for n in $(jot $DAYS); do
+        git log --author="$AUTHOR" --after="$n days ago" --before="$(expr $n - 1) days ago" --pretty=format: --shortstat
+    done |
+    egrep -v "$EXCLUSIONS" |
+    perl -lne 'if (/(\d+)\s+insertion/) {$sum += $1; $n++} END {printf("\tinsertions:\t%.1f\n", $sum/$n)}'
+
+    # Calculate deletions
+    for n in $(jot $DAYS); do
+        git log --author="$AUTHOR" --after="$n days ago" --before="$(expr $n - 1) days ago" --pretty=format: --shortstat
+    done |
+    egrep -v "$EXCLUSIONS" |
+    perl -lne 'if (/(\d+)\s+deletion/) {$sum += $1; $n++} END {printf("\tdeletions:\t%.1f\n", $sum/$n)}'
+}
+
+list_impact() {
+    for n in $(jot $DAYS); do
+        git log --author="$AUTHOR" --after="$n days ago" --before="$(expr $n - 1) days ago" --pretty=format:"%h %ar" --shortstat
+    done | sed '/^[[:space:]]*$/d'
+}
+
+if [[ $LIST -gt 0 ]]; then
+    list_impact
+else
+    show_average_impact
+fi
