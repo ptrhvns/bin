@@ -4,21 +4,15 @@ HEURISTICS=$HOME/doc/computer/programming/red_green_refactor
 
 # Open a project's todo file for editing.
 if [[ -e $PWD/todo ]]; then
-    TODO_DIR=$PWD
-    TODO=$TODO_DIR/todo
+    TODO=$PWD/todo
 elif [[ "$PWD" = "$HOME/src/personal/project" ]]; then
-    TODO_DIR=$HOME/doc/project
-    TODO=$TODO_DIR/todo
+    TODO=$HOME/doc/project/todo
 else
-    TODO_DIR=$HOME/doc/work/todos
-    TODO=$TODO_DIR/${PWD##*/}
+    TODO=$HOME/doc/work/todos/${PWD##*/}
 fi
 
 if [[ -e $HEURISTICS ]]; then
-    cp $HEURISTICS $TODO_DIR
-    PROJECT_HEURISTICS=$TODO_DIR/${HEURISTICS##*/}
+    $EDITOR -O $TODO $HEURISTICS
 else
-    PROJECT_HEURISTICS=''
+    $EDITOR -O $TODO
 fi
-
-$EDITOR -O $TODO $PROJECT_HEURISTICS
