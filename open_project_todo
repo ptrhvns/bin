@@ -1,18 +1,11 @@
 #!/usr/bin/env bash
 
-HEURISTICS=$HOME/doc/computer/programming/red_green_refactor
-
 # Open a project's todo file for editing.
 if [[ -e $PWD/todo ]]; then
-    TODO=$PWD/todo
+    $EDITOR $PWD/todo
 elif [[ "$PWD" = "$HOME/src/personal/project" ]]; then
-    TODO=$HOME/doc/project/todo
+    $EDITOR $HOME/doc/project/todo
 else
-    TODO=$HOME/doc/work/todos/${PWD##*/}
+    $EDITOR $HOME/doc/work/todos/${PWD##*/}
 fi
 
-if [[ -e $HEURISTICS ]]; then
-    $EDITOR -O $TODO $HEURISTICS
-else
-    $EDITOR -O $TODO
-fi
