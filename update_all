@@ -5,4 +5,4 @@ set -e
 update_brew
 update_node
 update_vim
-update_git_repositories
+update_git
