@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -e
+
+[[ -x "$(type -p brew)" ]] && brew update && brew upgrade

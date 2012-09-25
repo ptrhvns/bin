@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+
+update_brew
+update_node
+update_vim
+update_git_repositories

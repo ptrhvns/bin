@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -e
+
+[[ -x "$(type -p npm)" ]] && npm -g update

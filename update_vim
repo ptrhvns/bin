@@ -2,9 +2,6 @@
 
 set -e
 
-
-[[ -x "$(type -p brew)" ]] && brew update && brew upgrade
-[[ -x "$(type -p npm)" ]] && npm -g update
 (
     cd ~/src/rcfiles
     git submodule foreach git pull -q origin master
