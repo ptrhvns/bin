@@ -2,4 +2,7 @@
 
 set -e
 
-[[ -x "$(type -p brew)" ]] && brew update && brew upgrade
+(
+    unset DYLD_LIBRARY_PATH
+    [[ -x "$(type -p brew)" ]] && brew update && brew upgrade
+)
