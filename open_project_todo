@@ -5,7 +5,12 @@ if [[ -e $PWD/todo ]]; then
     $EDITOR $PWD/todo
 elif [[ "$PWD" = "$HOME/src/personal/project" ]]; then
     $EDITOR $HOME/doc/project/todo
-else
+elif [[ $(echo "$PWD" | grep -q "$HOME/src/personal") ]]; then
+    $EDITOR $HOME/doc/personal/todos/${PWD##*/}
+elif [[ $(echo "$PWD" | grep -q "$HOME/src/work") ]]; then
     $EDITOR $HOME/doc/work/todos/${PWD##*/}
+elif [[ -n "$TMUX" ]]; then
+    $EDITOR $HOME/doc/work/todos/$(tmux display-message -p "#S")
+else
+    $EDITOR $HOME/tmp/todo
 fi
-
