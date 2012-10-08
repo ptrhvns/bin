@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
-# Open a project's todo file for editing.
-if [[ -e $PWD/todo ]]; then
-    $EDITOR $PWD/todo
+# Open a project's scratch file for editing.
+if [[ -e $PWD/scratch ]]; then
+    $EDITOR $PWD/scratch
 elif [[ "$PWD" = "$HOME/src/personal/project" ]]; then
-    $EDITOR $HOME/doc/project/todo
-elif [[ $(echo "$PWD" | grep -q "$HOME/src/personal") ]]; then
-    $EDITOR $HOME/doc/personal/todos/${PWD##*/}
-elif [[ $(echo "$PWD" | grep -q "$HOME/src/work") ]]; then
-    $EDITOR $HOME/doc/work/todos/${PWD##*/}
+    $EDITOR $HOME/doc/project/scratch
+elif echo "$PWD" | grep -q "$HOME/src/personal"; then
+    $EDITOR $HOME/doc/personal/scratches/${PWD##*/}
+elif echo "$PWD" | grep -q "$HOME/src/work"; then
+    $EDITOR $HOME/doc/work/scratches/${PWD##*/}
 elif [[ -n "$TMUX" ]]; then
-    $EDITOR $HOME/doc/work/todos/$(tmux display-message -p "#S")
+    $EDITOR $HOME/doc/work/scratch/$(tmux display-message -p "#S")
 else
-    $EDITOR $HOME/tmp/todo
+    $EDITOR $HOME/tmp/scratch
 fi
