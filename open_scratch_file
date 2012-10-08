@@ -10,7 +10,7 @@ elif echo "$PWD" | grep -q "$HOME/src/personal"; then
 elif echo "$PWD" | grep -q "$HOME/src/work"; then
     $EDITOR $HOME/doc/work/scratches/${PWD##*/}
 elif [[ -n "$TMUX" ]]; then
-    $EDITOR $HOME/doc/work/scratch/$(tmux display-message -p "#S")
+    $EDITOR $HOME/doc/work/scratches/$(tmux display-message -p "#S")
 else
     $EDITOR $HOME/tmp/scratch
 fi
