@@ -6,11 +6,12 @@ if [[ -e $PWD/scratch ]]; then
 elif [[ "$PWD" = "$HOME/src/personal/project" ]]; then
     $EDITOR $HOME/doc/project/scratch
 elif echo "$PWD" | grep -q "$HOME/src/personal"; then
-    $EDITOR $HOME/doc/personal/scratches/${PWD##*/}
+    $EDITOR $HOME/doc/personal/projects/${PWD##*/}/scratch
 elif echo "$PWD" | grep -q "$HOME/src/work"; then
-    $EDITOR $HOME/doc/work/scratches/${PWD##*/}
+    $EDITOR $HOME/doc/work/projects/${PWD##*/}/scratch
 elif [[ -n "$TMUX" ]]; then
-    $EDITOR $HOME/doc/work/scratches/$(tmux display-message -p "#S")
+    $EDITOR $HOME/doc/work/projects/$(tmux display-message -p "#S")/scratch
 else
     $EDITOR $HOME/tmp/scratch
 fi
+
