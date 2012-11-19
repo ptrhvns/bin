@@ -1,5 +1,10 @@
 #!/bin/sh
 
+set -e
+
+rm -rf $HOME/.routes.save
+netstat -rn > $HOME/.routes.save
+
 sudo route delete default 10.2.32.1
 sudo route delete default 192.168.2.1
 sudo route add default 192.168.2.1
