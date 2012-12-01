@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-
-$EDITOR $HOME/doc/computer/programming/red_green_refactor
