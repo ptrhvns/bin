@@ -10,6 +10,8 @@ EXCLUSIONS="dummyexclusion"
 
 LIST=0
 
+usage() { echo "$(basename $0) [-d <days>] [-e <exclusions>]"; }
+
 while getopts d:e:hl opt; do
     case $opt in
         d)
@@ -27,8 +29,6 @@ while getopts d:e:hl opt; do
             ;;
     esac
 done
-
-usage() { echo "$(basename $0) [-d <days>] [-e <exclusions>]"; }
 
 show_average_impact() {
     AUTHOR=$(git config --get user.name)
