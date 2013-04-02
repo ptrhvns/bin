@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Create a new tmux session in a project directory.
+
+if [ $# -lt 1 ]; then
+    echo "ERROR: not enough arguments" 1>&2
+    echo "usage: $(basename $0) <directory>" 1>&2
+    return 1
+fi
+
+directory=$1
+session_name=$(basename $directory)
+test -d $directory || { echo "ERROR: no directory: $directory" 1>&2; return 1; }
+
+(
+    cd $directory
+    unset TMUX
+    tmux new-session -ds $session_name
+)
