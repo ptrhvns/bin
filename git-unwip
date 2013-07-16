@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -e
+
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+git fetch --all -p
+git checkout wip
+git reset HEAD^
+git checkout $current_branch
+git branch -d wip
+git push origin --delete wip

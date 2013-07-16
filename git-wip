@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -e
+
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+git push
+git checkout -b wip
+git add -A :/
+git commit -m "wip:${current_branch}"
+git push
+git checkout $current_branch
+git branch -D wip
