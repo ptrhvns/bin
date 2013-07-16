@@ -2,10 +2,13 @@
 
 set -e
 
+username=$(whoami)
 current_branch=$(git rev-parse --abbrev-ref HEAD)
+wip_name=wip_${username}_${current_branch}
+
 git fetch --all -p
-git checkout wip
+git checkout $wip_name
 git reset HEAD^
 git checkout $current_branch
-git branch -d wip
-git push origin --delete wip
+git branch -d $wip_name
+git push origin --delete $wip_name

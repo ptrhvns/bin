@@ -2,11 +2,14 @@
 
 set -e
 
+username=$(whoami)
 current_branch=$(git rev-parse --abbrev-ref HEAD)
+wip_name=wip_${username}_${current_branch}
+
 git push
-git checkout -b wip
+git checkout -b $wip_name
 git add -A :/
-git commit -m "wip:${current_branch}"
+git commit -m 'wip'
 git push
 git checkout $current_branch
-git branch -D wip
+git branch -D $wip_name
