@@ -3,6 +3,14 @@
 set -e
 
 username=$(whoami)
+
+while getopts u: opt; do
+    case $opt in
+        u)
+            username=$OPTARG
+    esac
+done
+
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 wip_name=wip_${username}_${current_branch}
 
