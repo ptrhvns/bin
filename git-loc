@@ -36,6 +36,12 @@ module Enumerable
   end
 end
 
+if ARGV.first == '-h'
+  puts "usage: git #{ File.basename($0).gsub(/git-/, '') } [author]"
+  puts "\nPrints statistics about lines of code added (insertions) per day."
+  exit
+end
+
 author = ARGV.first
 data = {}
 date = ''
@@ -44,7 +50,7 @@ date = ''
   case line
   when /^([MTWFS]\S+\s+\S+\s+\S+)/
     date = $1
-    data[date] = :none
+    data[date] = :none # Ensure things like merge commits are omitted.
   when /^(\d+)/
     insertions = $1.to_i
     old_value = (:none == data[date]) ? 0 : data[date]
@@ -55,7 +61,7 @@ end
 values = data.values.reject { |v| :none == v}
 
 puts <<END
-LOC / day (#{ author })
+lines of code / day (#{ author ? author : 'all authors' })
   median             => #{ values.median.round(1) }
   mean               => #{ values.mean.round(1) }
   standard deviation => #{ values.standard_deviation.round(1) }
