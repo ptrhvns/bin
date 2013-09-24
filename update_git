@@ -33,4 +33,18 @@ set -e
             echo ": repository is dirty"
         fi
     fi
+
+    FOOD_DIR=$HOME/src/personal/food
+    if [[ -d $FOOD_DIR ]]; then
+        echo ">>> Fetching commits for $FOOD_DIR"
+        cd $FOOD_DIR
+        git f
+        if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
+            echo -n ">>> ..."
+            echo -ne "\033[38;5;124m"
+            echo -n "WARNING"
+            echo -ne "\033[0m"
+            echo ": repository is dirty"
+        fi
+    fi
 )
