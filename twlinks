@@ -14,6 +14,8 @@ require 'thor'
 class CLI < Thor
   RCFILENAME = File.join(Etc.getpwuid.dir, '.twlinksrc')
 
+  default_command :get
+
   desc 'get', 'get all links in tweets since last recorded ID'
   def get
     display_links(get_timeline(build_command))
@@ -47,8 +49,7 @@ class CLI < Thor
 
       timeline.each do |tweet|
         if tweet.last =~ /(http\S+)/
-          link = HTTPClient.new.head($1).header['Location'].first # or use #get
-          printf "%-20s => %s\n", tweet[-2], link
+          printf "%-20s => %s\n", tweet[-2], get_link_from_redirect($1)
         end
       end
     end
@@ -56,6 +57,10 @@ class CLI < Thor
 
   def save_new_id(new_id)
     File.open(RCFILENAME, 'w') { |f| f.write("#{ new_id }\n") }
+  end
+
+  def get_link_from_redirect(url)
+    HTTPClient.new.head(url).header['Location'].first # or use #get
   end
 end
 
