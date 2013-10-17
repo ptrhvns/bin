@@ -1,0 +1,59 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+
+require 'csv'
+require 'etc'
+require 'httpclient'
+require 'open-uri'
+require 'thor'
+
+class CLI < Thor
+  RCFILENAME = File.join(Etc.getpwuid.dir, '.twlinksrc')
+
+  desc 'get', 'get all links in tweets since last recorded ID'
+  def get
+    display_links(get_timeline(build_command))
+  end
+
+  desc 'reset', 'reset (remove) the last ID recorded'
+  def reset
+    File.truncate(RCFILENAME, 0) if File.exist?(RCFILENAME)
+  end
+
+  private
+
+  def build_command
+    command = "command t timeline -c"
+    previous_id = File.exist?(RCFILENAME) ? File.read(RCFILENAME).to_i : 0
+    command << " -s #{ (previous_id + 1) }" if previous_id > 0
+    command << " 2> /dev/null"
+    command
+  end
+
+  def get_timeline(command)
+    timeline = CSV.parse(%x{#{ command }})
+    timeline.shift
+    timeline
+  end
+
+  def display_links(timeline)
+    if timeline.length > 0
+      new_id = timeline.first(2).last.first
+      save_new_id(new_id)
+
+      timeline.each do |tweet|
+        if tweet.last =~ /(http\S+)/
+          link = HTTPClient.new.head($1).header['Location'].first # or use #get
+          printf "%-20s => %s\n", tweet[-2], link
+        end
+      end
+    end
+  end
+
+  def save_new_id(new_id)
+    File.open(RCFILENAME, 'w') { |f| f.write("#{ new_id }\n") }
+  end
+end
+
+CLI.start(ARGV) if $0 == __FILE__
