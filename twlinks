@@ -27,7 +27,7 @@ class CLI < Thor
     command = "command t timeline -c"
     previous_id = File.exist?(RCFILENAME) ? File.read(RCFILENAME).to_i : 0
     command << " -s #{ (previous_id + 1) }" if previous_id > 0
-    command << " 2> /dev/null"
+    # command << " 2> /dev/null"
     command
   end
 
