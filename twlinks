@@ -18,7 +18,7 @@ class CLI < Thor
 
   desc 'get', 'get all links in tweets since last recorded ID'
   def get
-    display_links(get_timeline(build_command))
+    process_links(get_timeline(build_command))
   end
 
   desc 'reset', 'reset (remove) the last ID recorded'
@@ -42,13 +42,13 @@ class CLI < Thor
     timeline
   end
 
-  def display_links(timeline)
+  def process_links(timeline)
     if timeline.length > 0
       new_id = timeline.first(2).last.first
       save_new_id(new_id)
 
       timeline.each do |tweet|
-        if tweet.last =~ /(http\S+)/
+        if has_link?(tweet.last)
           printf "%-20s => %s\n", tweet[-2], get_link_from_redirect($1)
         end
       end
@@ -57,6 +57,10 @@ class CLI < Thor
 
   def save_new_id(new_id)
     File.open(RCFILENAME, 'w') { |f| f.write("#{ new_id }\n") }
+  end
+
+  def has_link?(text)
+    text =~ /(http\S+)/
   end
 
   def get_link_from_redirect(url)
