@@ -9,7 +9,7 @@ require 'open-uri'
 require 'thor'
 
 # NOTE You'll need to setup Twitter app stuff for the `t` command. See the
-# documentation for that `t` command.
+# documentation for the `t` command.
 
 class CLI < Thor
   RCFILENAME = File.join(Etc.getpwuid.dir, '.twlinksrc')
