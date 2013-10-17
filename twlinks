@@ -28,6 +28,7 @@ class CLI < Thor
 
   private
 
+  # FIXME previous_id is off by one after a reset.
   def build_command
     command = "command t timeline -c"
     previous_id = File.exist?(RCFILENAME) ? File.read(RCFILENAME).to_i : 0
@@ -44,27 +45,35 @@ class CLI < Thor
 
   def process_links(timeline)
     if timeline.length > 0
-      new_id = timeline.first(2).last.first
-      save_new_id(new_id)
+      save_new_id(get_new_id(timeline))
 
       timeline.each do |tweet|
-        if has_link?(tweet.last)
-          printf "%-20s => %s\n", tweet[-2], get_link_from_redirect($1)
-        end
+        link = get_link(tweet)
+        printf "%-20s => %s\n", get_screename(tweet), get_redirect_link(link) if link
       end
     end
+  end
+
+  def get_new_id(timeline)
+    timeline.first(2).last.first
   end
 
   def save_new_id(new_id)
     File.open(RCFILENAME, 'w') { |f| f.write("#{ new_id }\n") }
   end
 
-  def has_link?(text)
-    text =~ /(http\S+)/
+  def get_link(tweet)
+    /(http\S+)/.match(tweet.last).to_a.first
   end
 
-  def get_link_from_redirect(url)
-    HTTPClient.new.head(url).header['Location'].first # or use #get
+  def get_screename(tweet)
+    tweet[-2]
+  end
+
+  def get_redirect_link(link)
+    HTTPClient.new.head(link).header['Location'].first # or use #get
+  rescue => error
+    "[error parsing redirect on #{ link }: #{ error }]"
   end
 end
 
