@@ -11,6 +11,10 @@ require 'thor'
 # NOTE You'll need to setup Twitter app stuff for the `t` command. See the
 # documentation for the `t` command.
 
+FILTERS = [
+  /twitter.*status.*photo/
+]
+
 class CLI < Thor
   RCFILENAME = File.join(Etc.getpwuid.dir, '.twlinksrc')
 
@@ -49,7 +53,12 @@ class CLI < Thor
 
       timeline.each do |tweet|
         link = get_link(tweet)
-        printf "%-20s => %s\n", get_screename(tweet), get_redirect_link(link) if link
+        if link
+          redirect_link = get_redirect_link(link)
+          unless filtered?(redirect_link)
+            printf("%-20s => %s\n", get_screename(tweet), redirect_link)
+          end
+        end
       end
     end
   end
@@ -74,6 +83,10 @@ class CLI < Thor
     HTTPClient.new.head(link).header['Location'].first # or use #get
   rescue => error
     "[error parsing redirect on #{ link }: #{ error }]"
+  end
+
+  def filtered?(link)
+    FILTERS.any? { |filter| filter.match(link) }
   end
 end
 
