@@ -5,19 +5,22 @@ require 'rubygems'
 require 'csv'
 require 'etc'
 require 'httpclient'
+require 'nokogiri'
 require 'open-uri'
 require 'thor'
 
 # NOTE You'll need to setup Twitter app stuff for the `t` command. See the
 # documentation for the `t` command.
 
+# TODO follow all redirects
+
+RCFILENAME = File.join(Etc.getpwuid.dir, '.twlinksrc')
+
 FILTERS = [
   /twitter.*status.*photo/
 ]
 
 class CLI < Thor
-  RCFILENAME = File.join(Etc.getpwuid.dir, '.twlinksrc')
-
   default_command :get
 
   desc 'get', 'get all links in tweets since last recorded ID'
@@ -43,23 +46,14 @@ class CLI < Thor
 
   def get_timeline(command)
     timeline = CSV.parse(%x{#{ command }})
-    timeline.shift
+    timeline.shift # remove CSV headers
     timeline
   end
 
   def process_links(timeline)
-    if timeline.length > 0
+    unless timeline.empty?
       save_new_id(get_new_id(timeline))
-
-      timeline.each do |tweet|
-        link = get_link(tweet)
-        if link
-          redirect_link = get_redirect_link(link)
-          unless filtered?(redirect_link)
-            printf("%-20s => %s\n", get_screename(tweet), redirect_link)
-          end
-        end
-      end
+      display_links(timeline)
     end
   end
 
@@ -71,6 +65,21 @@ class CLI < Thor
     File.open(RCFILENAME, 'w') { |f| f.write("#{ new_id }\n") }
   end
 
+  def display_links(timeline)
+    timeline.each do |tweet|
+      link = get_link(tweet)
+      if link
+        redirect_link = get_redirect_link(link)
+        unless filtered?(redirect_link)
+          printf("%s => %s\n\t%s\n\n",
+                 get_screename(tweet),
+                 get_title(redirect_link),
+                 redirect_link)
+        end
+      end
+    end
+  end
+
   def get_link(tweet)
     /(http\S+)/.match(tweet.last).to_a.first
   end
@@ -79,10 +88,15 @@ class CLI < Thor
     tweet[-2]
   end
 
+  def get_title(link)
+    title = Nokogiri::HTML(HTTPClient.new.get(link).body).css('head title').inner_text
+    title.to_s.empty? ? '[no title]' : title
+  end
+
   def get_redirect_link(link)
     HTTPClient.new.head(link).header['Location'].first # or use #get
   rescue => error
-    "[error parsing redirect on #{ link }: #{ error }]"
+    "[error parsing HTTP redirect on #{ link }: #{ error }]"
   end
 
   def filtered?(link)
