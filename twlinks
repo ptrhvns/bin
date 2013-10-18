@@ -13,6 +13,8 @@ require 'thor'
 # documentation for the `t` command.
 
 # TODO follow all redirects
+#   TODO follow bit.ly links
+# TODO http://goo.gl/cmiYYE is broken
 
 RCFILENAME = File.join(Etc.getpwuid.dir, '.twlinksrc')
 
@@ -35,7 +37,7 @@ class CLI < Thor
 
   private
 
-  # FIXME previous_id is off by one after a reset.
+  # FIXME previous_id is off by one sometimes.
   def build_command
     command = "command t timeline -c"
     previous_id = File.exist?(RCFILENAME) ? File.read(RCFILENAME).to_i : 0
