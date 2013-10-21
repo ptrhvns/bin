@@ -94,7 +94,7 @@ class CLI < Thor
 
   def get_title(link)
     title = Nokogiri::HTML(HTTPClient.new.get(link).body).css('head title').inner_text
-    title.to_s.empty? ? '[no title]' : title
+    title.to_s.empty? ? '[no title]' : title.strip
   rescue => error
     "[error getting page title on #{ link }: #{ error }]"
   end
