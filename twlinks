@@ -75,7 +75,8 @@ class CLI < Thor
       if link
         redirect_link = get_redirect_link(link)
         if redirect_link && !filtered?(redirect_link)
-          printf("%s => %s\n\t%s\n\n",
+          printf("(%s) %s => %s\n\t%s\n\n",
+                 get_id(tweet),
                  get_screename(tweet),
                  get_title(redirect_link),
                  redirect_link)
@@ -86,6 +87,10 @@ class CLI < Thor
 
   def get_link(tweet)
     /(http\S+)/.match(tweet.last).to_a.first
+  end
+
+  def get_id(tweet)
+    tweet.first
   end
 
   def get_screename(tweet)
