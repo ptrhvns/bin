@@ -13,8 +13,7 @@ require 'thor'
 # documentation for the `t` command.
 
 # TODO follow all redirects
-#   TODO follow bit.ly links
-# TODO http://goo.gl/cmiYYE is broken
+# TODO follow shortener links (e.g. bit.ly)
 
 RCFILENAME = File.join(Etc.getpwuid.dir, '.twlinksrc')
 RESULT_LIMIT = 1_000
@@ -46,7 +45,6 @@ class CLI < Thor
     command = "command t timeline -c -n #{ RESULT_LIMIT }"
     previous_id = File.exist?(RCFILENAME) ? File.read(RCFILENAME).to_i : 0
     command << " -s #{ (previous_id + 1) }" if previous_id > 0
-    # command << " 2> /dev/null"
     command
   end
 
@@ -102,10 +100,9 @@ class CLI < Thor
   end
 
   def get_redirect_link(link)
-    HTTPClient.new.head(link).header['Location'].first # or use #get
+    HTTPClient.new.head(link).header['Location'].first.strip # or use #get
   rescue => error
-    warn "[error getting redirect link on #{ link }: #{ error }]"
-    nil
+    warn("[error getting redirect link on #{ link }: #{ error }]") and return nil
   end
 
   def filtered?(link)
