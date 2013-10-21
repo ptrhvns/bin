@@ -100,7 +100,7 @@ class CLI < Thor
   end
 
   def get_redirect_link(link)
-    HTTPClient.new.head(link).header['Location'].first.strip # or use #get
+    (HTTPClient.new.head(link).header['Location'].first || '').strip # or use #get
   rescue => error
     warn("[error getting redirect link on #{ link }: #{ error }]") and return nil
   end
