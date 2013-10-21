@@ -74,7 +74,7 @@ class CLI < Thor
       link = get_link(tweet)
       if link
         redirect_link = get_redirect_link(link)
-        unless filtered?(redirect_link)
+        if redirect_link && !filtered?(redirect_link)
           printf("%s => %s\n\t%s\n\n",
                  get_screename(tweet),
                  get_title(redirect_link),
@@ -102,7 +102,8 @@ class CLI < Thor
   def get_redirect_link(link)
     HTTPClient.new.head(link).header['Location'].first # or use #get
   rescue => error
-    "[error getting redirect link on #{ link }: #{ error }]"
+    warn "[error getting redirect link on #{ link }: #{ error }]"
+    nil
   end
 
   def filtered?(link)
