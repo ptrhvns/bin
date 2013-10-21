@@ -22,7 +22,8 @@ RESULT_LIMIT = 1_000
 FILTERS = [
   /imgur\.com/,
   /twitter.*status.*photo/,
-  /instagram\.com/
+  /instagram\.com/,
+  /facebook\.com/
 ]
 
 class CLI < Thor
