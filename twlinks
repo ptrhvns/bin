@@ -20,6 +20,7 @@ RCFILENAME = File.join(Etc.getpwuid.dir, '.twlinksrc')
 RESULT_LIMIT = 1_000
 
 FILTERS = [
+  /imgur\.com/,
   /twitter.*status.*photo/
 ]
 
