@@ -17,6 +17,7 @@ require 'thor'
 # TODO http://goo.gl/cmiYYE is broken
 
 RCFILENAME = File.join(Etc.getpwuid.dir, '.twlinksrc')
+RESULT_LIMIT = 1_000
 
 FILTERS = [
   /twitter.*status.*photo/
@@ -39,7 +40,7 @@ class CLI < Thor
 
   # FIXME previous_id is off by one sometimes.
   def build_command
-    command = "command t timeline -c"
+    command = "command t timeline -c -n #{ RESULT_LIMIT }"
     previous_id = File.exist?(RCFILENAME) ? File.read(RCFILENAME).to_i : 0
     command << " -s #{ (previous_id + 1) }" if previous_id > 0
     # command << " 2> /dev/null"
@@ -93,12 +94,14 @@ class CLI < Thor
   def get_title(link)
     title = Nokogiri::HTML(HTTPClient.new.get(link).body).css('head title').inner_text
     title.to_s.empty? ? '[no title]' : title
+  rescue => error
+    "[error getting page title on #{ link }: #{ error }]"
   end
 
   def get_redirect_link(link)
     HTTPClient.new.head(link).header['Location'].first # or use #get
   rescue => error
-    "[error parsing HTTP redirect on #{ link }: #{ error }]"
+    "[error getting redirect link on #{ link }: #{ error }]"
   end
 
   def filtered?(link)
