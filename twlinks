@@ -19,10 +19,11 @@ RCFILENAME = File.join(Etc.getpwuid.dir, '.twlinksrc')
 RESULT_LIMIT = 1_000
 
 FILTERS = [
+  /facebook\.com/,
   /imgur\.com/,
-  /twitter.*status.*photo/,
   /instagram\.com/,
-  /facebook\.com/
+  /twitpic\.com/,
+  /twitter.*status.*photo/
 ]
 
 class CLI < Thor
