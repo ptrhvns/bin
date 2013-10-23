@@ -94,9 +94,13 @@ class CLI < Thor
       link = head.header['Location'].first
       head = http_client.head(link)
     end
-    head.code.between?(200, 299) ? link : nil
+    head.code.between?(200, 299) ? normalize_link(link) : nil
   rescue => error
     puts("[error getting redirect link on '#{ link }': #{ error }]") and return nil
+  end
+
+  def normalize_link(link)
+    link.sub(/\?utm_.*$/, '')
   end
 
   def filtered?(link)
