@@ -100,7 +100,7 @@ class CLI < Thor
   end
 
   def normalize_link(link)
-    link.sub(/\?utm_.*$/, '')
+    link.sub(/utm_.*$/, '')
   end
 
   def filtered?(link)
