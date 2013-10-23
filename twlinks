@@ -12,8 +12,7 @@ require 'thor'
 # NOTE You'll need to setup Twitter app stuff for the `t` command. See the
 # documentation for the `t` command.
 
-# TODO follow all redirects
-# TODO follow shortener links (e.g. bit.ly)
+# FIXME previous_id is off by one sometimes.
 
 RCFILENAME = File.join(Etc.getpwuid.dir, '.twlinksrc')
 RESULT_LIMIT = 1_000
@@ -29,7 +28,7 @@ FILTERS = [
 class CLI < Thor
   default_command :get
 
-  desc 'get', 'get all links in tweets since last recorded ID'
+  desc 'get', "get all links in tweets since last recorded ID (limit: #{ RESULT_LIMIT })"
   def get
     @http_client = HTTPClient.new
     @http_client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
@@ -43,7 +42,6 @@ class CLI < Thor
 
   private
 
-  # FIXME previous_id is off by one sometimes.
   def build_command
     command = "command t timeline -c -n #{ RESULT_LIMIT }"
     previous_id = File.exist?(RCFILENAME) ? File.read(RCFILENAME).to_i : 0
