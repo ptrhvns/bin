@@ -31,6 +31,8 @@ class CLI < Thor
 
   desc 'get', 'get all links in tweets since last recorded ID'
   def get
+    @http_client = HTTPClient.new
+    @http_client.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
     process_links(get_timeline(build_command))
   end
 
@@ -75,7 +77,7 @@ class CLI < Thor
       next unless link = get_link(tweet)
       next unless redirect_link = get_redirect_link(link)
       next if filtered?(redirect_link)
-      printf("http://twitter.com/%s/status/%s\n%s\n\t%s\n\n",
+      printf("http://twitter.com/%s/status/%s\n\t%s\n\t%s\n\n",
               get_screename(tweet),
               get_id(tweet),
               get_title(redirect_link),
@@ -87,33 +89,35 @@ class CLI < Thor
     /(http\S+)/.match(tweet.last).to_a.first
   end
 
-  def get_id(tweet)
-    tweet.first
+  def get_redirect_link(link)
+    http_client = HTTPClient.new
+    head = http_client.head(link)
+    while head.code.between?(300, 399)
+      link = head.header['Location'].first
+      head = http_client.head(link)
+    end
+    head.code.between?(200, 299) ? link : nil
+  rescue => error
+    puts("[error getting redirect link on '#{ link }': #{ error }]") and return nil
+  end
+
+  def filtered?(link)
+    FILTERS.any? { |filter| filter.match(link) }
   end
 
   def get_screename(tweet)
     tweet[-2]
   end
 
+  def get_id(tweet)
+    tweet.first
+  end
+
   def get_title(link)
-    title = Nokogiri::HTML(HTTPClient.new.get(link).body).css('head title').inner_text
+    title = Nokogiri::HTML(@http_client.get(link).body).css('head title').inner_text
     title.to_s.empty? ? '[no title]' : title.strip
   rescue => error
-    "[error getting title on '#{ link }': #{ error }]"
-  end
-
-  def get_redirect_link(link)
-    begin
-      head = HTTPClient.new.head(link)
-      link = head.header['Location'].first
-    end while head.code.between?(300, 399)
-    link
-  rescue => error
-    warn("[error getting redirect link on '#{ link }': #{ error }]") and return nil
-  end
-
-  def filtered?(link)
-    FILTERS.any? { |filter| filter.match(link) }
+    puts "[error getting title on '#{ link }': #{ error }]"
   end
 end
 
