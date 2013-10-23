@@ -13,6 +13,7 @@ require 'thor'
 # documentation for the `t` command.
 
 # FIXME previous_id is off by one sometimes.
+# TODO if no previous_id, RESULT_LIMIT should be default (20)
 
 RCFILENAME = File.join(Etc.getpwuid.dir, '.twlinksrc')
 RESULT_LIMIT = 1_000
