@@ -72,16 +72,14 @@ class CLI < Thor
 
   def display_links(timeline)
     timeline.each do |tweet|
-      if link = get_link(tweet)
-        redirect_link = get_redirect_link(link)
-        if redirect_link && !filtered?(redirect_link)
-          printf("(%s) %s => %s\n\t%s\n\n",
-                 get_id(tweet),
-                 get_screename(tweet),
-                 get_title(redirect_link),
-                 redirect_link)
-        end
-      end
+      next unless link = get_link(tweet)
+      next unless redirect_link = get_redirect_link(link)
+      next if filtered?(redirect_link)
+      printf("http://twitter.com/%s/status/%s\n%s\n\t%s\n\n",
+              get_screename(tweet),
+              get_id(tweet),
+              get_title(redirect_link),
+              redirect_link)
     end
   end
 
@@ -101,13 +99,17 @@ class CLI < Thor
     title = Nokogiri::HTML(HTTPClient.new.get(link).body).css('head title').inner_text
     title.to_s.empty? ? '[no title]' : title.strip
   rescue => error
-    "[error getting page title on #{ link }: #{ error }]"
+    "[error getting title on '#{ link }': #{ error }]"
   end
 
   def get_redirect_link(link)
-    (HTTPClient.new.head(link).header['Location'].first || '').strip # or use #get
+    begin
+      head = HTTPClient.new.head(link)
+      link = head.header['Location'].first
+    end while head.code.between?(300, 399)
+    link
   rescue => error
-    warn("[error getting redirect link on #{ link }: #{ error }]") and return nil
+    warn("[error getting redirect link on '#{ link }': #{ error }]") and return nil
   end
 
   def filtered?(link)
