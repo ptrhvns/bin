@@ -93,6 +93,7 @@ class CLI < Thor
     head = http_client.head(link)
     while head.code.between?(300, 399)
       link = head.header['Location'].first
+      link = link.split(/:([^:]*)$/).first if link =~ /:.*:\d+$/
       head = http_client.head(link)
     end
     head.code.between?(200, 299) ? normalize_link(link) : nil
