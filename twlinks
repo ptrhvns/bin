@@ -98,7 +98,7 @@ class CLI < Thor
     end
     head.code.between?(200, 299) ? normalize_link(link) : nil
   rescue => error
-    puts("[error getting redirect link on '#{ link }': #{ error }]") and return nil
+    puts("[error getting redirect link on '#{ link }': #{ error }\n]") and return nil
   end
 
   def normalize_link(link)
