@@ -119,7 +119,7 @@ class CLI < Thor
 
   def get_title(link)
     title = Nokogiri::HTML(@http_client.get(link).body).css('head title').inner_text
-    title.to_s.empty? ? '[no title]' : title.strip
+    title.to_s.empty? ? '[no title]' : title.strip.gsub(/\s+/, ' ')
   rescue => error
     puts "[error getting title on '#{ link }': #{ error }]"
   end
