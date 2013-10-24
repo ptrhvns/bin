@@ -2,4 +2,11 @@
 
 set -e
 
+# Homebrew and Node.js can't agree on how to manage upgrades and they're
+# incompatible. So, you can use Homebrew to install Node.js, but then you'll
+# need to do the following to allow npm to do updates:
+#
+# rm /usr/local/bin/npm
+# ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm
+
 [[ -x "$(type -p npm)" ]] && npm -g update
