@@ -23,7 +23,9 @@ FILTERS = [
   /imgur\.com/,
   /instagram\.com/,
   /twitpic\.com/,
-  /twitter.*status.*photo/
+  /twitter.*status.*photo/,
+  /flicker\.com/,
+  /\.jpg$/i
 ]
 
 class CLI < Thor
