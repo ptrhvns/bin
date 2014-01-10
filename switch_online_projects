@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -e
+
+echo ">>> Pulling Git projects"
+(
+    cd ~/src/work
+    git_pull_list
+)
+
+echo ">>> Nuking schema"
+bundle exec rake db:nuke_schema RAILS_ENV=test
+
+echo ">>> Setting up test DB"
+bundle exec setup_test_db
