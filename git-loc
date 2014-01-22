@@ -2,35 +2,42 @@
 
 module Enumerable
   def sum
+    return 0 unless length > 0
     self.reduce(:+)
   end
 
   def mean
+    return 0 unless length > 0
     sum / length.to_f
   end
 
   def median
+    return 0 unless length > 0
     n = length
     values = sort
 
     if n.odd?
       return values[(n + 1) / 2]
     else
-      return (values[n / 2] + values[(n / 2) + 1]) / 2
+      return (values[n / 2].to_i + values[(n / 2) + 1].to_i) / 2
     end
   end
 
   def sample_variance
+    return 0 unless length > 0
     m = mean
     sum = inject(0) {|accum, i| accum + (i - m) ** 2 }
+    return 0 unless (length - 1) > 0
     sum / (length - 1).to_f
   end
 
   def standard_deviation
+    return 0 unless length > 0
     Math.sqrt(sample_variance)
   end
 
   def range
+    return '0' unless length > 0
     values = sort
     "#{ values.first } - #{ values.last }"
   end
@@ -62,8 +69,10 @@ values = data.values.reject { |v| :none == v}
 
 puts <<END
 lines of code / day (#{ author ? author : 'all authors' })
-  median             => #{ values.median.round(1) }
-  mean               => #{ values.mean.round(1) }
-  standard deviation => #{ values.standard_deviation.round(1) }
+  median             => #{ values.median.to_f.round(1) }
+  mean               => #{ values.mean.to_f.round(1) }
+  standard deviation => #{ values.standard_deviation.to_f.round(1) }
   range              => #{ values.range }
+
+total insertions     => #{ values.sum}
 END
