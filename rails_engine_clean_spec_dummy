@@ -5,8 +5,8 @@
 if [ -e "spec/dummy" ]; then
     (
         cd spec/dummy
-        rake assets:clobber
-        rake log:clear
-        rake tmp:clear
+        bundle exec rake assets:clobber
+        bundle exec rake log:clear
+        bundle exec rake tmp:clear
     )
 fi
