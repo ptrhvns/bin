@@ -3,14 +3,17 @@
 ruby_version=$(rbenv version | awk '{print $1}');
 project=$(basename $(pwd));
 
-bundle show | ruby -ne 'puts "#{$1} #{$2}" if /\s+\*\s+(\S+)\s+\(([^\s)]+)/' | while read gem version; do
-    gem_file=${HOME}/.rbenv/versions/${ruby_version}/gemsets/${project}/cache/${gem}-${version}.gem;
+bundle show | \
+    egrep -iv online | \
+    ruby -ne 'puts "#{$1} #{$2}" if /\s+\*\s+(\S+)\s+\(([^\s)]+)/' | \
+    while read gem version; do
+        gem_file=${HOME}/.rbenv/versions/${ruby_version}/gemsets/${project}/cache/${gem}-${version}.gem;
 
-    if [ ! -e "$gem_file" ]; then
-        gem_file=${HOME}/.rbenv/versions/${ruby_version}/gemsets/global/cache/${gem}-${version}.gem;
-    fi
+        if [ ! -e "$gem_file" ]; then
+            gem_file=${HOME}/.rbenv/versions/${ruby_version}/gemsets/global/cache/${gem}-${version}.gem;
+        fi
 
-    echo ">>> $gem $version => $gem_file";
-    push_gem $gem_file;
-    echo;
-done
+        echo ">>> $gem $version => $gem_file";
+        push_gem $gem_file;
+        echo;
+    done
