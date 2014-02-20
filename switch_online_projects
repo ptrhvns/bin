@@ -14,5 +14,9 @@ bundle exec rake db:nuke_schema RAILS_ENV=test
 echo ">>> Nuking development schema"
 bundle exec rake db:nuke_schema
 
-echo ">>> Setting up test DB"
-bundle exec setup_test_db
+if [ -d "spec/dummy" ]; then
+    echo ">>> Setting up test DB"
+    bundle exec setup_test_db
+else
+    bundle exec rake db:test:prepare
+fi
