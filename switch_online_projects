@@ -2,7 +2,6 @@
 
 set -e
 
-git dn
 bundle
 
 echo ">>> Pulling Git projects"
