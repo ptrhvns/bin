@@ -2,11 +2,13 @@
 
 set -e
 
+echo ">>> Bundling gems"
+
 bundle
 
 echo ">>> Pulling Git projects"
 (
-    cd ~/src/work
+    cd ..
     git_pull_list
 )
 
@@ -16,8 +18,8 @@ bundle exec rake db:nuke_schema RAILS_ENV=test
 echo ">>> Nuking development schema"
 bundle exec rake db:nuke_schema
 
+echo ">>> Setting up test DB"
 if [ -d "spec/dummy" ]; then
-    echo ">>> Setting up test DB"
     bundle exec setup_test_db
 else
     bundle exec rake db:test:prepare
