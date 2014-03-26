@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -e
+
+local rbenv_version=$(rbenv version | awk '{print $1}')
+rbenv gemset delete $rbenv_version $1
+rbenv gemset create $rbenv_version $1
+echo $1 >| .rbenv-gemsets
+gem install bundler $2 $3
+bundle install
+rbenv rehash

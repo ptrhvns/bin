@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [[ -n "$TMUX" ]]; then
+    local original_window_name=$(tmux list-windows | awk '/active/{print $2}' | tr -d '*')
+    tmux rename-window $1
+fi
+
+mssh $1
+
+if [[ -n "$TMUX" ]]; then
+    tmux rename-window $original_window_name
+fi

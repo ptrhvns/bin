@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+set -e
+
+history | awk '{ a[$4]++ } END { for(i in a) { print a[i] " " i } }' | sort -rn | head -25

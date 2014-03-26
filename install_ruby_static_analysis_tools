@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -e
+
+echo ">>> flay"
+gem install flay
+
+echo ">>> flog"
+gem install flog
+
+echo ">>> rubocop"
+gem install rubocop
+
+echo ">>> turbulence"
+gem install turbulence

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+
+(
+    cd spec/dummy
+    RAILS_ENV=test USE_SET_SCHEMA=false rails server $*
+)

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -e
+
+echo ">> plato"
+npm install -g coffee-script
+npm install -g plato
+
+echo "htmlhint"
+npm install -g htmlhint
+
+echo "jslint"
+npm install -g jslint
+
+echo "csslint"
+npm install -g csslint
+
+echo "coffeelint"
+npm install -g coffeelint
