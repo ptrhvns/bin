@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -e
+
+(
+    cd ~/src/work/rewrite/apps_env/online_payroll
+
+    echo ">>> Nuking test schema"
+    bundle exec rake db:nuke_schema RAILS_ENV=test
+
+    echo ">>> Nuking development schema"
+    bundle exec rake db:nuke_schema
+)
