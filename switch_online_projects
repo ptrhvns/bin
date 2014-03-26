@@ -12,11 +12,7 @@ echo ">>> Pulling Git projects"
     git_pull_list
 )
 
-echo ">>> Nuking test schema"
-bundle exec rake db:nuke_schema RAILS_ENV=test
-
-echo ">>> Nuking development schema"
-bundle exec rake db:nuke_schema
+nuke_schemas
 
 echo ">>> Setting up test DB"
 if [ -d "spec/dummy" ]; then
