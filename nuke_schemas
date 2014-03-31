@@ -3,7 +3,9 @@
 set -e
 
 (
-    cd ~/src/work/rewrite/apps_env/online_payroll
+    if [ ! -d "spec/dummy" ]; then
+        cd ~/src/work/rewrite/apps_env/online_payroll
+    fi
 
     echo ">>> Nuking test schema"
     bundle exec rake db:nuke_schema RAILS_ENV=test
