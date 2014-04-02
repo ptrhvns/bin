@@ -3,7 +3,7 @@
 set -e
 
 (
-    if [ ! -d "spec/dummy" ]; then
+    if [ "" = "$(bundle exec rake -T db:nuke_schema 2> /dev/null)" ]; then
         cd ~/src/work/rewrite/apps_env/online_payroll
     fi
 
