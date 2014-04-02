@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-set -e
+if [ -d spec/dummy ]; then
+    rm -rf Gemfile.lock
+fi
 
 rbenv_version=$(rbenv version | awk '{print $1}')
 rbenv gemset delete $rbenv_version $1
