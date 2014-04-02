@@ -2,9 +2,13 @@
 
 set -e
 
-echo ">>> Bundling gems"
-
-bundle
+if [ -d "spec/dummy" ]; then
+    echo ">>> Building rbenv gemset"
+    build_rbenv_gemset $(basename $(pwd))
+else
+    echo ">>> Bundling gems"
+    bundle
+fi
 
 echo ">>> Pulling Git projects"
 (
