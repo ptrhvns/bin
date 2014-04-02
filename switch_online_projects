@@ -18,9 +18,5 @@ echo ">>> Pulling Git projects"
 
 nuke_schemas
 
-echo ">>> Setting up test DB"
-if [ -d "spec/dummy" ]; then
-    bundle exec setup_test_db
-else
-    bundle exec rake db:test:prepare
-fi
+echo ">>> Running tests"
+bundle exec rake
