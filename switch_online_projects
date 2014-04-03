@@ -2,21 +2,59 @@
 
 set -e
 
-if [ -d "spec/dummy" ]; then
-    echo ">>> Building rbenv gemset"
-    build_rbenv_gemset $(basename $(pwd))
-else
-    echo ">>> Bundling gems"
-    bundle
+function usage {
+    echo "$(basename $0) [-B] [-G] [-h] [-N] [-T]"
+}
+
+BUNDLE=true
+GITPULL=true
+NUKESCHEMAS=true
+TESTS=true
+
+while getopts BGhNT opt; do
+    case $opt in
+        B)
+            BUNDLE=false
+            ;;
+        G)
+            GITPULL=false
+            ;;
+        h)
+            usage
+            exit 0
+            ;;
+        N)
+            NUKESCHEMAS=false
+            ;;
+        T)
+            TESTS=false
+            ;;
+    esac
+done
+
+if [[ $BUNDLE ]]; then
+    if [ -d "spec/dummy" ]; then
+        echo ">>> Building rbenv gemset"
+        build_rbenv_gemset $(basename $(pwd))
+    else
+        echo ">>> Bundling gems"
+        bundle
+    fi
 fi
 
-echo ">>> Pulling Git projects"
-(
-    cd ..
-    git_pull_list
-)
+if [[ $GITPULL ]]; then
+    echo ">>> Pulling Git projects"
+    (
+        cd ..
+        git_pull_list
+    )
+fi
 
-nuke_schemas
+if [[ $NUKESCHEMAS ]]; then
+    nuke_schemas
+fi
 
-echo ">>> Running tests"
-bundle exec rake
+if [[ $TESTS ]]; then
+    echo ">>> Running tests"
+    bundle exec rake
+fi
