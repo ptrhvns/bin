@@ -32,7 +32,7 @@ while getopts BGhNT opt; do
     esac
 done
 
-if [[ $BUNDLE ]]; then
+if [[ $BUNDLE = true ]]; then
     if [ -d "spec/dummy" ]; then
         echo ">>> Building rbenv gemset"
         build_rbenv_gemset $(basename $(pwd))
@@ -42,7 +42,7 @@ if [[ $BUNDLE ]]; then
     fi
 fi
 
-if [[ $GITPULL ]]; then
+if [[ $GITPULL = true ]]; then
     echo ">>> Pulling Git projects"
     (
         cd ..
@@ -50,11 +50,11 @@ if [[ $GITPULL ]]; then
     )
 fi
 
-if [[ $NUKESCHEMAS ]]; then
+if [[ $NUKESCHEMAS = true ]]; then
     nuke_schemas
 fi
 
-if [[ $TESTS ]]; then
+if [[ $TESTS = true ]]; then
     echo ">>> Running tests"
     bundle exec rake
 fi
