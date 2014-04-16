@@ -9,11 +9,9 @@ fi
 
 rbenv_version=$(rbenv version | awk '{print $1}')
 
-unset -e
-
-rbenv gemset delete $rbenv_version $1 2> /dev/null
-
-set -e
+if ! rbenv gemset delete $rbenv_version $1 2> /dev/null; then
+    echo ">>> Failure ignored."
+fi
 
 rbenv gemset create $rbenv_version $1
 echo $1 >| .rbenv-gemsets
