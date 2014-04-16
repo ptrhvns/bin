@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
+set -u
 
 if [[ -n "$TMUX" ]]; then
     original_window_name=$(tmux list-windows | awk '/active/{print $2}' | tr -d '*')

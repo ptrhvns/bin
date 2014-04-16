@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
+set -u
 
 username=$(whoami)
 current_branch=$(git rev-parse --abbrev-ref HEAD)

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
+set -u
 
 (
     if [ "" = "$(bundle exec rake -T db:nuke_schema 2> /dev/null)" ]; then

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
+set -u
 
 if [ -d "spec/dummy" ]; then
     rm -rf Gemfile.lock
