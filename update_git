@@ -3,7 +3,7 @@
 set -e
 
 (
-    for directory in $HOME/bin $HOME/doc/computer $HOME/doc/personal $HOME/doc/project $HOME/doc/work $HOME/src/rcfiles; do
+    for directory in $HOME/bin $HOME/doc/computer $HOME/doc/personal $HOME/doc/project $HOME/doc/work $HOME/src/rcfiles $HOME/src/personal/*; do
         if [[ -d $directory ]]; then
             echo ">>> Updating $directory"
             cd $directory
@@ -18,19 +18,5 @@ set -e
             fi
             echo
         fi
-    done
-
-    ls -d $HOME/src/personal/*/ | while read projdir; do
-        echo ">>> Fetching commits for $projdir"
-        cd $projdir
-        git f
-        if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
-            echo -n ">>> ..."
-            echo -ne "\033[38;5;124m"
-            echo -n "WARNING"
-            echo -ne "\033[0m"
-            echo ": repository is dirty"
-        fi
-        echo
     done
 )
