@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
 set -e
+
+gemset_name=$1
+bundler_flag=$2
+bundler_flag_arg=$3
+
 set -u
 
 if [ -d "spec/dummy" ]; then
@@ -9,12 +14,12 @@ fi
 
 rbenv_version=$(rbenv version | awk '{print $1}')
 
-if ! rbenv gemset delete $rbenv_version $1 2> /dev/null; then
+if ! rbenv gemset delete $rbenv_version $gemset_name 2> /dev/null; then
     echo ">>> Failure ignored."
 fi
 
-rbenv gemset create $rbenv_version $1
-echo $1 >| .rbenv-gemsets
-gem install bundler $2 $3
+rbenv gemset create $rbenv_version $gemset_name
+echo $gemset_name >| .rbenv-gemsets
+gem install bundler $bundler_flag $bundler_flag_arg
 bundle install
 rbenv rehash
