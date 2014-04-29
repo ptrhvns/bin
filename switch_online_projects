@@ -3,7 +3,7 @@
 set -e
 
 function usage {
-    echo "$(basename $0) [-B] [-G] [-h] [-N] [-T]"
+    echo "$(basename $0) [-B (bundle)] [-G (git)] [-h] [-N (nuke)] [-T (tests)]"
 }
 
 BUNDLE=true
@@ -43,11 +43,16 @@ if [[ $BUNDLE = true ]]; then
 fi
 
 if [[ $GITPULL = true ]]; then
-    echo ">>> Pulling Git projects"
-    (
-        cd ..
-        git_pull_list
-    )
+    echo ">>> Pulling Git commits"
+
+    if [[ -e "../list" ]]; then
+        (
+            cd ..
+            git_pull_list
+        )
+    else
+        git dn
+    fi
 fi
 
 if [[ $NUKESCHEMAS = true ]]; then
