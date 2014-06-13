@@ -99,8 +99,8 @@ class CLI < Thor
       head = http_client.head(link)
     end
     head.code.between?(200, 299) ? normalize_link(link) : nil
-  rescue => error
-    puts("[error getting redirect link on '#{ link }': #{ error }\n]") and return nil
+  rescue
+    nil
   end
 
   def normalize_link(link)
@@ -122,8 +122,8 @@ class CLI < Thor
   def get_title(link)
     title = Nokogiri::HTML(@http_client.get(link).body).css('head title').inner_text
     title.to_s.empty? ? '[no title]' : title.strip.gsub(/\s+/, ' ')
-  rescue => error
-    puts "[error getting title on '#{ link }': #{ error }]"
+  rescue
+    '[no title]'
   end
 end
 
