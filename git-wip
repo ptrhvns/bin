@@ -5,7 +5,7 @@ set -u
 
 username=$(whoami)
 current_branch=$(git rev-parse --abbrev-ref HEAD)
-wip_name=wip_${username}_${current_branch}
+wip_name=${current_branch}_wip_${username}
 
 git push
 git checkout -b $wip_name
