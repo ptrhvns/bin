@@ -7,6 +7,7 @@ require 'etc'
 require 'httpclient'
 require 'nokogiri'
 require 'open-uri'
+require 'set'
 require 'thor'
 
 # NOTE You'll need to setup Twitter app stuff for the `t` command. See the
@@ -74,10 +75,13 @@ class CLI < Thor
   end
 
   def display_links(timeline)
+    links_displayed = Set.new
     timeline.each do |tweet|
       next unless link = get_link(tweet)
       next unless redirect_link = get_redirect_link(link)
       next if filtered?(redirect_link)
+      next if links_displayed.include?(redirect_link)
+      links_displayed << redirect_link
       printf("http://twitter.com/%s/status/%s\n\t%s\n\t%s\n\n",
               get_screename(tweet),
               get_id(tweet),
