@@ -3,10 +3,11 @@
 set -e
 
 function usage {
-    echo "$(basename $0) [-B (bundle)] [-G (git)] [-h] [-N (nuke)] [-T (tests)]"
+    echo "$(basename $0) [-B (bundle)] [-C (clean)] [-G (git)] [-h] [-N (nuke)] [-T (tests)]"
 }
 
 BUNDLE=true
+CLEAN=true
 GITPULL=true
 NUKESCHEMAS=true
 TESTS=true
@@ -15,6 +16,9 @@ while getopts BGhNT opt; do
     case $opt in
         B)
             BUNDLE=false
+            ;;
+        C)
+            CLEAN=false
             ;;
         G)
             GITPULL=false
@@ -52,6 +56,13 @@ if [[ $GITPULL = true ]]; then
         )
     else
         git dn
+    fi
+fi
+
+if [[ $CLEAN = true ]]: then
+    if [ -d "spec/dummy" ]; then
+        echo ">>> Cleaning spec/dummy"
+        rails_engine_clean_spec_dummy
     fi
 fi
 
