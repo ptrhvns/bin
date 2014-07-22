@@ -59,7 +59,7 @@ if [[ $GITPULL = true ]]; then
     fi
 fi
 
-if [[ $CLEAN = true ]]: then
+if [[ $CLEAN = true ]]; then
     if [ -d "spec/dummy" ]; then
         echo ">>> Cleaning spec/dummy"
         rails_engine_clean_spec_dummy
