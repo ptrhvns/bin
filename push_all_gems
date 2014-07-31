@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 ruby_version=$(rbenv version | awk '{print $1}');
 project=$(basename $(pwd));
 
@@ -14,6 +16,14 @@ bundle show | \
         fi
 
         echo ">>> $gem $version => $gem_file";
-        push_gem $gem_file;
+        (
+            # FIXME: uses version of Ruby with correct version of Rubygems
+            # insalled for using push_gem.
+            ruby19=$(rbenv versions | grep 1.9 | head -1 | awk '{print $1}')
+            echo ">>> pushing with ruby version: $ruby19"
+            eval "$(rbenv init -)"
+            rbenv shell $ruby19
+            push_gem $gem_file;
+        )
         echo;
     done
