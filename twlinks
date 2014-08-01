@@ -28,6 +28,7 @@ FILTERS = [
   /flicker\.com/,
   /\.jpg$/i,
   /\.png$/i,
+  %r{github\.com.*/tree/master}
 ]
 
 class CLI < Thor
