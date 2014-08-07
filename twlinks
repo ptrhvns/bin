@@ -26,8 +26,7 @@ FILTERS = [
   /twitpic\.com/,
   /twitter.*status.*photo/,
   /flicker\.com/,
-  /\.jpg$/i,
-  /\.png$/i,
+  /\.(jpg|png|gif)$/i,
   %r{github\.com.*/tree/master}
 ]
 
