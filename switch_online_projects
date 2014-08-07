@@ -36,16 +36,6 @@ while getopts BGhNT opt; do
     esac
 done
 
-if [[ $BUNDLE = true ]]; then
-    if [ -d "spec/dummy" ]; then
-        echo ">>> Building rbenv gemset"
-        build_rbenv_gemset $(basename $(pwd))
-    else
-        echo ">>> Bundling gems"
-        bundle
-    fi
-fi
-
 if [[ $GITPULL = true ]]; then
     echo ">>> Pulling Git commits"
 
@@ -56,6 +46,16 @@ if [[ $GITPULL = true ]]; then
         )
     else
         git dn
+    fi
+fi
+
+if [[ $BUNDLE = true ]]; then
+    if [ -d "spec/dummy" ]; then
+        echo ">>> Building rbenv gemset"
+        build_rbenv_gemset $(basename $(pwd))
+    else
+        echo ">>> Bundling gems"
+        bundle
     fi
 fi
 
