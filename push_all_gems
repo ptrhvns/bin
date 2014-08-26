@@ -3,10 +3,14 @@
 set -e
 
 ruby_version=$(rbenv version | awk '{print $1}');
+ruby_small_version=${ruby_version//-p*/}
 project=$(basename $(pwd));
+ruby19=$(rbenv versions | grep 1.9 | head -1 | awk '{print $1}')
 
+echo ">>> pushing with ruby version: $ruby19"
+echo ">>> parsing bundled gems ..."
 bundle show | \
-    egrep -iv online | \
+    egrep -iv 'online|styleguide' | \
     ruby -ne 'puts "#{$1} #{$2}" if /\s+\*\s+(\S+)\s+\(([^\s)]+)/' | \
     while read gem version; do
         gem_file=${HOME}/.rbenv/versions/${ruby_version}/gemsets/${project}/cache/${gem}-${version}.gem;
@@ -15,15 +19,20 @@ bundle show | \
             gem_file=${HOME}/.rbenv/versions/${ruby_version}/gemsets/global/cache/${gem}-${version}.gem;
         fi
 
-        echo ">>> $gem $version => $gem_file";
-        (
-            # FIXME: uses version of Ruby with correct version of Rubygems
-            # insalled for using push_gem.
-            ruby19=$(rbenv versions | grep 1.9 | head -1 | awk '{print $1}')
-            echo ">>> pushing with ruby version: $ruby19"
-            eval "$(rbenv init -)"
-            rbenv shell $ruby19
-            push_gem $gem_file;
-        )
+        if [ ! -e "$gem_file" ]; then
+            gem_file=${HOME}/.rbenv/versions/${ruby_version}/lib/ruby/gems/${ruby_small_version}/cache/${gem}-${version}.gem;
+        fi
+
+        if [ ! -e "$gem_file" ]; then
+            echo ">>> ERROR: '${gem}-${version}.gem' not found"
+        else
+            echo ">>> $gem $version => $gem_file";
+            (
+                eval "$(rbenv init -)"
+                rbenv shell $ruby19
+                push_gem $gem_file;
+            )
+        fi
+
         echo;
     done
