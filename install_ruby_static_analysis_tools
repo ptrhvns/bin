@@ -5,12 +5,16 @@ set -u
 
 echo ">>> flay"
 gem install flay
+echo
 
 echo ">>> flog"
 gem install flog
+echo
 
 echo ">>> rubocop"
 gem install rubocop
+echo
 
 echo ">>> turbulence"
 gem install turbulence
+echo
