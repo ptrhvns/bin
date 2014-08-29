@@ -18,3 +18,7 @@ echo
 echo ">>> turbulence"
 gem install turbulence
 echo
+
+echo ">>> scss-lint"
+gem install scss-lint
+echo

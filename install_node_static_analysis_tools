@@ -12,6 +12,9 @@ npm install -g jshint
 echo "csslint"
 npm install -g csslint
 
+echo "coffeelint"
+npm install -g coffee-lint
+
 echo "complexity-report (cr)"
 npm install -g complexity-report
 
