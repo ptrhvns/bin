@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -e
+set -u
+
+$EDITOR $HOME/doc/computer/programming/programming_practice
