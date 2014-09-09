@@ -22,3 +22,7 @@ echo
 echo ">>> scss-lint"
 gem install scss-lint
 echo
+
+echo ">>> haml-lint"
+gem install haml-lint
+echo
