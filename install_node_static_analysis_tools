@@ -13,7 +13,7 @@ echo "csslint"
 npm install -g csslint
 
 echo "coffeelint"
-npm install -g coffee-lint
+npm install -g coffeelint
 
 echo "complexity-report (cr)"
 npm install -g complexity-report
