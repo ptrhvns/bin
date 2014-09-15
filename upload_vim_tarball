@@ -4,5 +4,5 @@ set -e
 
 {
     cd ~/src/rcfiles
-    tar cf ~/tmp/vim.tar vim/* && scp ~/tmp/vim.tar pike: && scp ~/tmp/vim.tar littlebear: && scp ~/tmp/vim.tar cuatro: && rm ~/tmp/vim.tar
+    tar cf ~/tmp/vim.tar vim/* && scp ~/tmp/vim.tar pike: && scp ~/tmp/vim.tar devhost: && scp ~/tmp/vim.tar cuatro: && rm ~/tmp/vim.tar
 }
