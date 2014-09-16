@@ -1,17 +1,22 @@
 #!/usr/bin/env bash
 
+set -u
+set -e
+
 # Open a project's scratch file for editing.
 if [[ -e $PWD/scratch ]]; then
     $EDITOR $PWD/scratch
 elif [[ "$PWD" = "$HOME/src/personal/project" ]]; then
     $EDITOR $HOME/doc/project/scratch
 elif echo "$PWD" | grep -q "$HOME/src/personal"; then
+    mkdir -p $HOME/doc/personal/projects/${PWD##*/}
     $EDITOR $HOME/doc/personal/projects/${PWD##*/}/scratch
 elif echo "$PWD" | grep -q "$HOME/src/work"; then
+    mkdir -p $HOME/doc/work/projects/${PWD##*/}
     $EDITOR $HOME/doc/work/projects/${PWD##*/}/scratch
 elif [[ -n "$TMUX" ]]; then
+    mkdir -p $HOME/doc/work/projects/$(tmux display-message -p "#S")
     $EDITOR $HOME/doc/work/projects/$(tmux display-message -p "#S")/scratch
 else
     $EDITOR $HOME/tmp/scratch
 fi
-
