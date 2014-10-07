@@ -3,7 +3,8 @@
 set -e
 
 if [ -z "$TMUX" ]; then
-    tmux_new_session general
+    >&2 echo "ERROR: not executed inside tmux."
+    exit 1
 fi
 
 original_window_name=$(tmux list-windows | awk '/active/{print $2}' | tr -d '*')
