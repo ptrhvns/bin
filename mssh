@@ -99,7 +99,7 @@ def verify_hostname(opts)
   return unless opts[:dns]
   say "verifying hostname"
 
-  if File.exist?(SSH_CONFIG) 
+  if File.exist?(SSH_CONFIG)
     return if IO.readlines(SSH_CONFIG).any? do |line|
       line =~ /^Host\s+#{opts[:host]}\b/
     end
