@@ -27,4 +27,4 @@ echo ">>> brakeman"
 gem install brakeman
 echo
 
-echo ">> Consider bullet, deadweight, rack-mini-profiler, and traceroute"
+echo ">> Consider bullet, deadweight, rack-mini-profiler, and traceroute."
