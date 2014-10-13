@@ -3,20 +3,12 @@
 set -e
 set -u
 
-echo ">>> flay"
-gem install flay
-echo
-
-echo ">>> flog"
-gem install flog
+echo ">>> rubycritic"
+gem install rubycritic
 echo
 
 echo ">>> rubocop"
 gem install rubocop
-echo
-
-echo ">>> turbulence"
-gem install turbulence
 echo
 
 echo ">>> scss-lint"
@@ -26,3 +18,13 @@ echo
 echo ">>> haml-lint"
 gem install haml-lint
 echo
+
+echo ">>> rails_best_practices"
+gem install rails_best_practices
+echo
+
+echo ">>> brakeman"
+gem install brakeman
+echo
+
+echo ">> Consider bullet, deadweight, rack-mini-profiler, and traceroute"
