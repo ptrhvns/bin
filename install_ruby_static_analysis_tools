@@ -23,6 +23,6 @@ echo ">>> haml-lint"
 gem install haml-lint
 echo
 
-echo ">> Consider also using:"
-echo ">>     bullet, brakeman, deadweight, rack-mini-profiler,"
-echo ">>     rails_best_practicesand traceroute."
+echo ">>> Consider also using:"
+echo ">>>     bullet, brakeman, deadweight, rack-mini-profiler,"
+echo ">>>     rails_best_practicesand traceroute."
