@@ -24,9 +24,14 @@ bundle show | \
         fi
 
         if [ ! -e "$gem_file" ]; then
-            echo ">>> ERROR: '${gem}-${version}.gem' not found"
+            echo ">>> searching for gem file: ${gem}-${version}.gem"
+            gem_file=$(find ${HOME}/.rbenv -name ${gem}-${version}.gem | head -1)
+        fi
+
+        if [ ! -e "$gem_file" ]; then
+            echo ">>> ERROR: gem file not found: ${gem}-${version}.gem"
         else
-            echo ">>> $gem $version => $gem_file";
+            echo ">>> pushing gem file: $gem_file";
             (
                 eval "$(rbenv init -)"
                 rbenv shell $ruby19
