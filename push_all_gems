@@ -7,8 +7,8 @@ ruby_small_version=${ruby_version//-p*/}
 project=$(basename $(pwd));
 ruby19=$(rbenv versions | grep 1.9 | head -1 | awk '{print $1}')
 
-echo ">>> pushing with ruby version: $ruby19"
-echo ">>> parsing bundled gems ..."
+echo ">>> pushing with Ruby version: $ruby19"
+echo ">>> parsing bundled gems"
 bundle show | \
     egrep -iv 'online|styleguide' | \
     ruby -ne 'puts "#{$1} #{$2}" if /\s+\*\s+(\S+)\s+\(([^\s)]+)/' | \
