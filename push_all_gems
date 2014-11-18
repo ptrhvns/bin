@@ -10,7 +10,7 @@ ruby19=$(rbenv versions | grep 1.9 | head -1 | awk '{print $1}')
 echo ">>> pushing with Ruby version: $ruby19"
 echo ">>> parsing bundled gems"
 bundle show | \
-    egrep -iv 'online|styleguide' | \
+    egrep -iv 'online|styleguide|pinnacol_assets' | \
     ruby -ne 'puts "#{$1} #{$2}" if /\s+\*\s+(\S+)\s+\(([^\s)]+)/' | \
     while read gem version; do
         gem_file=${HOME}/.rbenv/versions/${ruby_version}/gemsets/${project}/cache/${gem}-${version}.gem;
