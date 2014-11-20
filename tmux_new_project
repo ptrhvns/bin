@@ -11,7 +11,7 @@ if [ $# -lt 1 ]; then
 fi
 
 directory=$1
-session_name=$(basename $directory)
+session_name=$(basename $directory | sed -e 's/[^a-zA-Z0-9]/_/g')
 test -d $directory || { echo "ERROR: no directory: $directory" 1>&2; exit 1; }
 
 (
