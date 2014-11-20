@@ -4,5 +4,5 @@ set -e
 
 (
     cd spec/dummy
-    RAILS_ENV=development USE_SET_SCHEMA=true rails server $*
+    TRUSTED_IP=$(host $(hostname) | awk '{print $NF}') RAILS_ENV=development USE_SET_SCHEMA=true rails server $*
 )
