@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -e
+set -u
+
+files=$(git status -s -uall | awk '{print $2}' | grep haml)
+
+if [ "$files" != "" ]; then
+    haml-lint $files
+fi
