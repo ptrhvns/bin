@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+set -e
+set -u
+
+files=$(git status -s -uall | awk '{print $2}' | grep js | grep -v coffee)
+
+if [ "$files" != "" ]; then
+    jshint $files
+fi
