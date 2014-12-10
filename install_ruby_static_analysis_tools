@@ -3,12 +3,8 @@
 set -e
 set -u
 
-echo ">>> flog"
-gem install flog
-echo
-
-echo ">>> flay"
-gem install flay
+echo ">>> rubycritic"
+gem install rubycritic
 echo
 
 echo ">>> rubocop"
