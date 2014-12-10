@@ -21,4 +21,4 @@ echo
 
 echo ">>> Consider also using:"
 echo ">>>     bullet, brakeman, deadweight, rack-mini-profiler,"
-echo ">>>     rails_best_practicesand traceroute."
+echo ">>>     rails_best_practices, and traceroute."
