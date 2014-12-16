@@ -3,7 +3,7 @@
 set -e
 set -u
 
-files=$(git status -s -uall | awk '{print $2}' | grep scss)
+files=$(git status -s -uall | grep -v '^[[:space:]]*D' | awk '{print $2}' | grep scss)
 
 if [ "$files" != "" ]; then
     scss-lint $files
