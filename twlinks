@@ -83,7 +83,7 @@ class CLI < Thor
       next if links_displayed.include?(redirect_link)
       links_displayed << redirect_link
       printf(
-        "%s\n\t%s\n\thttp://twitter.com/%s/status/%s\n\n",
+        "%s\n\n\t%s\n\thttp://twitter.com/%s/status/%s\n\n",
         get_title(redirect_link),
         redirect_link,
         get_screename(tweet),
