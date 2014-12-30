@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -e
+set -u
+
+if [ -z "$TMUX" ]; then
+    if [ $# -lt 1 ]; then
+        echo "ERROR: not enough arguments" 1>&2
+        echo "usage: $(basename $0) <session_name>" 1>&2
+        exit 1
+    fi
+
+    tmux kill-session -t $1
+else
+    current_session_name=$(tmux display-message -p '#S')
+
+    if [ $(tmux ls | grep "^general:" | wc -l) -gt 0 ]; then
+        tmux switch-client -t general
+    fi
+
+    tmux kill-session -t $current_session_name
+fi

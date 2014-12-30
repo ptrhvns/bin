@@ -2,4 +2,20 @@
 
 set -e
 
-(unset TMUX; tmux new-session -ds $@)
+if [ $# -lt 1 ]; then
+    echo "ERROR: not enough arguments" 1>&2
+    echo "usage: $(basename $0) <session_name>" 1>&2
+    exit 1
+fi
+
+session_name=$(echo $1 | sed -e 's/[^a-zA-Z0-9]/_/g')
+
+if [ -z "$TMUX" ]; then
+    tmux new-session -As $session_name
+else
+    if [ $(tmux list-sessions | grep "^$session_name:" | wc -l) -lt 1 ] ; then
+        $(unset TMUX; tmux new-session -Ad -s $session_name)
+    fi
+
+    tmux switch-client -t $session_name
+fi
