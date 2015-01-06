@@ -5,7 +5,7 @@ set -u
 
 (
     if [ "" = "$(bundle exec rake -T db:nuke_schema 2> /dev/null)" ]; then
-        cd ~/src/work/rewrite/apps_env/online_payroll
+        cd ~/src/work/trampoline/online_auth
     fi
 
     echo ">>> Nuking test schema"
