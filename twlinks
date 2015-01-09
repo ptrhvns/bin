@@ -127,7 +127,7 @@ class CLI < Thor
 
   def get_title(link)
     title = Nokogiri::HTML(@http_client.get(link).body).css('head title').inner_text
-    title.to_s.empty? ? "[#{ .split('/').last.split('?').first.split('.').first.gsub(/[^0-9A-Za-z']/, ' ') }]" : title.strip.gsub(/\s+/, ' ')
+    title.to_s.empty? ? "[#{ link.split('/').last.split('?').first.split('.').first.gsub(/[^0-9A-Za-z']/, ' ') }]" : title.strip.gsub(/\s+/, ' ')
   rescue
     '[no title]'
   end
