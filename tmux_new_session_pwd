@@ -1,33 +1,18 @@
 #!/usr/bin/env bash
 
 set -e
-set -u
-
-# Create a new tmux session in the present working directory.
 
 session_name=$(basename "$PWD" | sed -e 's/[^a-zA-Z0-9]/_/g')
 
-not_in_tmux() {
-  [ -z "$TMUX" ]
-}
+if [ -z "$TMUX" ]; then
+    tmux new-session -As $session_name
+else
+    current_pane=$(tmux display-message -p "#D")
 
-session_exists() {
-  tmux list-sessions | sed -E 's/:.*$//' | grep -q "^$session_name$"
-}
-
-create_detached_session() {
-  (TMUX='' tmux new-session -Ad -s "$session_name")
-}
-
-create_if_needed_and_attach() {
-  if not_in_tmux; then
-    tmux new-session -As "$session_name"
-  else
-    if ! session_exists; then
-      create_detached_session
+    if [ $(tmux list-sessions | grep "^$session_name:" | wc -l) -lt 1 ]; then
+        $(unset TMUX; tmux new-session -Ad -s $session_name)
     fi
-    tmux switch-client -t "$session_name"
-  fi
-}
 
-create_if_needed_and_attach
+    tmux switch-client -t $session_name
+    tmux kill-pane -t $current_pane
+fi
