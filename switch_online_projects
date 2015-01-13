@@ -42,7 +42,7 @@ if [[ $GITPULL = true ]]; then
     if [[ -e "../list" ]]; then
         (
             cd ..
-            git_pull_list
+            git pull-list
         )
     else
         git dn

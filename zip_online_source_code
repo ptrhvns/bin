@@ -9,7 +9,7 @@ mkdir -p ~/tmp/online_source_code
 
 (
     cd ~/src/work
-    git_pull_list
+    git pull-list
 )
 
 cat ~/src/work/list | egrep -iv 'pinnacol-www|return-to-work|onlineapps' | while read dir; do
