@@ -4,5 +4,11 @@ set -e
 
 (
     cd spec/dummy
-    TRUSTED_IP=$(host $(hostname) | awk '{print $NF}') RAILS_ENV=development USE_SET_SCHEMA=true rails server $*
+
+    if bundle show pry-rescue >& /dev/null; then
+        echo '>>> Starting with rescue'
+        TRUSTED_IP=$(host $(hostname) | awk '{print $NF}') RAILS_ENV=development USE_SET_SCHEMA=true rescue rails server $*
+    else
+        TRUSTED_IP=$(host $(hostname) | awk '{print $NF}') RAILS_ENV=development USE_SET_SCHEMA=true rails server $*
+    fi
 )
