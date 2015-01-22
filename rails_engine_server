@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ $# -lt 1 ]; then
+    echo "ERROR: not enough arguments" 1>&2
+    echo "usage: $(basename $0) <environment>" 1>&2
+    exit 1
+fi
+
+environment=$1
+
+(
+    cd spec/dummy
+
+    if bundle show pry-rescue >& /dev/null; then
+        echo '>>> Starting with rescue'
+        TRUSTED_IP=$(host $(hostname) | awk '{print $NF}') RAILS_ENV=$environment USE_SET_SCHEMA=true rescue rails server $*
+    else
+        TRUSTED_IP=$(host $(hostname) | awk '{print $NF}') RAILS_ENV=$environment USE_SET_SCHEMA=true rails server $*
+    fi
+)
