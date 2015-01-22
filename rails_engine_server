@@ -9,6 +9,7 @@ if [ $# -lt 1 ]; then
 fi
 
 environment=$1
+shift
 
 (
     cd spec/dummy
