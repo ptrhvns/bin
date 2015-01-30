@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -e
+
+if [ -x "$(type -p gem)" ]; then
+    echo ">>> Installing Ruby static analysis tools ..."
+    gem install flay flog haml-lint rubocop scss-lint
+else
+    echo ">>> No 'gem' command found. Skipping Ruby static analysis tools."
+fi
+
+echo
+
+if [ -x "$(type -p npm)" ]; then
+    echo ">>> Installing Node.js static analysis tools ..."
+    npm install -g coffeelint csslint htmlhint jshint
+else
+    echo ">>> No 'npm' command found. Skipping Node.js static analysis tools."
+fi
