@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-set -u
 set -e
 
 (
@@ -15,7 +14,13 @@ set -e
                 echo -ne "\033[0m"
                 echo ": repository is dirty"
             else
-                git dn && git up
+                git pull
+
+                if [ -e .gitmodules ]; then
+                    git submodule init
+                fi
+
+                git push
             fi
             echo
         fi
