@@ -18,6 +18,7 @@ set -e
 
                 if [ -e .gitmodules ]; then
                     git submodule init
+                    git submodule update
                 fi
 
                 git push
