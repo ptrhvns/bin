@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
 set -e
-set -u
 
 (
-    if [ "" = "$(bundle exec rake -T db:nuke_schema 2> /dev/null)" ]; then
-        cd ~/src/work/trampoline/online_auth
-    fi
+    cd ~/src/work/trampoline/online_auth
 
     echo ">>> Nuking test schema"
     bundle exec rake db:nuke_schema RAILS_ENV=test
