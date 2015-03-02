@@ -2,18 +2,44 @@
 
 set -e
 
-if [ -x "$(type -p gem)" ]; then
-    echo ">>> Installing Ruby static analysis tools ..."
-    gem install flay flog haml-lint rubocop scss-lint
-else
-    echo ">>> No 'gem' command found. Skipping Ruby static analysis tools."
+function usage {
+    echo "$(basename $0) [-N (node)] [-R (ruby)]"
+}
+
+NODE=true
+RUBY=true
+
+while getopts NR opt; do
+    case $opt in
+        h)
+            usage
+            exit 0
+            ;;
+        N)
+            NODE=false
+            ;;
+        R)
+            RUBY=false
+            ;;
+    esac
+done
+
+if [[ $RUBY = true ]]; then
+    if [ -x "$(type -p gem)" ]; then
+        echo ">>> Installing Ruby static analysis tools ..."
+        gem install flay flog haml-lint rubocop scss-lint
+    else
+        echo ">>> No 'gem' command found. Skipping Ruby static analysis tools."
+    fi
 fi
 
-echo
+if [[ $NODE = true ]]; then
+    echo
 
-if [ -x "$(type -p npm)" ]; then
-    echo ">>> Installing Node.js static analysis tools ..."
-    npm install -g coffeelint csslint htmlhint jshint
-else
-    echo ">>> No 'npm' command found. Skipping Node.js static analysis tools."
+    if [ -x "$(type -p npm)" ]; then
+        echo ">>> Installing Node.js static analysis tools ..."
+        npm install -g coffeelint csslint htmlhint jshint
+    else
+        echo ">>> No 'npm' command found. Skipping Node.js static analysis tools."
+    fi
 fi
