@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+
+# Git pre-commit hook.
+
+require 'English'
+
+def run_command(command)
+  system "#{ command } 2>&1 > /dev/null"
+
+  unless $CHILD_STATUS.exitstatus.zero?
+    warn "ERROR: lint command failed => #{ command }"
+    exit 1
+  end
+end
+
+def main
+  pathnames = %x(git diff --cached --name-only --diff-filter=AM -z).split(?\x00)
+
+  pathnames.each do |path|
+    case File.basename(path)
+    when /\.coffee/
+      run_command "coffeelint #{ path }"
+    when /\.scss/
+      run_command "scss-lint #{ path }"
+    when /\.css/
+      run_command "csslint #{ path }"
+    when /\.haml/
+      run_command "haml-lint #{ path }"
+    when /\.html/
+      run_command "htmlhint #{ path }"
+    when /\.js/
+      run_command "jshint #{ path }"
+    when /\.rb/
+      run_command "rubocop #{ path }"
+    end
+  end
+
+  exit 0
+end
+
+main if $0 == __FILE__
