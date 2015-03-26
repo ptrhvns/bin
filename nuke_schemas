@@ -3,6 +3,7 @@
 set -e
 
 (
+    echo ">>> cd ~/src/work/trampoline/online_auth"
     cd ~/src/work/trampoline/online_auth
 
     echo ">>> Nuking test schema"
