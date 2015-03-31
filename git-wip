@@ -10,7 +10,7 @@ wip_name=${current_branch}_wip_${username}
 git push
 git checkout -b $wip_name
 git add -A :/
-git commit -m 'wip'
+git commit -n -m 'wip'
 git push
 git checkout $current_branch
 git branch -D $wip_name
