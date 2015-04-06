@@ -20,14 +20,14 @@ RCFILENAME = File.join(Etc.getpwuid.dir, '.twlinksrc')
 RESULT_LIMIT = 1_000
 
 FILTERS = [
-  /\.(jpg|png|gif)$/i
+  /\.(jpg|png|gif)$/i,
   /facebook\.com/,
   /flicker\.com/,
   /imgur\.com/,
   /instagram\.com/,
   /twitpic\.com/,
   /twitter.*status.*photo/,
-  /untappd\.com/,
+  /untappd\.com/
 ]
 
 class CLI < Thor
@@ -61,10 +61,13 @@ class CLI < Thor
   end
 
   def process_links(timeline)
-    unless timeline.empty?
-      save_new_id(get_new_id(timeline))
-      display_links(timeline)
+    if timeline.empty?
+      warn "Timeline is empty."
+      exit 1
     end
+
+    save_new_id(get_new_id(timeline))
+    display_links(timeline)
   end
 
   def get_new_id(timeline)
