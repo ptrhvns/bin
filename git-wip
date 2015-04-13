@@ -14,3 +14,4 @@ git commit -n -m 'wip'
 git push
 git checkout $current_branch
 git branch -D $wip_name
+git branch -av

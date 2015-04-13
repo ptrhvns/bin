@@ -22,3 +22,4 @@ git checkout $current_branch
 git branch -d $wip_name
 git push origin --delete $wip_name
 git push origin --delete $current_branch
+git branch -av
