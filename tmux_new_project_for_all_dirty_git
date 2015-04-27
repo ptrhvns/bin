@@ -2,6 +2,7 @@
 
 set -e
 
+echo ">>> Scanning directories in $(pwd) ..."
 find . -type d -maxdepth 1 | while read dir; do
     (
         cd $dir
