@@ -22,5 +22,5 @@ rbenv gemset create $rbenv_version $gemset_name
 echo $gemset_name >| .rbenv-gemsets
 gem install bundler $bundler_flag $bundler_flag_arg
 rbenv rehash
-bundle install
+bundle install --verbose
 rbenv rehash
