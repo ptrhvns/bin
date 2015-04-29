@@ -1,7 +1,13 @@
 #!/usr/bin/env ruby
 
+def die(msg)
+  warn "#{ File.basename($0) }: ERROR: #{ msg }"
+  exit 1
+end
+
 def main
   file_name, line_number = ARGV
+  die 'no file name given' unless file_name
   line_number_spec = (line_number ? ":#{ line_number }": '')
 
   case file_name
@@ -14,7 +20,7 @@ def main
   when /\.feature$/
     exec "SELENIUM_DRIVER=true bundle exec cucumber -r features #{ file_name }" + line_number_spec
   else
-    fail "ERROR: Unrecognized test file type: #{ file_name }"
+    die "unrecognized file name: #{ file_name }"
   end
 end
 
