@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+def main
+  file_name, line_number = ARGV
+  line_number_spec = (line_number ? ":#{ line_number }": '')
+
+  case file_name
+  when /spec\.rb$/
+    exec "bundle exec rspec -f d #{ file_name }" + line_number_spec
+  when /spec(\.js|\.js\.coffee|\.coffee)$/i
+    exec "bundle exec teaspoon --fail-fast -r spec/dummy/spec/teaspoon_env.rb #{ file_name }"
+  when /test\.rb$/
+    exec "bundle exec rake test TEST=#{ file_name }"
+  when /\.feature$/
+    exec "SELENIUM_DRIVER=true bundle exec cucumber -r features #{ file_name }" + line_number_spec
+  else
+    fail "ERROR: Unrecognized test file type: #{ file_name }"
+  end
+end
+
+main if $0 == __FILE__
