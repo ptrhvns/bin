@@ -27,7 +27,7 @@ done
 if [[ $RUBY = true ]]; then
     if [ -x "$(type -p gem)" ]; then
         echo ">>> Installing Ruby static analysis tools ..."
-        gem install flay flog haml-lint rubocop scss-lint
+        gem install flay flog haml-lint rubocop scss_lint
     else
         echo ">>> No 'gem' command found. Skipping Ruby static analysis tools."
     fi
