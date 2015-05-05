@@ -3,7 +3,7 @@
 set -e
 
 function usage {
-    echo "$(basename $0) [-B (bundle)] [-C (clean)] [-G (git)] [-h] [-N (nuke)] [-T (tests)]"
+    echo "$(basename $0) [-B (bundle)] [-C (clean)] [-G (git)] [-h] [-N (nuke)]"
 }
 
 BUNDLE=true
@@ -30,9 +30,6 @@ while getopts BGhNT opt; do
         N)
             NUKESCHEMAS=false
             ;;
-        T)
-            TESTS=false
-            ;;
     esac
 done
 
@@ -41,7 +38,7 @@ if [[ $GITPULL = true ]]; then
 
     if [[ -e "../list" ]]; then
         (
-            cd ..
+            cd ~/src/work/trampoline
             git pull-list
         )
     else
@@ -68,9 +65,4 @@ fi
 
 if [[ $NUKESCHEMAS = true ]]; then
     nuke_schemas
-fi
-
-if [[ $TESTS = true ]]; then
-    echo ">>> Running tests"
-    bundle exec rake
 fi
