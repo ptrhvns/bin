@@ -14,7 +14,7 @@ set -e
                 echo -ne "\033[0m"
                 echo ": repository is dirty"
             else
-                git gc
+                # git gc
                 git pull
 
                 if [ -e .gitmodules ]; then
