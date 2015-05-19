@@ -3,13 +3,14 @@
 set -e
 
 function usage {
-    echo "$(basename $0) [-B (bundle)] [-C (clean)] [-G (git)] [-h] [-N (nuke)]"
+    echo "$(basename $0) [-B (bundle)] [-C (clean)] [-G (git)] [-h] [-N (nuke)] [-S (setup_test_db)]"
 }
 
 BUNDLE=true
 CLEAN=true
 GITPULL=true
 NUKESCHEMAS=true
+SETUPTESTDB=true
 TESTS=true
 
 while getopts BGhNT opt; do
@@ -29,6 +30,9 @@ while getopts BGhNT opt; do
             ;;
         N)
             NUKESCHEMAS=false
+            ;;
+        S)
+            SETUPTESTDB=false
             ;;
     esac
 done
@@ -65,4 +69,9 @@ fi
 
 if [[ $NUKESCHEMAS = true ]]; then
     nuke_schemas
+fi
+
+if [[ $SETUPTESTDB = true ]]; then
+    echo ">>> setting up test database"
+    setup_test_db
 fi
