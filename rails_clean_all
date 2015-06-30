@@ -1,0 +1,13 @@
+ #!/usr/bin/env bash
+
+set -e
+
+(
+    if [ -e "spec/dummy" ]; then
+        cd spec/dummy
+    fi
+
+    bundle exec rake assets:clobber
+    bundle exec rake log:clear
+    bundle exec rake tmp:clear
+)
