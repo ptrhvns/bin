@@ -7,6 +7,9 @@ set -e
     cd ~/src/work/trampoline
 
     find . -type d -depth 1 | while read dir; do
-        echo $(cd $dir; git l | head -1 | awk '{print $2}'; git symbolic-ref HEAD | awk -F/ '{print $3}') $dir
+        (
+            cd $dir
+            printf "%-15s %-15s %s\n" $(git l | head -1 | awk '{print $2}') $(git symbolic-ref HEAD | awk -F/ '{print $3}') $(basename $(pwd))
+        )
     done
 )
