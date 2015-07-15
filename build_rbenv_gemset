@@ -24,4 +24,3 @@ gem install bundler $bundler_flag $bundler_flag_arg
 rbenv rehash
 bundle install --verbose
 rbenv rehash
-install_static_analysis_tools
