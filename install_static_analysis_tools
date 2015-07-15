@@ -3,13 +3,14 @@
 set -e
 
 function usage {
-    echo "$(basename $0) [-N (node)] [-R (ruby)]"
+    echo "$(basename $0) [-N (node)] [-R (ruby)] [-x (extended)]"
 }
 
 NODE=true
 RUBY=true
+EXTENDED=false
 
-while getopts NR opt; do
+while getopts hNRx opt; do
     case $opt in
         h)
             usage
@@ -21,13 +22,21 @@ while getopts NR opt; do
         R)
             RUBY=false
             ;;
+        x)
+            EXTENDED=true
+            ;;
     esac
 done
 
 if [[ $RUBY = true ]]; then
     if [ -x "$(type -p gem)" ]; then
         echo ">>> Installing Ruby static analysis tools ..."
-        gem install flay flog haml-lint rubocop scss_lint
+        gem install rubycritic rubocop scss_lint
+
+        if [[ $EXTENDED = true ]]; then
+            echo ">>> Installing extended Ruby static analysis tools ..."
+            gem install haml-lint
+        fi
     else
         echo ">>> No 'gem' command found. Skipping Ruby static analysis tools."
     fi
@@ -38,8 +47,13 @@ if [[ $NODE = true ]]; then
 
     if [ -x "$(type -p npm)" ]; then
         echo ">>> Installing Node.js static analysis tools ..."
-        npm install -g coffeelint csslint htmlhint jshint
+        npm install -g htmlhint jshint
+
+        if [[ $EXTENDED = true ]]; then
+            echo ">>> Installing extended Node.js static analysis tools ..."
+            npm install -g coffeelint csshint
+        fi
     else
-        echo ">>> No 'npm' command found. Skipping Node.js static analysis tools."
+        echo ">>> No 'npm' command found. Skipping extended Node.js static analysis tools."
     fi
 fi
