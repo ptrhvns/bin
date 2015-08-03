@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+echo ">>> My insertions"
+git log --author="$(git config user.name)" --pretty=tformat: --numstat | awk '{print $1}' | paste -sd+ - | bc
+
+echo
+
+echo ">>> My deletions"
+git log --author="$(git config user.name)" --pretty=tformat: --numstat | awk '{print $2}' | paste -sd+ - | bc
