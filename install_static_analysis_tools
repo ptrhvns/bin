@@ -47,7 +47,7 @@ if [[ $NODE = true ]]; then
 
     if [ -x "$(type -p npm)" ]; then
         echo ">>> Installing Node.js static analysis tools ..."
-        npm install -g htmlhint jshint
+        npm install -g htmlhint eslint
 
         if [[ $EXTENDED = true ]]; then
             echo ">>> Installing extended Node.js static analysis tools ..."
