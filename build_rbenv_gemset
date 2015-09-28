@@ -6,11 +6,9 @@ gemset_name=$1
 bundler_flag=$2
 bundler_flag_arg=$3
 
-set -u
-
-if [ -d "spec/dummy" ]; then
-    rm -rf Gemfile.lock
-fi
+# if [ -d "spec/dummy" ]; then
+    # rm -rf Gemfile.lock
+# fi
 
 rbenv_version=$(rbenv version | awk '{print $1}')
 
