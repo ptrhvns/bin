@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+set -e
+
+environment=$1
+
+(
+    echo ">>> Environment => $environment ... "
+    echo ">>> Working on member-portal ..."
+    cd ~/src/work/member-portal
+    echo ">>> ... Git branch => $(git rev-parse --abbrev-ref HEAD)"
+
+    echo
+    echo ">>> ... merging commits from origin/develop"
+    echo
+    if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
+        echo -n ">>> ..."
+        echo -ne "\033[38;5;124m"
+        echo -n "WARNING"
+        echo -ne "\033[0m"
+        echo ": repository is dirty"
+        exit 1
+    fi
+    git gc --auto
+    git fetch --prune
+    git merge origin/develop
+
+    echo
+    echo ">>> ... deploying"
+    echo
+    cap $environment deploy
+
+    echo
+    echo ">>> Working on ember-client ..."
+    cd ~/src/work/ember-client
+    echo ">>> ... Git branch => $(git rev-parse --abbrev-ref HEAD)"
+
+    echo
+    echo ">>> ... merging commits from origin/develop"
+    echo
+    if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
+        echo -n ">>> ..."
+        echo -ne "\033[38;5;124m"
+        echo -n "WARNING"
+        echo -ne "\033[0m"
+        echo ": repository is dirty"
+        exit 1
+    fi
+    git gc --auto
+    git fetch --prune
+    git merge origin/develop
+
+    echo
+    echo ">>> ... deploying"
+    echo
+    case $environment in
+        "rc")
+            ember build -prod && rsync -av dist/ venus@titan.is.covaleo.com:member-portal-rc/current/public
+            ;;
+        "qa")
+            ember build -prod && rsync -av dist/ venus@titan.is.covaleo.com:member-portal/current/public
+            ;;
+        "qa01")
+            ember build -prod && rsync -av dist/ venus@titan.is.covaleo.com:member-portal-qa01/current/public
+            ;;
+        "qa02")
+            ember build -prod && rsync -av dist/ venus@titan.is.covaleo.com:member-portal-qa02/current/public
+            ;;
+        "qa03")
+            ember build -prod && rsync -av dist/ venus@titan.is.covaleo.com:member-portal-qa03/current/public
+            ;;
+    esac
+
+    echo
+    echo ">>> Done. Restart JBoss on titan if needed."
+    echo
+)

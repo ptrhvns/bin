@@ -13,11 +13,9 @@ def main
   case file_name
   when /spec\.rb$/
     exec "bundle exec rspec -f d #{ file_name }" + line_number_spec
-  when /spec(\.js|\.js\.coffee|\.coffee)$/i
-    if File.exist?('./spec/dummy/lib/tasks/karma.rake')
-      exec 'bundle exec rake app:karma:run'
-    elsif File.exist?('./spec/dummy/spec/teaspoon_env.rb')
-      exec "bundle exec teaspoon --fail-fast -r spec/dummy/spec/teaspoon_env.rb #{ file_name }"
+  when /(test|spec).*(\.js|\.js\.coffee|\.coffee)$/i
+    if File.exist?('package.json')
+      exec "npm test"
     else
       die "can't figure out JavaScript test runner: #{ file_name }"
     end
