@@ -9,10 +9,8 @@ environment=$1
     echo ">>> Working on member-portal ..."
     cd ~/src/work/member-portal
     echo ">>> ... Git branch => $(git rev-parse --abbrev-ref HEAD)"
-
-    echo
     echo ">>> ... merging commits from origin/develop"
-    echo
+
     if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
         echo -n ">>> ..."
         echo -ne "\033[38;5;124m"
@@ -21,11 +19,11 @@ environment=$1
         echo ": repository is dirty"
         exit 1
     fi
+
     git gc --auto
     git fetch --prune
     git merge origin/develop
 
-    echo
     echo ">>> ... deploying"
     echo
     cap $environment deploy
@@ -34,10 +32,8 @@ environment=$1
     echo ">>> Working on ember-client ..."
     cd ~/src/work/ember-client
     echo ">>> ... Git branch => $(git rev-parse --abbrev-ref HEAD)"
-
-    echo
     echo ">>> ... merging commits from origin/develop"
-    echo
+
     if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
         echo -n ">>> ..."
         echo -ne "\033[38;5;124m"
@@ -46,11 +42,11 @@ environment=$1
         echo ": repository is dirty"
         exit 1
     fi
+
     git gc --auto
     git fetch --prune
     git merge origin/develop
 
-    echo
     echo ">>> ... deploying"
     echo
     case $environment in
