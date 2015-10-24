@@ -24,6 +24,7 @@ environment=$1
     git fetch --prune
     git merge origin/develop
 
+    echo
     echo ">>> ... deploying"
     echo
     cap $environment deploy
@@ -47,6 +48,7 @@ environment=$1
     git fetch --prune
     git merge origin/develop
 
+    echo
     echo ">>> ... deploying"
     echo
     case $environment in
