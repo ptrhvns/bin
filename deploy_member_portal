@@ -9,7 +9,6 @@ environment=$1
     echo ">>> Working on member-portal ..."
     cd ~/src/work/member-portal
     echo ">>> ... Git branch => $(git rev-parse --abbrev-ref HEAD)"
-    echo ">>> ... merging commits from origin/develop"
 
     if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
         echo -n ">>> ..."
@@ -20,6 +19,7 @@ environment=$1
         exit 1
     fi
 
+    echo ">>> ... merging commits from origin/develop"
     git gc --auto
     git fetch --prune
     git merge origin/develop
@@ -33,7 +33,6 @@ environment=$1
     echo ">>> Working on ember-client ..."
     cd ~/src/work/ember-client
     echo ">>> ... Git branch => $(git rev-parse --abbrev-ref HEAD)"
-    echo ">>> ... merging commits from origin/develop"
 
     if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
         echo -n ">>> ..."
@@ -44,6 +43,7 @@ environment=$1
         exit 1
     fi
 
+    echo ">>> ... merging commits from origin/develop"
     git gc --auto
     git fetch --prune
     git merge origin/develop
