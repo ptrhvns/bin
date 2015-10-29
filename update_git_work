@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+set -e
+
+(
+    echo ">>> Mounting thumbdrive"
+    diskutil unmount thumbdrive && mkdir /Volumes/thumbdrive && sudo mount -t hfs /dev/disk2s2 /Volumes/thumbdrive
+
+    for directory in bin doc/computer doc/personal doc/work src/rcfiles; do
+        thumbdrive_directory=/Volumes/thumbdrive/pete/$directory
+        home_directory=$HOME/$directory
+
+        if [[ -d $thumbdrive_directory ]]; then
+            echo ">>> Updating $thumbdrive_directory"
+            cd $thumbdrive_directory
+
+            if test $(git status -s 2> /dev/null | wc -l) -gt 0; then
+                echo -n ">>> ..."
+                echo -ne "\033[38;5;124m"
+                echo -n "WARNING"
+                echo -ne "\033[0m"
+                echo ": repository is dirty"
+                exit 1
+            else
+                git gc --auto
+                git pull $home_directory
+            fi
+
+            echo
+        fi
+
+        if [[ -d $home_directory ]]; then
+            echo ">>> Updating $home_directory"
+            cd $home_directory
+
+            if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
+                echo -n ">>> ..."
+                echo -ne "\033[38;5;124m"
+                echo -n "WARNING"
+                echo -ne "\033[0m"
+                echo ": repository is dirty"
+                exit 1
+            else
+                git gc --auto
+                git pull $thumbdrive_directory
+
+                if [ -e .gitmodules ]; then
+                    git submodule init
+                    git submodule update
+                fi
+            fi
+
+            echo
+        fi
+    done
+
+    echo "Unmounting thumbdrive"
+    cd && diskutil unmount thumbdrive
+
+    echo
+)
