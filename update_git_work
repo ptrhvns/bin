@@ -54,7 +54,7 @@ set -e
         fi
     done
 
-    echo "Unmounting thumbdrive"
+    echo ">>> Unmounting thumbdrive"
     cd && diskutil unmount thumbdrive
 
     echo
