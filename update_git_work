@@ -20,7 +20,6 @@ set -e
                 echo -n "WARNING"
                 echo -ne "\033[0m"
                 echo ": repository is dirty"
-                exit 1
             else
                 git gc --auto
                 git pull $home_directory
@@ -39,7 +38,6 @@ set -e
                 echo -n "WARNING"
                 echo -ne "\033[0m"
                 echo ": repository is dirty"
-                exit 1
             else
                 git gc --auto
                 git pull $thumbdrive_directory
