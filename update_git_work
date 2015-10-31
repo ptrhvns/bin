@@ -2,17 +2,30 @@
 
 set -e
 
+echo ">>> Updating from thumbdrive ..."
+echo
+
+thumbdrive_directory=/Volumes/thumbdrive
+
+if [ ! -d $thumbdrive_directory ]; then
+    echo ">>> No thumbdrive mounted. Skipping update."
+    echo
+    exit 0
+fi
+
 (
-    echo ">>> Mounting thumbdrive"
-    diskutil unmount thumbdrive && mkdir /Volumes/thumbdrive && sudo mount -t hfs /dev/disk2s2 /Volumes/thumbdrive
+    if [ ! $SKIP_THUMBDRIVE_REMOUNT ]; then
+        echo ">>> Re-mounting thumbdrive"
+        diskutil unmount thumbdrive && mkdir /Volumes/thumbdrive && sudo mount -t hfs /dev/disk2s2 /Volumes/thumbdrive
+    fi
 
     for directory in bin doc/computer doc/personal doc/work src/rcfiles; do
-        thumbdrive_directory=/Volumes/thumbdrive/pete/$directory
-        home_directory=$HOME/$directory
+        thumbdrive_subdirectory=$thumbdrive_directory/pete/$directory
+        home_subdirectory=$HOME/$directory
 
-        if [[ -d $thumbdrive_directory ]]; then
-            echo ">>> Updating $thumbdrive_directory"
-            cd $thumbdrive_directory
+        if [[ -d $thumbdrive_subdirectory ]]; then
+            echo ">>> Updating $thumbdrive_subdirectory"
+            cd $thumbdrive_subdirectory
 
             if test $(git status -s 2> /dev/null | wc -l) -gt 0; then
                 echo -n ">>> ..."
@@ -22,15 +35,15 @@ set -e
                 echo ": repository is dirty"
             else
                 git gc --auto
-                git pull $home_directory
+                git pull $home_subdirectory
             fi
 
             echo
         fi
 
-        if [[ -d $home_directory ]]; then
-            echo ">>> Updating $home_directory"
-            cd $home_directory
+        if [[ -d $home_subdirectory ]]; then
+            echo ">>> Updating $home_subdirectory"
+            cd $home_subdirectory
 
             if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
                 echo -n ">>> ..."
@@ -40,7 +53,7 @@ set -e
                 echo ": repository is dirty"
             else
                 git gc --auto
-                git pull $thumbdrive_directory
+                git pull $thumbdrive_subdirectory
 
                 if [ -e .gitmodules ]; then
                     git submodule init

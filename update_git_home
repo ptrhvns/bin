@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 
+set -e
+
+SKIP_THUMBDRIVE_REMOUNT=true update_git_work
+
+echo ">>> Updating from remote ..."
+echo
+
 (
-    for directory in $HOME/bin $HOME/doc/computer $HOME/doc/personal $HOME/doc/project $HOME/doc/work $HOME/src/rcfiles $HOME/src/personal/*; do
+    for directory in $HOME/bin $HOME/doc/* $HOME/src/rcfiles $HOME/src/personal/*; do
         if [[ -d $directory ]]; then
             echo ">>> Updating $directory"
             cd $directory
