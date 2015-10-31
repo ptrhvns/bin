@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+echo ">>> Updating all ..."
+echo
+
 update_brew
 update_node
 update_vim
