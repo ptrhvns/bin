@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo ">>> Updating all ..."
+echo ">>> Updating all (home) ..."
 echo
 
 update_brew

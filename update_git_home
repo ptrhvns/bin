@@ -4,7 +4,7 @@ set -e
 
 SKIP_THUMBDRIVE_REMOUNT=true update_git_work
 
-echo ">>> Updating from remote ..."
+echo ">>> Updating Git from remote ..."
 echo
 
 (

@@ -2,7 +2,7 @@
 
 set -e
 
-echo ">>> Updating from thumbdrive ..."
+echo ">>> Updating Git from thumbdrive ..."
 echo
 
 thumbdrive_directory=/Volumes/thumbdrive
