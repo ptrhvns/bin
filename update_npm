@@ -2,7 +2,7 @@
 
 set -e
 
-echo ">>> Updating Node ..."
+echo ">>> Updating npm ..."
 echo
 
 [[ -x "$(type -p npm)" ]] && npm -g update

@@ -2,7 +2,7 @@
 
 set -e
 
-echo ">>> Updating brew ..."
+echo ">>> Updating Homebrew ..."
 echo
 
 (
