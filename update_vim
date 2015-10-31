@@ -9,3 +9,5 @@ echo
     cd ~/src/rcfiles
     git submodule foreach git pull -q origin master
 )
+
+echo

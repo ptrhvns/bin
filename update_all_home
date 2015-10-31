@@ -7,3 +7,5 @@ update_homebrew
 update_npm
 update_vim
 update_git_home
+
+echo

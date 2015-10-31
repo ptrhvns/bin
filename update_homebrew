@@ -9,3 +9,5 @@ echo
     unset DYLD_LIBRARY_PATH
     [[ -x "$(type -p brew)" ]] && brew update && brew upgrade --all
 )
+
+echo
