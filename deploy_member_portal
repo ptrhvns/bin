@@ -2,6 +2,26 @@
 
 set -e
 
+function usage {
+    echo "$(basename $0) [-M]"
+    echo
+    echo "-M    don't merge in develop before deploying"
+}
+
+MERGE_DEVELOP=true
+
+while getopts M: opt; do
+    case $opt in
+        h)
+            usage
+            exit 0
+            ;;
+        M)
+            MERGE_DEVELOP=false
+            ;;
+    esac
+done
+
 environment=$1
 
 (
@@ -13,16 +33,27 @@ environment=$1
     if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
         echo -n ">>> ..."
         echo -ne "\033[38;5;124m"
-        echo -n "WARNING"
+        echo -n "ERROR"
         echo -ne "\033[0m"
         echo ": repository is dirty"
         exit 1
     fi
 
-    echo ">>> ... merging commits from origin/develop"
-    git gc --auto
-    git fetch --prune
-    git merge origin/develop
+    if [[ $MERGE_DEVELOP = true ]]; then
+        echo ">>> ... merging commits from origin/develop"
+        git gc --auto
+        git fetch --prune
+        git merge origin/develop
+    fi
+
+    if [[ $(git diff --name-only --diff-filter=U | wc -l) -gt 0 ]]; then
+        echo -n ">>> ..."
+        echo -ne "\033[38;5;124m"
+        echo -n "ERROR"
+        echo -ne "\033[0m"
+        echo ": there were merge conflicts"
+        exit 1
+    fi
 
     echo
     echo ">>> ... deploying"
@@ -37,16 +68,27 @@ environment=$1
     if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
         echo -n ">>> ..."
         echo -ne "\033[38;5;124m"
-        echo -n "WARNING"
+        echo -n "ERROR"
         echo -ne "\033[0m"
         echo ": repository is dirty"
         exit 1
     fi
 
-    echo ">>> ... merging commits from origin/develop"
-    git gc --auto
-    git fetch --prune
-    git merge origin/develop
+    if [[ $MERGE_DEVELOP = true ]]; then
+        echo ">>> ... merging commits from origin/develop"
+        git gc --auto
+        git fetch --prune
+        git merge origin/develop
+    fi
+
+    if [[ $(git diff --name-only --diff-filter=U | wc -l) -gt 0 ]]; then
+        echo -n ">>> ..."
+        echo -ne "\033[38;5;124m"
+        echo -n "ERROR"
+        echo -ne "\033[0m"
+        echo ": there were merge conflicts"
+        exit 1
+    fi
 
     echo
     echo ">>> ... deploying"
