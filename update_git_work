@@ -14,6 +14,24 @@ if [ ! -d $thumbdrive_directory ]; then
 fi
 
 (
+    for directory in bin doc/computer doc/personal doc/work src/rcfiles; do
+        home_subdirectory=$HOME/$directory
+
+        if [[ -d $thumbdrive_subdirectory ]]; then
+            echo ">>> Checking Git status of $home_subdirectory"
+            cd $home_subdirectory
+
+            if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
+                echo -n ">>> ..."
+                echo -ne "\033[38;5;124m"
+                echo -n "WARNING"
+                echo -ne "\033[0m"
+                echo ": repository is dirty"
+                exit 1
+            fi
+        fi
+    done
+
     if [ ! $SKIP_THUMBDRIVE_REMOUNT ]; then
         echo ">>> Re-mounting thumbdrive"
         diskutil unmount thumbdrive && mkdir /Volumes/thumbdrive && sudo mount -t hfs /dev/disk2s2 /Volumes/thumbdrive
