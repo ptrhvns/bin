@@ -3,14 +3,14 @@
 set -e
 
 function usage {
-    echo "$(basename $0) [-M]"
+    echo "$(basename $0) [-hM] <environment>"
     echo
     echo "-M    don't merge in develop before deploying"
 }
 
 MERGE_DEVELOP=true
 
-while getopts M: opt; do
+while getopts hM opt; do
     case $opt in
         h)
             usage
@@ -23,6 +23,7 @@ while getopts M: opt; do
 done
 
 environment=$1
+# shift
 
 (
     echo ">>> Environment => $environment ... "
@@ -39,21 +40,21 @@ environment=$1
         exit 1
     fi
 
-    if [[ $MERGE_DEVELOP = true ]]; then
-        echo ">>> ... merging commits from origin/develop"
-        git gc --auto
-        git fetch --prune
-        git merge origin/develop
-    fi
+    # if [[ $MERGE_DEVELOP = true ]]; then
+        # echo ">>> ... merging commits from origin/develop"
+        # git gc --auto
+        # git fetch --prune
+        # git merge origin/develop
+    # fi
 
-    if [[ $(git diff --name-only --diff-filter=U | wc -l) -gt 0 ]]; then
-        echo -n ">>> ..."
-        echo -ne "\033[38;5;124m"
-        echo -n "ERROR"
-        echo -ne "\033[0m"
-        echo ": there were merge conflicts"
-        exit 1
-    fi
+    # if [[ $(git diff --name-only --diff-filter=U | wc -l) -gt 0 ]]; then
+        # echo -n ">>> ..."
+        # echo -ne "\033[38;5;124m"
+        # echo -n "ERROR"
+        # echo -ne "\033[0m"
+        # echo ": there were merge conflicts"
+        # exit 1
+    # fi
 
     echo
     echo ">>> ... deploying"
@@ -74,26 +75,29 @@ environment=$1
         exit 1
     fi
 
-    if [[ $MERGE_DEVELOP = true ]]; then
-        echo ">>> ... merging commits from origin/develop"
-        git gc --auto
-        git fetch --prune
-        git merge origin/develop
-    fi
+    # if [[ $MERGE_DEVELOP = true ]]; then
+        # echo ">>> ... merging commits from origin/develop"
+        # git gc --auto
+        # git fetch --prune
+        # git merge origin/develop
+    # fi
 
-    if [[ $(git diff --name-only --diff-filter=U | wc -l) -gt 0 ]]; then
-        echo -n ">>> ..."
-        echo -ne "\033[38;5;124m"
-        echo -n "ERROR"
-        echo -ne "\033[0m"
-        echo ": there were merge conflicts"
-        exit 1
-    fi
+    # if [[ $(git diff --name-only --diff-filter=U | wc -l) -gt 0 ]]; then
+        # echo -n ">>> ..."
+        # echo -ne "\033[38;5;124m"
+        # echo -n "ERROR"
+        # echo -ne "\033[0m"
+        # echo ": there were merge conflicts"
+        # exit 1
+    # fi
 
     echo
     echo ">>> ... deploying"
     echo
     case $environment in
+        "harken")
+            ember build -prod && rsync -av dist/ venus@titan.is.covaleo.com:member-portal-harken/current/public
+            ;;
         "rc")
             ember build -prod && rsync -av dist/ venus@titan.is.covaleo.com:member-portal-rc/current/public
             ;;
