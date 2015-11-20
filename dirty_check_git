@@ -1,0 +1,51 @@
+#/usr/bin/env bash
+
+set -e
+
+found_dirty=false
+thumbdrive_directory=/Volumes/thumbdrive
+
+(
+    for directory in bin doc/computer doc/personal doc/work src/rcfiles; do
+        thumbdrive_subdirectory=$thumbdrive_directory/pete/$directory
+        home_subdirectory=$HOME/$directory
+
+        if [[ -d $thumbdrive_subdirectory ]]; then
+            echo ">>> Checking Git status of $thumbdrive_subdirectory"
+            cd $thumbdrive_subdirectory
+
+            if test $(git status -s 2> /dev/null | wc -l) -gt 0; then
+                echo -n ">>> ..."
+                echo -ne "\033[38;5;124m"
+                echo -n "WARNING"
+                echo -ne "\033[0m"
+                echo ": repository is dirty"
+                found_dirty=true
+            fi
+
+            echo
+        fi
+
+        if [[ -d $home_subdirectory ]]; then
+            echo ">>> Checking Git status of $home_subdirectory"
+            cd $home_subdirectory
+
+            if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
+                echo -n ">>> ..."
+                echo -ne "\033[38;5;124m"
+                echo -n "WARNING"
+                echo -ne "\033[0m"
+                echo ": repository is dirty"
+                found_dirty=true
+            fi
+
+            echo
+        fi
+    done
+
+    if [[ $found_dirty -eq true ]]; then
+        exit 1
+    else
+        exit 0
+    fi
+)
