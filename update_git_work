@@ -10,7 +10,7 @@ echo
 thumbdrive_directory=/Volumes/thumbdrive
 
 if [ ! -d $thumbdrive_directory ]; then
-    echo ">>> No thumbdrive mounted. Skipping update."
+    echo ">>> No thumbdrive mounted. Skipping work update."
     echo
     exit 0
 fi
