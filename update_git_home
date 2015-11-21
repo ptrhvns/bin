@@ -4,7 +4,7 @@ set -e
 
 dirty_check_git
 
-SKIP_THUMBDRIVE_REMOUNT=true
+export SKIP_THUMBDRIVE_REMOUNT=true
 update_git_work
 
 echo ">>> Updating Git from remote ..."
