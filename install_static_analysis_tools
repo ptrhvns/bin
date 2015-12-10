@@ -31,7 +31,7 @@ done
 if [[ $RUBY = true ]]; then
     if [ -x "$(type -p gem)" ]; then
         echo ">>> Installing Ruby static analysis tools ..."
-        gem install rubycritic rubocop scss_lint
+        gem install brakeman bundler-audit rubocop rubycritic scss_lint
 
         if [[ $EXTENDED = true ]]; then
             echo ">>> Installing extended Ruby static analysis tools ..."
