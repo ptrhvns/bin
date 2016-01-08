@@ -14,8 +14,8 @@ def main
   when /spec\.rb$/
     exec "bundle exec rspec -f d #{ file_name }" + line_number_spec
   when /(test|spec).*(\.js|\.js\.coffee|\.coffee)$/i
-    if File.exist?('package.json')
-      exec "npm test"
+    if File.exist?('./node_modules/.bin/mocha')
+      exec "./node_modules/.bin/mocha #{ file_name }"
     else
       die "can't figure out JavaScript test runner: #{ file_name }"
     end
