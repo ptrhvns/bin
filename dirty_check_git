@@ -1,4 +1,4 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 
 set -e
 
@@ -6,13 +6,11 @@ found_dirty=false
 thumbdrive_directory=/Volumes/thumbdrive
 
 (
-    for directory in bin doc/computer doc/personal doc/work src/rcfiles; do
-        thumbdrive_subdirectory=$thumbdrive_directory/pete/$directory
-        home_subdirectory=$HOME/$directory
+    for directory in $thumdrive_directory/pete/bin $thumdrive_directory/doc/* $thumdrive_directory/src/rcfiles $thumdrive_directory/src/personal/*; do
 
-        if [[ -d $thumbdrive_subdirectory ]]; then
-            echo ">>> Checking Git status of $thumbdrive_subdirectory"
-            cd $thumbdrive_subdirectory
+        if [[ -d $directory ]]; then
+            echo ">>> Checking Git status of $directory"
+            cd $directory
 
             if test $(git status -s 2> /dev/null | wc -l) -gt 0; then
                 echo -n ">>> ..."
@@ -25,10 +23,12 @@ thumbdrive_directory=/Volumes/thumbdrive
 
             echo
         fi
+    done
 
-        if [[ -d $home_subdirectory ]]; then
-            echo ">>> Checking Git status of $home_subdirectory"
-            cd $home_subdirectory
+    for directory in $HOME/bin $HOME/doc/* $HOME/src/rcfiles $HOME/src/personal/*; do
+        if [[ -d $directory ]]; then
+            echo ">>> Checking Git status of $directory"
+            cd $directory
 
             if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
                 echo -n ">>> ..."
