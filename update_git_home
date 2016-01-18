@@ -27,6 +27,8 @@ echo
 
                 git push
                 echo
+            else
+                echo ">>> Skipping $directory: no remote named origin"
             fi
         fi
     done
