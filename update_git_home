@@ -7,29 +7,29 @@ dirty_check_git
 export SKIP_THUMBDRIVE_REMOUNT=true
 update_git_work
 
-echo ">>> Updating Git from remote ..."
-echo
+# echo ">>> Updating Git from remote ..."
+# echo
 
-(
-    for directory in $HOME/bin $HOME/doc/* $HOME/src/rcfiles $HOME/src/personal/*; do
-        if [[ -d $directory ]]; then
-            cd $directory
+# (
+    # for directory in $HOME/bin $HOME/doc/* $HOME/src/rcfiles $HOME/src/personal/*; do
+        # if [[ -d $directory ]]; then
+            # cd $directory
 
-            if [ $(git remote -v | grep "origin" | wc -l) -gt 0 ]; then
-                echo ">>> Updating $directory"
-                git gc --auto
-                git pull
+            # if [ $(git remote -v | grep "origin" | wc -l) -gt 0 ]; then
+                # echo ">>> Updating $directory"
+                # git gc --auto
+                # git pull
 
-                if [ -e .gitmodules ]; then
-                    git submodule init
-                    git submodule update
-                fi
+                # if [ -e .gitmodules ]; then
+                    # git submodule init
+                    # git submodule update
+                # fi
 
-                git push
-                echo
-            else
-                echo ">>> Skipping $directory: no remote named origin"
-            fi
-        fi
-    done
-)
+                # git push
+                # echo
+            # else
+                # echo ">>> Skipping $directory: no remote named origin"
+            # fi
+        # fi
+    # done
+# )
