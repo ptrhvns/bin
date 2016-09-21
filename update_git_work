@@ -32,8 +32,8 @@ fi
         if [[ -d $thumbdrive_subdirectory ]]; then
             echo ">>> Updating $thumbdrive_subdirectory"
             cd $thumbdrive_subdirectory
-            # git gc --auto
-            # git pull $home_subdirectory
+            git gc --auto
+            git pull $home_subdirectory
             echo
         fi
 
@@ -41,12 +41,12 @@ fi
             echo ">>> Updating $home_subdirectory"
             cd $home_subdirectory
             # git gc --auto
-            # git pull $thumbdrive_subdirectory
+            git pull $thumbdrive_subdirectory
 
-            # if [ -e .gitmodules ]; then
-                # git submodule init
-                # git submodule update
-            # fi
+            if [ -e .gitmodules ]; then
+                git submodule init
+                git submodule update
+            fi
 
             echo
         fi
