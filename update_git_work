@@ -27,7 +27,11 @@ fi
         thumbdrive_subdirectory=$thumbdrive_directory/pete/$directory
         home_subdirectory=$HOME/$directory
 
-        mkdir -p $thumbdrive_subdirectory
+        if [[ ! -d $thumbdrive_subdirectory ]]; then
+            mkdir -p $thumbdrive_subdirectory
+            cd $thumbdrive_subdirectory
+            git init
+        fi
 
         if [[ -d $thumbdrive_subdirectory ]]; then
             echo ">>> Updating $thumbdrive_subdirectory"
