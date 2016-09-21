@@ -32,6 +32,7 @@ fi
         if [[ -d $thumbdrive_subdirectory ]]; then
             echo ">>> Updating $thumbdrive_subdirectory"
             cd $thumbdrive_subdirectory
+            git init
             git gc --auto
             git pull $home_subdirectory
             echo
