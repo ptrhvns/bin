@@ -95,19 +95,19 @@ for i in $(seq 0 $(expr $git_home_directories_length - 1)); do
         echo
     fi
 
-    if [[ -d $src ]]; then
-        echo ">>> Updating $src"
-        cd $src
-        git gc --auto
-        git pull $dest
+    # if [[ -d $src ]]; then
+        # echo ">>> Updating $src"
+        # cd $src
+        # git gc --auto
+        # git pull $dest
 
-        if [ -e .gitmodules ]; then
-            git submodule init
-            git submodule update
-        fi
+        # if [ -e .gitmodules ]; then
+            # git submodule init
+            # git submodule update
+        # fi
 
-        echo
-    fi
+        # echo
+    # fi
 done
 
 echo ">>> Unmounting thumbdrive"
