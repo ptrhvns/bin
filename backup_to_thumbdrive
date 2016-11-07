@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+
+set -e
+
+dirty_check_git
+
+thumbdrive_directory=/Volumes/thumbdrive
+
+if [ ! -d $thumbdrive_directory ]; then
+    echo -n ">>> "
+    echo -ne "\033[38;5;124m"
+    echo -n "ERROR"
+    echo -ne "\033[0m"
+    echo ": thumbdrive directory not found: ${thumbdrive_directory}"
+    echo
+    exit 1
+fi
+
+git_home_directories=(
+    ~/bin
+    ~/doc/computer
+    ~/doc/personal
+    ~/doc/project
+    ~/doc/work
+    ~/src/personal/99bottles
+    ~/src/personal/algorithms
+    ~/src/personal/angular2-reddit-base
+    ~/src/personal/angular2-tour-of-heroes
+    ~/src/personal/codeschool
+    ~/src/personal/ember-cli-star-rating
+    ~/src/personal/foreclojure
+    ~/src/personal/js-assessment
+    ~/src/personal/my-new-app
+    ~/src/personal/project
+    ~/src/personal/rarwe
+    ~/src/personal/react_tutorial
+    ~/src/personal/sandbox
+    ~/src/personal/tdd_presentation
+    ~/src/rcfiles
+)
+
+git_thumbdrive_directories=(
+    $thumbdrive_directory/pete/bin
+    $thumbdrive_directory/pete/doc/computer
+    $thumbdrive_directory/pete/doc/personal
+    $thumbdrive_directory/pete/doc/project
+    $thumbdrive_directory/pete/doc/work
+    $thumbdrive_directory/pete/src/personal/99bottles
+    $thumbdrive_directory/pete/src/personal/algorithms
+    $thumbdrive_directory/pete/src/personal/angular2-reddit-base
+    $thumbdrive_directory/pete/src/personal/angular2-tour-of-heroes
+    $thumbdrive_directory/pete/src/personal/codeschool
+    $thumbdrive_directory/pete/src/personal/ember-cli-star-rating
+    $thumbdrive_directory/pete/src/personal/foreclojure
+    $thumbdrive_directory/pete/src/personal/js-assessment
+    $thumbdrive_directory/pete/src/personal/my-new-app
+    $thumbdrive_directory/pete/src/personal/project
+    $thumbdrive_directory/pete/src/personal/rarwe
+    $thumbdrive_directory/pete/src/personal/react_tutorial
+    $thumbdrive_directory/pete/src/personal/sandbox
+    $thumbdrive_directory/pete/src/personal/tdd_presentation
+    $thumbdrive_directory/pete/src/rcfiles
+)
+
+git_home_directories_length=${#git_home_directories[@]}
+
+if [ $git_home_directories_length -lt 1 ]; then
+    echo -n ">>> "
+    echo -ne "\033[38;5;124m"
+    echo -n "ERROR"
+    echo -ne "\033[0m"
+    echo ": no Git repositories list in home directory"
+    echo
+    exit 1
+fi
+
+for i in $(seq 0 $(expr $git_home_directories_length - 1)); do
+    src=${git_home_directories[$i]}
+    dest=${git_thumbdrive_directories[$i]}
+
+    if [[ ! -d $dest ]]; then
+        mkdir -p $dest
+    fi
+
+    if [[ -d $dest ]]; then
+        echo ">>> Updating $dest"
+        cd $dest
+
+        # if [ ! -d .git ]; then
+            # git init
+        # fi;
+
+        git gc --auto
+        git pull $src
+        echo
+    fi
+
+    if [[ -d $src ]]; then
+        echo ">>> Updating $src"
+        cd $src
+        git gc --auto
+        git pull $dest
+
+        if [ -e .gitmodules ]; then
+            git submodule init
+            git submodule update
+        fi
+
+        echo
+    fi
+done
+
+echo ">>> Unmounting thumbdrive"
+cd && diskutil unmount thumbdrive
+
+echo
