@@ -44,6 +44,12 @@ thumbdrive_directory=/Volumes/thumbdrive
     done
 
     if [ "$found_dirty" = true ]; then
+        echo -n ">>> "
+        echo -ne "\033[38;5;124m"
+        echo -n "ERROR"
+        echo -ne "\033[0m"
+        echo ": dirty Git repositories found"
+        echo
         exit 1
     else
         exit 0
