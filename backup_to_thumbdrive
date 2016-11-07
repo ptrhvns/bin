@@ -78,11 +78,16 @@ for i in $(seq 0 $(expr $git_home_directories_length - 1)); do
     src=${git_home_directories[$i]}
     dest=${git_thumbdrive_directories[$i]}
 
-    if [[ ! -d $dest ]]; then
-        mkdir -p $dest
-    fi
+    (
+        cd $src
+        git gc --auto
+    )
 
-    if [[ -d $dest ]]; then
+    if [[ ! -d $dest ]]; then
+        echo ">>> Creating $dest"
+        mkdir -p $(dirname $dest)
+        git clone $src $dest
+    else
         echo ">>> Updating $dest"
         cd $dest
 
