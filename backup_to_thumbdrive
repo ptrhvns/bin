@@ -87,6 +87,7 @@ for i in $(seq 0 $(expr $git_home_directories_length - 1)); do
         echo ">>> Creating $dest"
         mkdir -p $(dirname $dest)
         git clone $src $dest
+        echo
     else
         echo ">>> Updating $dest"
         cd $dest
