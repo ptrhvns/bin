@@ -7,7 +7,7 @@ echo
 
 (
     unset DYLD_LIBRARY_PATH
-    [[ -x "$(type -p brew)" ]] && brew update && brew upgrade --all
+    [[ -x "$(type -p brew)" ]] && brew update && brew upgrade
 )
 
 echo
