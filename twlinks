@@ -28,6 +28,7 @@ FILTERS = [
   /instagram\.com/,
   /twitpic\.com/,
   /twitter.*status.*photo/,
+  /twitter\.com/,
   /untappd\.com/
 ]
 
