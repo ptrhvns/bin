@@ -21,7 +21,6 @@ git_home_directories=(
     ~/doc/computer
     ~/doc/personal
     ~/doc/project
-    ~/doc/work
     ~/src/personal/99bottles
     ~/src/personal/algorithms
     ~/src/personal/angular2-reddit-base
@@ -44,7 +43,6 @@ git_thumbdrive_directories=(
     $thumbdrive_directory/pete/doc/computer
     $thumbdrive_directory/pete/doc/personal
     $thumbdrive_directory/pete/doc/project
-    $thumbdrive_directory/pete/doc/work
     $thumbdrive_directory/pete/src/personal/99bottles
     $thumbdrive_directory/pete/src/personal/algorithms
     $thumbdrive_directory/pete/src/personal/angular2-reddit-base
