@@ -6,13 +6,13 @@ def die(msg)
 end
 
 def main
-  file_name, line_number = ARGV
+  file_name, target = ARGV
   die 'no file name given' unless file_name
-  line_number_spec = (line_number ? ":#{ line_number }" : '')
 
   case file_name
   when /spec\.rb$/
-    exec "bundle exec rspec -f d #{ file_name }" + line_number_spec
+    line_number_spec = (target ? ":#{ target }" : '')
+    exec "bundle exec rspec -f d #{ file_name }#{ line_number_spec }"
   when /\.js$/i
     if File.exist?('./node_modules/.bin/mocha')
       exec "./node_modules/.bin/mocha #{ file_name }"
@@ -22,7 +22,20 @@ def main
   when /test\.rb$/
     exec "bundle exec rake test TEST=#{ file_name }"
   when /\.feature$/
-    exec "SELENIUM_DRIVER=true bundle exec cucumber -r features #{ file_name }" + line_number_spec
+    line_number_spec = (target ? ":#{ target }" : '')
+    exec "SELENIUM_DRIVER=true bundle exec cucumber -r features #{ file_name }#{ line_number_spec }"
+  when /test.*\.py$/
+    if File.exist?('manage.py')
+      label = File.basename(File.dirname(file_name))
+      pattern = File.basename(file_name)
+      if target
+        exec "python manage.py test #{label} --pattern='*#{pattern}' --tag=only"
+      else
+        exec "python manage.py test #{label} --pattern='*#{pattern}'"
+      end
+    else
+      die "couldn't find Python testing strategy: #{ file_name }"
+    end
   else
     die "unrecognized file name: #{ file_name }"
   end
