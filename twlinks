@@ -50,6 +50,8 @@ class CLI < Thor
   private
 
   def build_command
+    t_path = `which t`
+    raise 'failed to find `t` command' unless File.executable?(t_path)
     command = "command t timeline -c -n #{ RESULT_LIMIT }"
     previous_id = File.exist?(RCFILENAME) ? File.read(RCFILENAME).to_i : 0
     command << " -s #{ (previous_id + 1) }" if previous_id > 0
