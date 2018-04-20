@@ -18,45 +18,69 @@ fi
 
 git_home_directories=(
     ~/bin
-    ~/doc/computer
     ~/doc/personal
-    ~/doc/project
+    ~/doc/professional
+    ~/doc/projects
     ~/src/personal/99bottles
     ~/src/personal/algorithms
+    ~/src/personal/alt-project
     ~/src/personal/angular2-reddit-base
     ~/src/personal/angular2-tour-of-heroes
     ~/src/personal/codeschool
+    ~/src/personal/css-grid
     ~/src/personal/ember-cli-star-rating
+    ~/src/personal/example
+    ~/src/personal/food
     ~/src/personal/foreclojure
     ~/src/personal/js-assessment
+    ~/src/personal/landingpage
+    ~/src/personal/mealhawk
     ~/src/personal/my-new-app
-    ~/src/personal/project
+    ~/src/personal/mysite
+    ~/src/personal/rails
     ~/src/personal/rarwe
     ~/src/personal/react_tutorial
+    ~/src/personal/rust_book
     ~/src/personal/sandbox
     ~/src/personal/tdd_presentation
+    ~/src/personal/vetorocket
+    ~/src/personal/vue_guide
+    ~/src/personal/wt
+    ~/src/personal/xtap
     ~/src/rcfiles
 )
 
 git_thumbdrive_directories=(
     $thumbdrive_directory/pete/bin
-    $thumbdrive_directory/pete/doc/computer
     $thumbdrive_directory/pete/doc/personal
-    $thumbdrive_directory/pete/doc/project
+    $thumbdrive_directory/pete/doc/professional
+    $thumbdrive_directory/pete/doc/projects
     $thumbdrive_directory/pete/src/personal/99bottles
     $thumbdrive_directory/pete/src/personal/algorithms
+    $thumbdrive_directory/pete/src/personal/alt-project
     $thumbdrive_directory/pete/src/personal/angular2-reddit-base
     $thumbdrive_directory/pete/src/personal/angular2-tour-of-heroes
     $thumbdrive_directory/pete/src/personal/codeschool
+    $thumbdrive_directory/pete/src/personal/css-grid
     $thumbdrive_directory/pete/src/personal/ember-cli-star-rating
+    $thumbdrive_directory/pete/src/personal/example
+    $thumbdrive_directory/pete/src/personal/food
     $thumbdrive_directory/pete/src/personal/foreclojure
     $thumbdrive_directory/pete/src/personal/js-assessment
+    $thumbdrive_directory/pete/src/personal/landingpage
+    $thumbdrive_directory/pete/src/personal/mealhawk
     $thumbdrive_directory/pete/src/personal/my-new-app
-    $thumbdrive_directory/pete/src/personal/project
+    $thumbdrive_directory/pete/src/personal/mysite
+    $thumbdrive_directory/pete/src/personal/rails
     $thumbdrive_directory/pete/src/personal/rarwe
     $thumbdrive_directory/pete/src/personal/react_tutorial
+    $thumbdrive_directory/pete/src/personal/rust_book
     $thumbdrive_directory/pete/src/personal/sandbox
     $thumbdrive_directory/pete/src/personal/tdd_presentation
+    $thumbdrive_directory/pete/src/personal/vetorocket
+    $thumbdrive_directory/pete/src/personal/vue_guide
+    $thumbdrive_directory/pete/src/personal/wt
+    $thumbdrive_directory/pete/src/personal/xtap
     $thumbdrive_directory/pete/src/rcfiles
 )
 
