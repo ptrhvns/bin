@@ -29,7 +29,6 @@ git_home_directories=(
     ~/src/personal/codeschool
     ~/src/personal/css-grid
     ~/src/personal/ember-cli-star-rating
-    ~/src/personal/example
     ~/src/personal/food
     ~/src/personal/foreclojure
     ~/src/personal/js-assessment
@@ -63,7 +62,6 @@ git_thumbdrive_directories=(
     $thumbdrive_directory/pete/src/personal/codeschool
     $thumbdrive_directory/pete/src/personal/css-grid
     $thumbdrive_directory/pete/src/personal/ember-cli-star-rating
-    $thumbdrive_directory/pete/src/personal/example
     $thumbdrive_directory/pete/src/personal/food
     $thumbdrive_directory/pete/src/personal/foreclojure
     $thumbdrive_directory/pete/src/personal/js-assessment
