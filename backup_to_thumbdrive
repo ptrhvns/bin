@@ -44,7 +44,6 @@ git_home_directories=(
     ~/src/personal/tdd_presentation
     ~/src/personal/vetorocket
     ~/src/personal/vue_guide
-    ~/src/personal/wt
     ~/src/personal/xtap
     ~/src/rcfiles
 )
@@ -77,7 +76,6 @@ git_thumbdrive_directories=(
     $thumbdrive_directory/pete/src/personal/tdd_presentation
     $thumbdrive_directory/pete/src/personal/vetorocket
     $thumbdrive_directory/pete/src/personal/vue_guide
-    $thumbdrive_directory/pete/src/personal/wt
     $thumbdrive_directory/pete/src/personal/xtap
     $thumbdrive_directory/pete/src/rcfiles
 )
