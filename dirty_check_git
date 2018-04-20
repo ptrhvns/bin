@@ -21,7 +21,7 @@ thumbdrive_directory=/Volumes/thumbdrive
                 found_dirty=true
             fi
 
-            echo
+            # echo
         fi
     done
 
@@ -39,7 +39,7 @@ thumbdrive_directory=/Volumes/thumbdrive
                 found_dirty=true
             fi
 
-            echo
+            # echo
         fi
     done
 
