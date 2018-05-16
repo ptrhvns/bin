@@ -129,11 +129,13 @@ def clean_git(source, dest, did_dirty_check):
 def sync_git(source, dest, did_dirty_check):
     with cd(dest):
         say('syncing Git repository:', source, '->', dest)
-        sh(['git', 'pull', source])
+        sh(['git', 'checkout', 'master'])
+        sh(['git', 'pull', source, 'master'])
     if did_dirty_check:
         with cd(source):
             say('syncing Git repository:', dest, '->', source)
-            sh(['git', 'pull', dest])
+            sh(['git', 'checkout', 'master'])
+            sh(['git', 'pull', dest, 'master'])
 
 
 def backup(source, dest, did_dirty_check):
