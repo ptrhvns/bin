@@ -152,6 +152,7 @@ def backup(source, dest, did_dirty_check):
 
 
 def process_directories(did_dirty_check=True):
+    # TODO remove dest w/o corresponding source
     for dir_ in DIRECTORIES_TO_BACKUP:
         source = home(dir_)
         dest = thumbdrive(dir_)
