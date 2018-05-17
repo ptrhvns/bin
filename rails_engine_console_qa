@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-
-(
-    cd spec/dummy
-    RAILS_ENV=qa USE_SET_SCHEMA=true rails console $*
-)

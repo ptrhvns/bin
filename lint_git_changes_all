@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-lint_git_changes_haml
-lint_git_changes_js
-lint_git_changes_rubocop
-lint_git_changes_scss

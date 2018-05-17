@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-# Launch a Pomodoro reminder -- time boxing technique
-
-echo "DISPLAY=:0 xmessage Time is up." | at now +  $1 minutes
