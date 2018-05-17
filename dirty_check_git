@@ -1,57 +1,13 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python
 
-set -e
+import os.path
+import subprocess
+import sys
 
-found_dirty=false
-thumbdrive_directory=/Volumes/thumbdrive
+sys.path.append(os.path.join(os.environ['HOME'], 'lib'))
 
-(
-    for directory in $thumdrive_directory/pete/bin $thumdrive_directory/doc/* $thumdrive_directory/src/rcfiles $thumdrive_directory/src/personal/*; do
+from pylocal import directories, git
 
-        if [[ -d $directory ]]; then
-            echo ">>> Checking Git status of $directory"
-            cd $directory
-
-            if test $(git status -s 2> /dev/null | wc -l) -gt 0; then
-                echo -n ">>> ..."
-                echo -ne "\033[38;5;124m"
-                echo -n "WARNING"
-                echo -ne "\033[0m"
-                echo ": repository is dirty"
-                found_dirty=true
-            fi
-
-            # echo
-        fi
-    done
-
-    for directory in $HOME/bin $HOME/doc/* $HOME/src/rcfiles $HOME/src/personal/*; do
-        if [[ -d $directory ]]; then
-            echo ">>> Checking Git status of $directory"
-            cd $directory
-
-            if test $(git status -s --ignore-submodules=dirty 2> /dev/null | wc -l) -gt 0; then
-                echo -n ">>> ..."
-                echo -ne "\033[38;5;124m"
-                echo -n "WARNING"
-                echo -ne "\033[0m"
-                echo ": repository is dirty"
-                found_dirty=true
-            fi
-
-            # echo
-        fi
-    done
-
-    if [ "$found_dirty" = true ]; then
-        echo -n ">>> "
-        echo -ne "\033[38;5;124m"
-        echo -n "ERROR"
-        echo -ne "\033[0m"
-        echo ": dirty Git repositories found"
-        echo
-        exit 1
-    else
-        exit 0
-    fi
-)
+if __name__ == '__main__':
+    if git.check_dirty(directories.home(d) for d in directories.GIT_SUBDIRS):
+        sys.exit(1)
