@@ -1,85 +1,16 @@
 #!/usr/bin/env python
 
-from argparse import ArgumentParser
-from contextlib import contextmanager
-from os import chdir, environ, getcwd, listdir, makedirs, path
-from os.path import exists, expanduser, isdir, isfile, join
-from subprocess import CalledProcessError, run
-from sys import exit, stderr
+import argparse
+import os
+import sys
 
-PREFIX = '>>>'
+sys.path.append(os.path.join(os.environ['HOME'], 'lib'))
 
-RED = '\033[38;5;124m'
-RESET = '\033[0;0m'
-ERROR = f'{RED}ERROR{RESET}:'
-WARNING = f'{RED}WARNING{RESET}:'
-
-HOME = environ['HOME']
-USER = environ['USER']
-
-THUMBDRIVE = f'/Volumes/thumbdrive/{USER}'
-THUMBDRIVE_NAME = 'thumbdrive'
-
-
-def home(*paths):
-    return path.join(HOME, *paths)
-
-
-def thumbdrive(*paths):
-    return path.join(THUMBDRIVE, *paths)
-
-
-def relative_subdirs(*paths):
-    rsdirs = [path.join(*paths, d) for d in listdir(home(*paths))]
-    return [d for d in rsdirs if isdir(home(d))]
-
-
-DIRECTORIES_TO_BACKUP = ['bin', path.join('src', 'rcfiles')] \
-    + relative_subdirs('doc') \
-    + relative_subdirs('src', 'personal')
-
-
-def isgitdir(dir_):
-    return True if isdir(path.join(dir_, '.git')) else False
-
-
-def warn(*msg, exc=None):
-    joined = ' '.join(msg)
-    output = f'{joined}: {exc}' if exc else joined
-    print(PREFIX, WARNING, output, file=stderr)
-
-
-def die(*msg, exc=None):
-    joined = ' '.join(msg)
-    output = f'{joined}: {exc}' if exc else joined
-    print(PREFIX, ERROR, output, file=stderr)
-    exit(1)
-
-
-def say(*msg):
-    print(PREFIX, *msg)
-
-
-def sh(cmd):
-    try:
-        run(cmd).check_returncode()
-    except Exception as exc:
-        arg = ' '.join(cmd) if isinstance(cmd, (list, tuple)) else cmd
-        die('command failed:', arg, exc=exc)
-
-
-@contextmanager
-def cd(dir_):
-    savedir = getcwd()
-    chdir(expanduser(dir_))
-    try:
-        yield
-    finally:
-        chdir(savedir)
+from pylocal import directories, git, output, shell
 
 
 def process_args():
-    parser = ArgumentParser(
+    parser = argparse.ArgumentParser(
         description='Backup directories to a USB thumbdrive.'
     )
     parser.add_argument(
@@ -92,60 +23,59 @@ def process_args():
 
 
 def dirty_check_git():
-    # TODO inline dirty_check_git?
-    say('checking for dirty Git directories')
-    sh('dirty_check_git')
+    output.say('checking for dirty Git directories')
+    shell.run('dirty_check_git')
     print('\n')
 
 
 def check_thumbdrive():
-    say('checking thumbdrive')
+    output.say('checking thumbdrive')
     # TODO check that thumbdrive is mounted
-    if not isdir(THUMBDRIVE):
-        die('directory not found:', THUMBDRIVE)
+    if not os.path.isdir(directories.THUMBDRIVE):
+        output.die('directory not found:', directories.THUMBDRIVE)
     print('\n')
 
 
 def setup_dest(dest):
-    if not exists(dest):
-        say('creating directory:', dest)
-        makedirs(dest, exist_ok=True)
-    if not isgitdir(dest):
-        with cd(dest):
-            say('initializing Git repository:', dest)
-            sh(['git', 'init'])
+    if not os.path.exists(dest):
+        output.say('creating directory:', dest)
+        os.makedirs(dest, exist_ok=True)
+    if not git.isgitdir(dest):
+        with shell.cd(dest):
+            output.say('initializing Git repository:', dest)
+            shell.run(['git', 'init'])
 
 
 def clean_git(source, dest, did_dirty_check):
-    with cd(dest):
-        say('cleaning up Git repository:', dest)
-        sh(['git', 'gc', '--auto'])
+    with shell.cd(dest):
+        output.say('cleaning up Git repository:', dest)
+        shell.run(['git', 'gc', '--auto'])
     if did_dirty_check:
-        with cd(source):
-            say('cleaning up Git repository:', source)
-            sh(['git', 'gc', '--auto'])
+        with shell.cd(source):
+            output.say('cleaning up Git repository:', source)
+            shell.run(['git', 'gc', '--auto'])
 
 
 def sync_git(source, dest, did_dirty_check):
-    with cd(dest):
-        say('syncing Git repository:', source, '->', dest)
-        sh(['git', 'checkout', 'master'])
-        sh(['git', 'pull', source, 'master'])
+    with shell.cd(dest):
+        output.say('syncing Git repository:', source, '->', dest)
+        shell.run(['git', 'checkout', 'master'])
+        shell.run(['git', 'pull', source, 'master'])
     if did_dirty_check:
-        with cd(source):
-            say('syncing Git repository:', dest, '->', source)
-            sh(['git', 'checkout', 'master'])
-            sh(['git', 'pull', dest, 'master'])
+        with shell.cd(source):
+            output.say('syncing Git repository:', dest, '->', source)
+            shell.run(['git', 'checkout', 'master'])
+            shell.run(['git', 'pull', dest, 'master'])
 
 
 def backup(source, dest, did_dirty_check):
-    say('backing up:', source, '->', dest)
-    if not isdir(source):
-        warn('skipping:', 'not a directory:', source)
-    elif exists(dest) and not isdir(dest):
-        warn('skipping:', 'not a directory:', dest)
-    elif not isgitdir(source):
-        warn('skipping:', 'not a Git repository:', source)
+    output.say('backing up:', source, '->', dest)
+    if not os.path.isdir(source):
+        output.warn('skipping:', 'not a directory:', source)
+    elif os.path.exists(dest) and not os.path.isdir(dest):
+        output.warn('skipping:', 'not a directory:', dest)
+    elif not git.isgitdir(source):
+        output.warn('skipping:', 'not a Git repository:', source)
     else:
         setup_dest(dest)
         clean_git(source, dest, did_dirty_check)
@@ -154,16 +84,16 @@ def backup(source, dest, did_dirty_check):
 
 
 def process_directories(did_dirty_check=True):
-    # TODO remove dest w/o corresponding source
-    for dir_ in DIRECTORIES_TO_BACKUP:
-        source = home(dir_)
-        dest = thumbdrive(dir_)
+    # TODO remove any dest w/o a corresponding source?
+    for dir_ in directories.ALL_SUBDIRS:
+        source = directories.home(dir_)
+        dest = directories.thumbdrive(dir_)
         backup(source, dest, did_dirty_check=did_dirty_check)
 
 
 def unmount_thumbdrive():
-    say('unmounting thumbdrive')
-    sh(['diskutil',  'unmount', THUMBDRIVE_NAME])
+    output.say('unmounting thumbdrive')
+    shell.run(['diskutil',  'unmount', directories.THUMBDRIVE_NAME])
     print('\n')
 
 
