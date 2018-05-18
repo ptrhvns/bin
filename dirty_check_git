@@ -9,5 +9,5 @@ sys.path.append(os.path.join(os.environ['HOME'], 'lib'))
 from pylocal import directories, git
 
 if __name__ == '__main__':
-    if git.check_dirty(directories.home(d) for d in directories.GIT_SUBDIRS):
+    if git.check_dirty([directories.home(d) for d in directories.GIT_SUBDIRS]):
         sys.exit(1)

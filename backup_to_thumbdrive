@@ -24,7 +24,7 @@ def process_args() -> argparse.Namespace:
 
 def dirty_check_git() -> None:
     output.say('checking for dirty Git directories')
-    shell.run('dirty_check_git')
+    shell.run(['dirty_check_git'])
     print('\n')
 
 

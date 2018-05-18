@@ -9,3 +9,4 @@ rvm*
 mate
 subl
 lein
+.mypy_cache
