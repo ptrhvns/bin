@@ -9,7 +9,7 @@ sys.path.append(os.path.join(os.environ['HOME'], 'lib'))
 from pylocal import directories, git, output, shell
 
 
-def process_args():
+def process_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description='Backup directories to a USB thumbdrive.'
     )
@@ -22,13 +22,13 @@ def process_args():
     return parser.parse_args()
 
 
-def dirty_check_git():
+def dirty_check_git() -> None:
     output.say('checking for dirty Git directories')
     shell.run('dirty_check_git')
     print('\n')
 
 
-def check_thumbdrive():
+def check_thumbdrive() -> None:
     output.say('checking thumbdrive')
     # TODO check that thumbdrive is mounted
     if not os.path.isdir(directories.THUMBDRIVE):
@@ -36,7 +36,7 @@ def check_thumbdrive():
     print('\n')
 
 
-def setup_dest(dest):
+def setup_dest(dest: str) -> None:
     if not os.path.exists(dest):
         output.say('creating directory:', dest)
         os.makedirs(dest, exist_ok=True)
@@ -46,7 +46,7 @@ def setup_dest(dest):
             shell.run(['git', 'init'])
 
 
-def clean_git(source, dest, did_dirty_check):
+def clean_git(source: str, dest: str, did_dirty_check: bool) -> None:
     with shell.cd(dest):
         output.say('cleaning up Git repository:', dest)
         shell.run(['git', 'gc', '--auto'])
@@ -56,7 +56,7 @@ def clean_git(source, dest, did_dirty_check):
             shell.run(['git', 'gc', '--auto'])
 
 
-def sync_git(source, dest, did_dirty_check):
+def sync_git(source: str, dest: str, did_dirty_check: bool) -> None:
     with shell.cd(dest):
         output.say('syncing Git repository:', source, '->', dest)
         shell.run(['git', 'checkout', 'master'])
@@ -68,7 +68,7 @@ def sync_git(source, dest, did_dirty_check):
             shell.run(['git', 'pull', dest, 'master'])
 
 
-def backup(source, dest, did_dirty_check):
+def backup(source: str, dest: str, did_dirty_check: bool) -> None:
     output.say('backing up:', source, '->', dest)
     if not os.path.isdir(source):
         output.warn('skipping:', 'not a directory:', source)
@@ -83,7 +83,7 @@ def backup(source, dest, did_dirty_check):
     print('\n')
 
 
-def process_directories(did_dirty_check=True):
+def process_directories(did_dirty_check: bool = True) -> None:
     # TODO remove any dest w/o a corresponding source?
     for dir_ in directories.ALL_SUBDIRS:
         source = directories.home(dir_)
@@ -91,7 +91,7 @@ def process_directories(did_dirty_check=True):
         backup(source, dest, did_dirty_check=did_dirty_check)
 
 
-def unmount_thumbdrive():
+def unmount_thumbdrive() -> None:
     output.say('unmounting thumbdrive')
     shell.run(['diskutil',  'unmount', directories.THUMBDRIVE_NAME])
     print('\n')
