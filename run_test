@@ -1,48 +1,75 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env python
 
-def die(msg)
-  warn "#{ File.basename($0) }: ERROR: #{ msg }"
-  exit 1
-end
+from argparse import ArgumentParser, Namespace
+from os import environ, execl, path
+from re import search
+import sys
 
-def main
-  file_name, target = ARGV
-  die 'no file name given' unless file_name
+sys.path.append(path.join(environ['HOME'], 'lib'))
 
-  case file_name
-  when /spec\.rb$/
-    line_number_spec = (target ? ":#{ target }" : '')
-    if File.exist?(*'./bin/rspec')
-      exec "./bin/rspec -f d #{ file_name }#{ line_number_spec }"
-    else
-      exec "bundle exec rspec -f d #{ file_name }#{ line_number_spec }"
-    end
-  when /\.js$/i
-    if File.exist?('./node_modules/.bin/mocha')
-      exec "./node_modules/.bin/mocha #{ file_name }"
-    else
-      die "can't figure out JavaScript test runner: #{ file_name }"
-    end
-  when /test\.rb$/
-    exec "bundle exec rake test TEST=#{ file_name }"
-  when /\.feature$/
-    line_number_spec = (target ? ":#{ target }" : '')
-    exec "SELENIUM_DRIVER=true bundle exec cucumber -r features #{ file_name }#{ line_number_spec }"
-  when /test.*\.py$/
-    if File.exist?('manage.py')
-      label = File.basename(File.dirname(file_name))
-      pattern = File.basename(file_name)
-      if target
-        exec "python manage.py test #{label} --pattern='*#{pattern}' --tag=only"
-      else
-        exec "python manage.py test #{label} --pattern='*#{pattern}'"
-      end
-    else
-      die "couldn't find Python testing strategy: #{ file_name }"
-    end
-  else
-    die "unrecognized file name: #{ file_name }"
-  end
-end
+from pylocal.output import die
 
-main if $0 == __FILE__
+
+def process_args() -> Namespace:
+    parser = ArgumentParser(
+        description='Detect how to run tests, and run them.'
+    )
+    parser.add_argument(
+        'file_name',
+        help='name of the file from which this command was run',
+    )
+    parser.add_argument(
+        'target',
+        help='which test(s) in the file name to run (default is all)',
+    )
+    return parser.parse_args()
+
+
+def rspec(args: Namespace) -> None:
+    line = f':{args.target}' if args.target else ''
+    if path.exists('./bin/rspec'):
+        execl('./bin/rspec', './bin/rspec', '-f', 'd', f'{args.file_name}{line}')
+    else:
+        execl('bundle', 'bundle', 'exec', 'rspec',
+                 '-f', 'd', f'{args.file_name}{line}')
+
+
+def javascript(args: Namespace) -> None:
+    if path.exists('./node_modules/.bin/mocha'):
+        execl('./node_modules/.bin/mocha', 'mocha', args.file_name)
+    else:
+        die('failed find JavaScript testing strategy:', args.file_name)
+
+
+def rake(args: Namespace) -> None:
+    execl('bundle', 'bundle', 'exec', 'rake',
+             'test', f'TEST={args.file_name}')
+
+
+def python(args: Namespace) -> None:
+    if path.exists('manage.py'):
+        label = path.basename(path.dirname(args.file_name))
+        pattern = path.basename(args.file_name)
+        if args.target:
+            execl('python', 'python', 'manage.py', 'test',
+                     label, f'--pattern="*{pattern}"', '--tag=only')
+        else:
+            execl('python', 'python', 'manage.py',
+                     'test', label, '--pattern="*{pattern}"')
+    else:
+        die('failed find Python testing strategy:', args.file_name)
+
+
+if __name__ == '__main__':
+    args = process_args()
+
+    if search(r'spec\.rb$', args.file_name):
+        rspec(args)
+    elif search(r'\.js$', args.file_name):
+        javascript(args)
+    elif search(r'test\.rb$', args.file_name):
+        rake(args)
+    elif search(r'test.*\.py$', args.file_name):
+        python(args)
+    else:
+        die('unrecognized file name:', args.file_name)
