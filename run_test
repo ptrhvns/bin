@@ -28,10 +28,15 @@ def process_args() -> Namespace:
 def rspec(args: Namespace) -> None:
     line = f':{args.target}' if args.target else ''
     if path.exists('./bin/rspec'):
-        execl('./bin/rspec', './bin/rspec', '-f', 'd', f'{args.file_name}{line}')
+        execl(
+            './bin/rspec',
+            './bin/rspec',
+            '-f',
+            'd',
+            f'{args.file_name}{line}')
     else:
         execl('bundle', 'bundle', 'exec', 'rspec',
-                 '-f', 'd', f'{args.file_name}{line}')
+              '-f', 'd', f'{args.file_name}{line}')
 
 
 def javascript(args: Namespace) -> None:
@@ -43,7 +48,7 @@ def javascript(args: Namespace) -> None:
 
 def rake(args: Namespace) -> None:
     execl('bundle', 'bundle', 'exec', 'rake',
-             'test', f'TEST={args.file_name}')
+          'test', f'TEST={args.file_name}')
 
 
 def python(args: Namespace) -> None:
@@ -52,10 +57,10 @@ def python(args: Namespace) -> None:
         pattern = path.basename(args.file_name)
         if args.target:
             execl('python', 'python', 'manage.py', 'test',
-                     label, f'--pattern="*{pattern}"', '--tag=only')
+                  label, f'--pattern="*{pattern}"', '--tag=only')
         else:
             execl('python', 'python', 'manage.py',
-                     'test', label, '--pattern="*{pattern}"')
+                  'test', label, '--pattern="*{pattern}"')
     else:
         die('failed find Python testing strategy:', args.file_name)
 
