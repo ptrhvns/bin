@@ -28,12 +28,8 @@ def process_args() -> Namespace:
 def rspec(args: Namespace) -> None:
     line = f':{args.target}' if args.target else ''
     if path.exists('./bin/rspec'):
-        execl(
-            './bin/rspec',
-            './bin/rspec',
-            '-f',
-            'd',
-            f'{args.file_name}{line}')
+        execl('./bin/rspec', './bin/rspec', '-f',
+              'd', f'{args.file_name}{line}')
     else:
         execl('bundle', 'bundle', 'exec', 'rspec',
               '-f', 'd', f'{args.file_name}{line}')
