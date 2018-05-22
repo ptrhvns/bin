@@ -1,0 +1,123 @@
+#!/usr/bin/env python
+
+import argparse
+import os
+import sys
+
+sys.path.append(os.path.join(os.environ['HOME'], 'lib'))
+
+from pylocal import directories, git, output, shell
+
+
+def process_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description='Backup files and directories.'
+    )
+    parser.add_argument(
+        '-D',
+        action='store_false',
+        dest='dirty_check',
+        help="don't dirty checking Git repositories",
+    )
+    parser.add_argument(
+        '-U',
+        action='store_false',
+        dest='unmount',
+        help="don't unmount target when backup is done",
+    )
+    return parser.parse_args()
+
+
+def dirty_check_git() -> None:
+    output.say('checking for dirty Git directories')
+    shell.run(['dirty_check_git'])
+    print('\n')
+
+
+def check_target() -> None:
+    output.say('checking target')
+    # TODO check that target is mounted
+    if not os.path.isdir(directories.target()):
+        output.die('directory not found:', directories.target())
+    print('\n')
+
+
+def setup_target(target: str) -> None:
+    if not os.path.exists(target):
+        output.say('creating directory:', target)
+        os.makedirs(target, exist_ok=True)
+    if not git.isgitdir(target):
+        if not os.listdir(target):
+            output.warn('not an empty directory:', target)
+            return
+        with shell.cd(target):
+            output.say('initializing Git repository:', target)
+            shell.run(['git', 'init'])
+
+
+def clean_git(source: str, target: str, did_dirty_check: bool) -> None:
+    with shell.cd(target):
+        output.say('cleaning up Git repository:', target)
+        shell.run(['git', 'gc', '--auto'])
+    if did_dirty_check:
+        with shell.cd(source):
+            output.say('cleaning up Git repository:', source)
+            shell.run(['git', 'gc', '--auto'])
+
+
+def sync_git(source: str, target: str, did_dirty_check: bool) -> None:
+    with shell.cd(target):
+        output.say('syncing Git repository:', source, '->', target)
+        shell.run(['git', 'checkout', 'master'])
+        shell.run(['git', 'pull', source, 'master'])
+    if did_dirty_check:
+        with shell.cd(source):
+            output.say('syncing Git repository:', target, '->', source)
+            shell.run(['git', 'checkout', 'master'])
+            shell.run(['git', 'pull', target, 'master'])
+
+
+def backup(source: str, target: str, did_dirty_check: bool) -> None:
+    output.say('backing up:', source, '->', target)
+    if not os.path.isdir(source):
+        output.warn('skipping:', 'not a directory:', source)
+    elif os.path.exists(target) and not os.path.isdir(target):
+        output.warn('skipping:', 'not a directory:', target)
+    elif not git.isgitdir(source):
+        output.warn('skipping:', 'not a Git repository:', source)
+    else:
+        setup_target(target)
+        clean_git(source, target, did_dirty_check)
+        sync_git(source, target, did_dirty_check)
+    print('\n')
+
+
+def process_target_directories() -> None:
+    for dir_ in directories.target_backup_subdirs():
+        source = directories.source(dir_)
+        if not os.path.isdir(source):
+            output.warn('target has no source:', source)
+
+
+def process_source_directories(did_dirty_check: bool = True) -> None:
+    for dir_ in directories.source_backup_subdirs():
+        source = directories.source(dir_)
+        target = directories.target(dir_)
+        backup(source, target, did_dirty_check=did_dirty_check)
+
+
+def unmount_target() -> None:
+    output.say('unmounting target')
+    shell.run(['diskutil', 'unmount', directories.TARGET_NAME])
+    print('\n')
+
+
+if __name__ == '__main__':
+    args = process_args()
+    if args.dirty_check:
+        dirty_check_git()
+    check_target()
+    process_target_directories()
+    process_source_directories(args.dirty_check)
+    if args.unmount:
+        unmount_target()
