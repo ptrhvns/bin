@@ -11,7 +11,7 @@ from pylocal.output import die
 from pylocal.shell import run
 
 
-def process_args() -> Namespace:
+def process_args():
     parser = ArgumentParser(
         description='Detect how to run tests, and run them.'
     )
@@ -28,7 +28,7 @@ def process_args() -> Namespace:
     return parser.parse_args()
 
 
-def rspec(args: Namespace) -> None:
+def rspec(args):
     line = f':{args.target}' if args.target else ''
     if path.exists('./bin/rspec'):
         run(['./bin/rspec', '-f', 'd', f'{args.file_name}{line}'])
@@ -36,18 +36,18 @@ def rspec(args: Namespace) -> None:
         run(['bundle', 'exec', 'rspec', '-f', 'd', f'{args.file_name}{line}'])
 
 
-def javascript(args: Namespace) -> None:
+def javascript(args):
     if path.exists('./node_modules/.bin/mocha'):
         run(['./node_modules/.bin/mocha', args.file_name])
     else:
         die('failed find JavaScript testing strategy:', args.file_name)
 
 
-def rake(args: Namespace) -> None:
+def rake(args):
     run(['bundle', 'exec', 'rake', 'test', f'TEST={args.file_name}'])
 
 
-def python(args: Namespace) -> None:
+def python(args):
     if path.exists('manage.py'):
         label = path.basename(path.dirname(args.file_name))
         pattern = path.basename(args.file_name)

@@ -9,7 +9,7 @@ sys.path.append(os.path.join(os.environ['HOME'], 'lib'))
 from pylocal import directories, git, output, shell
 
 
-def process_args() -> argparse.Namespace:
+def process_args():
     parser = argparse.ArgumentParser(
         description='Backup files and directories.'
     )
@@ -28,13 +28,13 @@ def process_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def dirty_check_git() -> None:
+def dirty_check_git():
     output.say('checking for dirty Git directories')
     shell.run(['dirty_check_git'])
     print('\n')
 
 
-def check_target() -> None:
+def check_target():
     output.say('checking target')
     # TODO check that target is mounted
     if not os.path.isdir(directories.target()):
@@ -42,7 +42,7 @@ def check_target() -> None:
     print('\n')
 
 
-def setup_target(target: str) -> None:
+def setup_target(target):
     if not os.path.exists(target):
         output.say('creating directory:', target)
         os.makedirs(target, exist_ok=True)
@@ -55,7 +55,7 @@ def setup_target(target: str) -> None:
             shell.run(['git', 'init'])
 
 
-def clean_git(source: str, target: str, did_dirty_check: bool) -> None:
+def clean_git(source, target, did_dirty_check):
     with shell.cd(target):
         output.say('cleaning up Git repository:', target)
         shell.run(['git', 'gc', '--auto'])
@@ -65,7 +65,7 @@ def clean_git(source: str, target: str, did_dirty_check: bool) -> None:
             shell.run(['git', 'gc', '--auto'])
 
 
-def sync_git(source: str, target: str, did_dirty_check: bool) -> None:
+def sync_git(source, target, did_dirty_check):
     with shell.cd(target):
         output.say('syncing Git repository:', source, '->', target)
         shell.run(['git', 'checkout', 'master'])
@@ -77,7 +77,7 @@ def sync_git(source: str, target: str, did_dirty_check: bool) -> None:
             shell.run(['git', 'pull', target, 'master'])
 
 
-def backup(source: str, target: str, did_dirty_check: bool) -> None:
+def backup(source, target, did_dirty_check):
     output.say('backing up:', source, '->', target)
     if not os.path.isdir(source):
         output.warn('skipping:', 'not a directory:', source)
@@ -92,21 +92,21 @@ def backup(source: str, target: str, did_dirty_check: bool) -> None:
     print('\n')
 
 
-def process_target_directories() -> None:
+def process_target_directories():
     for dir_ in directories.target_backup_subdirs():
         source = directories.source(dir_)
         if not os.path.isdir(source):
             output.warn('target has no source:', source)
 
 
-def process_source_directories(did_dirty_check: bool = True) -> None:
+def process_source_directories(did_dirty_check):
     for dir_ in directories.source_backup_subdirs():
         source = directories.source(dir_)
         target = directories.target(dir_)
         backup(source, target, did_dirty_check=did_dirty_check)
 
 
-def unmount_target() -> None:
+def unmount_target():
     output.say('unmounting target')
     shell.run(['diskutil', 'unmount', directories.TARGET_NAME])
     print('\n')
