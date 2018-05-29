@@ -2,13 +2,13 @@
 
 from argparse import ArgumentParser
 from os import environ, path
-from re import search
+from re import search, sub
 import sys
 
 sys.path.append(path.join(environ['HOME'], 'lib'))
 
 from pylocal.output import die
-from pylocal.shell import run
+from pylocal.shell import cd, run
 
 
 def process_args():
@@ -32,6 +32,10 @@ def rspec(args):
     line = f':{args.target}' if args.target else ''
     if path.exists('./bin/rspec'):
         run(['./bin/rspec', '-f', 'd', f'{args.file_name}{line}'])
+    elif path.exists('./server/bin/rspec'):
+        with cd('server'):
+            file_name = sub('server/', '', args.file_name, count=1)
+            run(['./bin/rspec', '-f', 'd', f'{file_name}{line}'])
     else:
         run(['bundle', 'exec', 'rspec', '-f', 'd', f'{args.file_name}{line}'])
 
