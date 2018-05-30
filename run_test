@@ -31,24 +31,28 @@ def process_args():
 def rspec(args):
     line = f':{args.target}' if args.target else ''
     if path.exists('./bin/rspec'):
-        run(['./bin/rspec', '-f', 'd', f'{args.file_name}{line}'])
+        run(['./bin/rspec', '-f', 'd',
+             f'{args.file_name}{line}'], verbose=False)
     elif path.exists('./server/bin/rspec'):
         with cd('server'):
             file_name = sub('server/', '', args.file_name, count=1)
-            run(['./bin/rspec', '-f', 'd', f'{file_name}{line}'])
+            run(['./bin/rspec', '-f', 'd',
+                 f'{file_name}{line}'], verbose=False)
     else:
-        run(['bundle', 'exec', 'rspec', '-f', 'd', f'{args.file_name}{line}'])
+        run(['bundle', 'exec', 'rspec', '-f', 'd', f'{args.file_name}{line}'],
+            verbose=False)
 
 
 def javascript(args):
     if path.exists('./node_modules/.bin/mocha'):
-        run(['./node_modules/.bin/mocha', args.file_name])
+        run(['./node_modules/.bin/mocha', args.file_name], verbose=False)
     else:
         die('failed find JavaScript testing strategy:', args.file_name)
 
 
 def rake(args):
-    run(['bundle', 'exec', 'rake', 'test', f'TEST={args.file_name}'])
+    run(['bundle', 'exec', 'rake', 'test', f'TEST={args.file_name}'],
+        verbose=False)
 
 
 def python(args):
@@ -57,9 +61,10 @@ def python(args):
         pattern = path.basename(args.file_name)
         if args.target:
             run(['python', 'manage.py', 'test', label,
-                 '--pattern', pattern, '--tag=only'])
+                 '--pattern', pattern, '--tag=only'], verbose=False)
         else:
-            run(['python', 'manage.py', 'test', label, '--pattern', pattern])
+            run(['python', 'manage.py', 'test', label, '--pattern', pattern],
+                verbose=False)
     else:
         die('failed find Python testing strategy:', args.file_name)
 
