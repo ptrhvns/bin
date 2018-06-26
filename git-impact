@@ -11,6 +11,8 @@ EXCLUSIONS="dummyexclusion"
 
 LIST=0
 
+AUTHOR=$(git config --get user.name)
+
 usage() { echo "$(basename $0) [-d <days>] [-e <exclusions>]"; }
 
 while getopts d:e:hl opt; do
@@ -32,8 +34,7 @@ while getopts d:e:hl opt; do
 done
 
 show_average_impact() {
-    AUTHOR=$(git config --get user.name)
-    echo "Over $DAYS day(s):"
+    echo "Over $DAYS day(s), the average impact for <$AUTHOR> was:"
 
     # Calculate insertions.
     for n in $(jot $DAYS); do
