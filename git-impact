@@ -54,7 +54,7 @@ def parse_args
   {}.tap do |options|
     options[:author] = ''
     options[:days] = 7
-    options[:verbose] = false
+    options[:verbose] = true
 
     OptionParser.new do |op|
       op.banner = "Usage: git #{git_command} [options]"
@@ -80,11 +80,11 @@ def parse_args
       end
 
       op.on(
-        '-v',
-        '--verbose',
-        'display verbose output (show data for each day)'
+        '-q',
+        '--quiet',
+        "do not display verbose output (i.e. don't show data for each day)"
       ) do
-        options[:verbose] = true
+        options[:verbose] = false
       end
     end.parse!
   end
