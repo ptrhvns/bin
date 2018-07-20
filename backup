@@ -68,7 +68,8 @@ def clean_git(source, target, did_dirty_check):
 def sync_git(source, target, did_dirty_check):
     with shell.cd(target):
         output.say('syncing Git repository:', source, '->', target)
-        shell.run(['git', 'checkout', 'master'])
+        # TODO ensure master, if it exists, is checked out.
+        #  shell.run(['git', 'checkout', 'master'])
         shell.run(['git', 'pull', source, 'master'])
     if did_dirty_check:
         with shell.cd(source):
