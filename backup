@@ -47,7 +47,7 @@ def setup_target(target):
         output.say('creating directory:', target)
         os.makedirs(target, exist_ok=True)
     if not git.isgitdir(target):
-        if not os.listdir(target):
+        if os.listdir(target):
             output.warn('not an empty directory:', target)
             return
         with shell.cd(target):
