@@ -42,9 +42,9 @@ class Statistics
   end
 
   def range
-    return '0' if numbers.empty?
+    return '' if numbers.empty?
     values = numbers.sort
-    "#{values.first} - #{values.last}"
+    "#{values.first} .. #{values.last}"
   end
 end
 
@@ -135,9 +135,8 @@ def main
 
   insertion_statistics = Statistics.new(insertions.values)
   deletion_statistics = Statistics.new(deletions.values)
-  net_values = insertions.values.zip(deletions.values).map{ |i, d| i - d }
+  net_values = insertions.map { |d, v| v - deletions[d] }
   net_statistics = Statistics.new(net_values)
-
   author = options[:author].empty? ? 'all authors' : options[:author]
 
   puts <<~OUTPUT
