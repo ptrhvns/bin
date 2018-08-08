@@ -128,6 +128,8 @@ def main
     end
   end
 
+  # TODO add `{ git diff --cached --numstat; git diff --numstat; }` ouput.
+
   if options[:verbose]
     puts "data: insertions: #{insertions.inspect}\n\n"
     puts "data: deletions: #{deletions.inspect}\n\n"
