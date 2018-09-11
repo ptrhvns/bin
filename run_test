@@ -47,7 +47,7 @@ def javascript(args):
     if path.exists('./node_modules/.bin/mocha'):
         run(['./node_modules/.bin/mocha', args.file_name], verbose=False)
     else:
-        die('failed find JavaScript testing strategy:', args.file_name)
+        die('failed to find JavaScript testing strategy:', args.file_name)
 
 
 def rake(args):
@@ -66,7 +66,7 @@ def python(args):
             run(['python', 'manage.py', 'test', label, '--pattern', pattern],
                 verbose=False)
     else:
-        die('failed find Python testing strategy:', args.file_name)
+        die('failed to find Python testing strategy:', args.file_name)
 
 
 if __name__ == '__main__':
