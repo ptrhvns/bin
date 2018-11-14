@@ -2,6 +2,7 @@
 
 require 'rubygems'
 
+# Also need t gem.
 require 'csv'
 require 'etc'
 require 'httpclient'
