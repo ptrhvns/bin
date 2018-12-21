@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-set -e
-set -u
-
-$EDITOR $HOME/doc/professional/programming/programming_practice
-

@@ -3,6 +3,8 @@
 from argparse import ArgumentParser
 from os import environ, path
 from re import search, sub
+import itertools
+import json
 import sys
 
 sys.path.append(path.join(environ['HOME'], 'lib'))
@@ -44,8 +46,15 @@ def rspec(args):
 
 
 def javascript(args):
-    if path.exists('./node_modules/.bin/mocha'):
-        run(['./node_modules/.bin/mocha', args.file_name], verbose=False)
+    if path.exists('package.json'):
+        with open('package.json') as f:
+            scripts = json.load(f)['scripts']
+            if scripts['test:unit']:
+                cmd = ['npx'] + scripts['test:unit'].split()[0:-1]
+                cmd.append(args.file_name)
+                run(cmd, verbose=False)
+            else:
+                die('failed to find unit test command in package.json')
     else:
         die('failed to find JavaScript testing strategy:', args.file_name)
 
