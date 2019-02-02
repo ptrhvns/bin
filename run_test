@@ -66,8 +66,9 @@ def javascript(args):
         with cd(path.dirname(package_path)):
             with open(package_path) as f:
                 scripts = json.load(f)['scripts']
-                if scripts['test:unit']:
-                    cmd = ['time', 'npx'] + scripts['test:unit'].split()[0:-1]
+                target = scripts.get('test:unit', scripts.get('test:mocha'))
+                if target:
+                    cmd = ['time', 'npx'] + target.split()[0:-1]
                     cmd.append(abs_file_name)
                     run(cmd, verbose=False)
                 else:
