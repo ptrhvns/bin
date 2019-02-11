@@ -32,6 +32,7 @@ def process_args():
 
 def rspec(args):
     line = f':{args.target}' if args.target else ''
+
     if path.exists('./bin/rspec'):
         run(['./bin/rspec', '-f', 'd',
              f'{args.file_name}{line}'], verbose=False)
@@ -50,11 +51,14 @@ def find_up_tree(directory, file):
     while True:
         if root_visited:
             return None
+
         full_path = path.join(directory, file)
+
         if path.exists(full_path):
             return full_path
         else:
             directory, _ = path.split(directory)
+
             if directory == '/':
                 root_visited = True
 
@@ -62,19 +66,27 @@ def find_up_tree(directory, file):
 def javascript(args):
     abs_file_name = path.abspath(args.file_name)
     package_path = find_up_tree(path.dirname(abs_file_name), 'package.json')
-    if package_path:
-        with cd(path.dirname(package_path)):
-            with open(package_path) as f:
-                scripts = json.load(f)['scripts']
-                target = scripts.get('test:unit', scripts.get('test:mocha'))
-                if target:
-                    cmd = ['time', 'npx'] + target.split()[0:-1]
-                    cmd.append(abs_file_name)
-                    run(cmd, verbose=False)
-                else:
-                    die('failed to find unit test command in package.json')
-    else:
+
+    if not package_path:
         die('failed to find JavaScript testing strategy:', args.file_name)
+
+    with cd(path.dirname(package_path)):
+        with open(package_path) as package_file:
+            scripts = json.load(package_file)['scripts']
+            target = None
+
+            if '/e2e/' in abs_file_name:
+                target = scripts.get('test:e2e')
+            elif '/unit/' in abs_file_name:
+                target = scripts.get('test:unit')
+            elif 'mocha' in abs_file_name:
+                target = scripts.get('test:mocha')
+
+            if not target:
+                die('failed to find appropriate test command in package.json')
+
+            cmd = ['time', 'npx'] + target.split()[0:-1] + [abs_file_name]
+            run(cmd, verbose=False)
 
 
 def rake(args):
@@ -83,17 +95,18 @@ def rake(args):
 
 
 def python(args):
-    if path.exists('manage.py'):
-        label = path.basename(path.dirname(args.file_name))
-        pattern = path.basename(args.file_name)
-        if args.target:
-            run(['python', 'manage.py', 'test', label,
-                 '--pattern', pattern, '--tag=only'], verbose=False)
-        else:
-            run(['python', 'manage.py', 'test', label, '--pattern', pattern],
-                verbose=False)
-    else:
+    if not path.exists('manage.py'):
         die('failed to find Python testing strategy:', args.file_name)
+
+    label = path.basename(path.dirname(args.file_name))
+    pattern = path.basename(args.file_name)
+
+    if args.target:
+        run(['python', 'manage.py', 'test', label,
+             '--pattern', pattern, '--tag=only'], verbose=False)
+    else:
+        run(['python', 'manage.py', 'test', label, '--pattern', pattern],
+            verbose=False)
 
 
 if __name__ == '__main__':
