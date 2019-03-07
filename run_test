@@ -81,6 +81,8 @@ def javascript(args):
                 target = scripts.get('test:unit')
             elif 'mocha' in abs_file_name:
                 target = scripts.get('test:mocha')
+            else:
+                target = scripts.get('test')
 
             if not target:
                 die('failed to find appropriate test command in package.json')
