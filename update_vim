@@ -6,11 +6,12 @@ echo ">>> Loading GitHub SSH key"
 
 keychain --nogui ~/.ssh/id_dsa_github.pub && source ~/.keychain/$(hostname)-sh
 
-echo ">>> Updating Vim ..."
+dir=~/src/personal/github/dotfiles
+echo ">>> Updating Vim: ${dir}"
 echo
 
 (
-    cd ~/src/rcfiles
+    cd ${dir}
     git submodule foreach git pull -q origin master
 )
 
