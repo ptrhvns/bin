@@ -1,15 +1,20 @@
 #!/usr/bin/env ruby
 
-require 'rubygems'
+begin
+  require 'rubygems'
+  require 'httpclient'
+  require 'nokogiri'
+  require 'thor'
+  require 't' # Just to make sure the command is around.
+rescue LoadError => e
+  $stderr.write("Failed require: #{e}\n")
+  exit 1
+end
 
-# Also need t gem.
 require 'csv'
 require 'etc'
-require 'httpclient'
-require 'nokogiri'
 require 'open-uri'
 require 'set'
-require 'thor'
 require 'uri'
 
 # NOTE You'll need to setup Twitter app stuff for the `t` command. See the
