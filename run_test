@@ -9,8 +9,8 @@ import sys
 
 sys.path.append(path.join(environ['HOME'], 'lib'))
 
-from pylocal.output import die
-from pylocal.shell import cd, run
+from output import die
+from shell import cd, run
 
 
 def process_args():
