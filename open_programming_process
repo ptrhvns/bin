@@ -3,5 +3,4 @@
 set -e
 set -u
 
-$EDITOR $HOME/doc/professional/programming/process
-
+$EDITOR $HOME/doc/professional/programming/reminders
