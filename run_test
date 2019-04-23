@@ -34,20 +34,20 @@ def rspec(args):
     line = f':{args.target}' if args.target else ''
 
     if path.exists('./bin/rspec'):
-        run(['./bin/rspec', '-f', 'd',
+        run(['time', './bin/rspec', '-f', 'd',
              f'{args.file_name}{line}'], verbose=False)
     elif path.exists('./server/bin/rspec'):
         with cd('server'):
             file_name = sub('server/', '', args.file_name, count=1)
-            run(['./bin/rspec', '-f', 'd',
+            run(['time', './bin/rspec', '-f', 'd',
                  f'{file_name}{line}'], verbose=False)
     elif path.exists('./server'):
         with cd('server'):
             file_name = sub('server/', '', args.file_name, count=1)
-            run(['bundle', 'exec', 'rspec', '-f', 'd',
+            run(['time', 'bundle', 'exec', 'rspec', '-f', 'd',
                  f'{file_name}{line}'], verbose=False)
     else:
-        run(['bundle', 'exec', 'rspec', '-f', 'd',
+        run(['time', 'bundle', 'exec', 'rspec', '-f', 'd',
              f'{args.file_name}{line}'], verbose=False)
 
 
