@@ -41,9 +41,14 @@ def rspec(args):
             file_name = sub('server/', '', args.file_name, count=1)
             run(['./bin/rspec', '-f', 'd',
                  f'{file_name}{line}'], verbose=False)
+    elif path.exists('./server'):
+        with cd('server'):
+            file_name = sub('server/', '', args.file_name, count=1)
+            run(['bundle', 'exec', 'rspec', '-f', 'd',
+                 f'{file_name}{line}'], verbose=False)
     else:
-        run(['bundle', 'exec', 'rspec', '-f', 'd', f'{args.file_name}{line}'],
-            verbose=False)
+        run(['bundle', 'exec', 'rspec', '-f', 'd',
+             f'{args.file_name}{line}'], verbose=False)
 
 
 def find_up_tree(directory, file):
