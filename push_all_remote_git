@@ -1,0 +1,11 @@
+#!/usr/bin/env zsh
+
+for dir in ~/src/personal/remote/*/; do
+    (
+        cd $dir
+        echo ">>> $(pwd)"
+        git push origin master
+        echo
+    )
+done
+
