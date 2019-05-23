@@ -22,13 +22,10 @@ def child_directories(parents):
 
 
 CHILD_DIRECTORIES = [
-    home('bin'),
-    home('lib'),
-    home('src', 'rcfiles')
+    # currently empty
 ]
 
 PARENT_DIRECTORIES = [
-    home('doc'),
     home('src', 'personal', 'local'),
     home('src', 'personal', 'remote')
 ]
