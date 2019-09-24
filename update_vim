@@ -6,7 +6,7 @@ echo ">>> Loading GitHub SSH key"
 
 keychain --nogui ~/.ssh/id_dsa_github.pub && source ~/.keychain/$(hostname)-sh
 
-dir=~/src/personal/github/dotfiles
+dir=~/src/personal/remote/dotfiles
 echo ">>> Updating Vim: ${dir}"
 echo
 
