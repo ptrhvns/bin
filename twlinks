@@ -58,21 +58,21 @@ class CLI < Thor
   def build_command
     t_path = `which t`.strip
     raise 'failed to find `t` command' unless File.executable?(t_path)
-    command = "command t timeline -c -n #{ RESULT_LIMIT }"
+    command = "t timeline -c -n #{ RESULT_LIMIT }"
     previous_id = File.exist?(RCFILENAME) ? File.read(RCFILENAME).to_i : 0
     command << " -s #{ (previous_id + 1) }" if previous_id > 0
     command
   end
 
   def get_timeline(command)
-    timeline = CSV.parse(%x{#{ command }})
+    timeline = CSV.parse(%x{#{command}})
     timeline.shift # remove CSV headers
     timeline
   end
 
   def process_links(timeline)
     if timeline.empty?
-      warn "Timeline is empty."
+      warn "Warning: timeline is empty."
       exit 1
     end
 
