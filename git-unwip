@@ -15,9 +15,9 @@ current_branch=$(git rev-parse --abbrev-ref HEAD)
 wip_name=${current_branch}_wip_${username}
 
 git fetch --all -p
-git checkout $wip_name
+git checkout "$wip_name"
 git reset HEAD^
-git checkout $current_branch
-git branch -d $wip_name
-git push origin --delete $wip_name
-git push origin --delete $current_branch
+git checkout "$current_branch"
+git branch -d "$wip_name"
+git push origin --delete "$wip_name"
+git push origin --delete "$current_branch"

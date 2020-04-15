@@ -12,13 +12,13 @@ bundler_flag_arg=$3
 
 rbenv_version=$(rbenv version | awk '{print $1}')
 
-if ! rbenv gemset delete $rbenv_version $gemset_name 2> /dev/null; then
+if ! rbenv gemset delete "$rbenv_version" "$gemset_name" 2> /dev/null; then
     echo ">>> Failure ignored."
 fi
 
-rbenv gemset create $rbenv_version $gemset_name
+rbenv gemset create "$rbenv_version" "$gemset_name"
 echo "$gemset_name -global" >| .rbenv-gemsets
-gem install bundler $bundler_flag $bundler_flag_arg
+gem install bundler "$bundler_flag" "$bundler_flag_arg"
 rbenv rehash
 bundle install --verbose
 rbenv rehash

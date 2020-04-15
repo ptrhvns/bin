@@ -12,8 +12,8 @@ fi
 
 pkg=$1
 
-for dep in $(pip show $pkg | grep Requires | sed 's/Requires: //g; s/,//g') ; do
-    pip uninstall -y $dep;
+for dep in $(pip show "$pkg" | grep Requires | sed 's/Requires: //g; s/,//g') ; do
+    pip uninstall -y "$dep"
 done
 
-pip uninstall -y $pkg
+pip uninstall -y "$pkg"

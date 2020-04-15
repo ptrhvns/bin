@@ -4,18 +4,18 @@ set -euo pipefail
 
 # Open a project's scratch file for editing.
 if [[ -e $PWD/scratch ]]; then
-    $EDITOR $PWD/scratch
+    $EDITOR "$PWD/scratch"
 elif [[ "$PWD" = "$HOME/src/personal/project" ]]; then
-    $EDITOR $HOME/doc/project/scratch
+    $EDITOR "$HOME/doc/project/scratch"
 elif echo "$PWD" | grep -q "$HOME/src/personal"; then
-    mkdir -p $HOME/doc/personal/projects/${PWD##*/}
-    $EDITOR $HOME/doc/personal/projects/${PWD##*/}/scratch
+    mkdir -p "$HOME/doc/personal/projects/${PWD##*/}"
+    $EDITOR "$HOME/doc/personal/projects/${PWD##*/}/scratch"
 elif echo "$PWD" | grep -q "$HOME/src/work"; then
-    mkdir -p $HOME/doc/work/projects/${PWD##*/}
-    $EDITOR $HOME/doc/work/projects/${PWD##*/}/scratch
+    mkdir -p "$HOME/doc/work/projects/${PWD##*/}"
+    $EDITOR "$HOME/doc/work/projects/${PWD##*/}/scratch"
 elif [[ -n "$TMUX" ]]; then
-    mkdir -p $HOME/doc/work/projects/$(tmux display-message -p "#S")
-    $EDITOR $HOME/doc/work/projects/$(tmux display-message -p "#S")/scratch
+    mkdir -p "$HOME/doc/work/projects/$(tmux display-message -p "#S")"
+    $EDITOR "$HOME/doc/work/projects/$(tmux display-message -p "#S")/scratch"
 else
-    $EDITOR $HOME/tmp/scratch
+    $EDITOR "$HOME/tmp/scratch"
 fi

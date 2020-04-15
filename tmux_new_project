@@ -6,14 +6,15 @@ set -euo pipefail
 
 if [ $# -lt 1 ]; then
     echo "ERROR: not enough arguments" 1>&2
-    echo "usage: $(basename $0) <directory>" 1>&2
+    bname=$(basename "$0")
+    echo "usage: $bname <directory>" 1>&2
     exit 1
 fi
 
 directory=$1
-test -d $directory || { echo "ERROR: no directory: $directory" 1>&2; exit 1; }
+test -d "$directory" || { echo "ERROR: no directory: $directory" 1>&2; exit 1; }
 
 (
-    cd $directory
+    cd "$directory"
     tmux_new_session_pwd
 )

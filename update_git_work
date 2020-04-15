@@ -16,7 +16,7 @@ if [ ! -d $thumbdrive_directory ]; then
 fi
 
 (
-    if [ ! $SKIP_THUMBDRIVE_REMOUNT ]; then
+    if [ ! "$SKIP_THUMBDRIVE_REMOUNT" ]; then
         echo ">>> Re-mounting thumbdrive"
         diskutil unmount thumbdrive && mkdir /Volumes/thumbdrive && sudo mount -t hfs /dev/disk2s2 /Volumes/thumbdrive
     fi
@@ -28,27 +28,27 @@ fi
         home_subdirectory=$HOME/$directory
 
         if [[ ! -d $thumbdrive_subdirectory ]]; then
-            mkdir -p $thumbdrive_subdirectory
+            mkdir -p "$thumbdrive_subdirectory"
         fi
 
         if [[ -d $thumbdrive_subdirectory ]]; then
             echo ">>> Updating $thumbdrive_subdirectory"
-            cd $thumbdrive_subdirectory
+            cd "$thumbdrive_subdirectory"
 
             if [ ! -d .git ]; then
                 git init
             fi;
 
             git gc --auto
-            git pull $home_subdirectory
+            git pull "$home_subdirectory"
             echo
         fi
 
         if [[ -d $home_subdirectory ]]; then
             echo ">>> Updating $home_subdirectory"
-            cd $home_subdirectory
+            cd "$home_subdirectory"
             # git gc --auto
-            git pull $thumbdrive_subdirectory
+            git pull "$thumbdrive_subdirectory"
 
             if [ -e .gitmodules ]; then
                 git submodule init
