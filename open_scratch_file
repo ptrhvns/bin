@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-set -u
-set -e
+set -euo pipefail
 
 # Open a project's scratch file for editing.
 if [[ -e $PWD/scratch ]]; then

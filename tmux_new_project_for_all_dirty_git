@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 echo ">>> Scanning directories in $(pwd) ..."
 find . -type d -maxdepth 1 | while read dir; do

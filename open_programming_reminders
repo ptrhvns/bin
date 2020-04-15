@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-set -e
-set -u
+set -euo pipefail
 
 $EDITOR $HOME/doc/professional/programming/reminders
