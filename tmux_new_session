@@ -12,7 +12,7 @@ fi
 # session_name=$(echo "$1" | sed -e 's/[^a-zA-Z0-9]/_/g')
 session_name=${1//[^a-zA-Z0-9]/_/g}
 
-if [ -z "$TMUX" ]; then
+if [ -z "${TMUX:-}" ]; then
     tmux new-session -As "$session_name"
 else
     current_pane=$(tmux display-message -p "#D")

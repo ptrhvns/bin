@@ -13,7 +13,7 @@ elif echo "$PWD" | grep -q "$HOME/src/personal"; then
 elif echo "$PWD" | grep -q "$HOME/src/work"; then
     mkdir -p "$HOME/doc/work/projects/${PWD##*/}"
     $EDITOR "$HOME/doc/work/projects/${PWD##*/}/scratch"
-elif [[ -n "$TMUX" ]]; then
+elif [[ -n "${TMUX:-}" ]]; then
     mkdir -p "$HOME/doc/work/projects/$(tmux display-message -p "#S")"
     $EDITOR "$HOME/doc/work/projects/$(tmux display-message -p "#S")/scratch"
 else

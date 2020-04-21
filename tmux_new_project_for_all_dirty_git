@@ -10,7 +10,7 @@ find . -type d -maxdepth 1 | while read -r dir; do
         if [[ $(git diff --shortstat 2> /dev/null | tail -n1) != "" ]]; then
             session_name=$(basename "$PWD" | sed -e 's/[^a-zA-Z0-9]/_/g')
 
-            if [ -z "$TMUX" ]; then
+            if [ -z "${TMUX:-}" ]; then
                 tmux new-session -As "$session_name"
             else
                 if [ "$(tmux list-sessions | grep -c \"^$session_name:\")" -lt 1 ]; then

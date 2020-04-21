@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-if [ -z "$TMUX" ]; then
+if [ -z "${TMUX:-}" ]; then
     if [ $# -lt 1 ]; then
         echo "ERROR: not enough arguments" 1>&2
         bname=$(basename "$0")

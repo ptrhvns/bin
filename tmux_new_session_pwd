@@ -4,7 +4,7 @@ set -euo pipefail
 
 session_name=$(basename "$PWD" | sed -e 's/[^a-zA-Z0-9]/_/g')
 
-if [ -z "$TMUX" ]; then
+if [ -z "${TMUX:-}" ]; then
     tmux new-session -As "$session_name"
 else
     current_pane=$(tmux display-message -p "#D")
