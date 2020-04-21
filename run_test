@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 
 import json
+import pathlib
 import sys
 from argparse import ArgumentParser
 from os import environ, path
 from re import search, sub
+from itertools import zip_longest
 
 sys.path.append(path.join(environ["HOME"], "lib"))  # isort:skip
 
@@ -116,32 +118,32 @@ def rake(args):
 
 
 def python(args):
-    abs_filename = path.abspath(args.file_name)
-    abs_dirname = path.dirname(abs_filename)
+    file_name_path = path.abspath(args.file_name)
+    dirname = path.dirname(file_name_path)
 
-    manage_path = find_up_tree(abs_dirname, "manage.py")
+    manage_path = find_up_tree(dirname, "manage.py")
     if manage_path:
-        label = path.basename(path.dirname(args.file_name))
-        pattern = path.basename(args.file_name)
-        if args.target:
-            cmd = [
-                "python",
-                "manage.py",
-                "test",
-                label,
-                "--pattern",
-                pattern,
-                "--tag=only",
+        file_name_path_root = path.splitext(file_name_path)[0]
+        file_name_path_parts = pathlib.Path(file_name_path_root).parts
+        manage_dirname = path.dirname(manage_path)
+        manage_dirname_parts = pathlib.Path(manage_dirname).parts
+        label = ".".join(
+            [
+                p1
+                for p1, p2 in zip_longest(file_name_path_parts, manage_dirname_parts)
+                if p1 != p2
             ]
-        else:
-            cmd = ["python", "manage.py", "test", label, "--pattern", pattern]
+        )
+        cmd = ["python", "-Wa", manage_path, "test", label]
+        if args.target:
+            cmd.append("--tag=only")
         run(cmd, verbose=False)
         return
 
-    requirements_path = find_up_tree(abs_dirname, "requirements.txt")
+    requirements_path = find_up_tree(dirname, "requirements.txt")
     if requirements_path and file_contains(requirements_path, "pytest"):
         with cd(path.dirname(requirements_path)):
-            cmd = ["pytest", "-q", abs_filename]
+            cmd = ["pytest", "-q", file_name_path]
             if args.target:
                 cmd.extend(["-m", "focus"])
             run(cmd, verbose=False)
