@@ -6,7 +6,7 @@ for dir in ~/src/personal/remote/*/; do
     (
         cd $dir
         echo ">>> $(pwd)"
-        git pull --all --prune
+        git pull --all
         echo
     )
 done
