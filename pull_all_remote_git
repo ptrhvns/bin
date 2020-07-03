@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -eou pipefail
+
+for dir in ~/src/personal/remote/*/; do
+    (
+        cd $dir
+        echo ">>> $(pwd)"
+        git pull --all --prune
+        echo
+    )
+done
+
