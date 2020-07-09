@@ -14,10 +14,11 @@ def child_directories(parents):
     """Build paths of child directories."""
     children = []
     for p in parents:
-        for d in os.listdir(p):
-            j = os.path.join(p, d)
-            if os.path.isdir(j):
-                children.append(j)
+        if os.path.isdir(p):
+            for d in os.listdir(p):
+                j = os.path.join(p, d)
+                if os.path.isdir(j):
+                    children.append(j)
     return children
 
 
