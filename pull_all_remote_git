@@ -5,7 +5,7 @@ set -eou pipefail
 for dir in ~/src/personal/remote/*/; do
     (
         cd $dir
-        echo ">>> $(pwd)"
+        echo ">>> pulling $(pwd)"
         git pull --all
         echo
     )
