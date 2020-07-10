@@ -5,7 +5,7 @@ set -euo pipefail
 for dir in ~/src/personal/remote/*/; do
     (
         cd $dir
-        echo ">>> pulling $(pwd)"
+        echo ">>> pushing $(pwd)"
         git push origin master
     )
 done
