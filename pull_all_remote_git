@@ -6,7 +6,7 @@ for dir in ~/src/personal/remote/*/; do
     (
         cd $dir
         echo ">>> pulling $(pwd)"
-        git pull --all
+        git pull origin master:master
     )
 done
 
