@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-echo ">>> Updating npm ..."
+echo "### Updating npm ..."
 echo
 
 [[ -x "$(type -p npm)" ]] && npm -g update
