@@ -9,8 +9,8 @@ def run_command(command)
 
   unless exit_status.zero?
     warn "\n"
-    warn ">>> ERROR: lint command failed => #{ command }"
-    warn '>>> (To bypass this pre-commit hook, add `-n` to your Git command.)'
+    warn "### ERROR: lint command failed => #{ command }"
+    warn '### (To bypass this pre-commit hook, add `-n` to your Git command.)'
     warn "\n"
     exit exit_status
   end

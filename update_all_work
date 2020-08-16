@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-echo ">>> Updating all (work) ..."
+echo "### Updating all (work) ..."
 echo
 
 update_homebrew

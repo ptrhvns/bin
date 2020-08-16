@@ -13,7 +13,7 @@ bundler_flag_arg=$3
 rbenv_version=$(rbenv version | awk '{print $1}')
 
 if ! rbenv gemset delete "$rbenv_version" "$gemset_name" 2> /dev/null; then
-    echo ">>> Failure ignored."
+    echo "### Failure ignored."
 fi
 
 rbenv gemset create "$rbenv_version" "$gemset_name"
