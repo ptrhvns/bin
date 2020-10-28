@@ -4,11 +4,11 @@ import json
 import pathlib
 import sys
 from argparse import ArgumentParser
+from itertools import zip_longest
 from os import environ, path
 from re import search, sub
-from itertools import zip_longest
 
-sys.path.append(path.join(environ["HOME"], "lib"))  # isort:skip
+sys.path.append(path.join(environ["HOME"], "lib"))
 
 from output import die
 from shell import cd, run
@@ -134,7 +134,7 @@ def python(args):
                 if p1 != p2
             ]
         )
-        cmd = ["python", "-Wa", manage_path, "test", label, "--keepdb"]
+        cmd = ["python", "-Wa", manage_path, "test", label, "--keepdb", "--failfast"]
         if args.target:
             cmd.append("--tag=only")
         run(cmd, verbose=False)
