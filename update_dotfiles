@@ -3,12 +3,12 @@
 set -euo pipefail
 
 dir=~/src/personal/remote/dotfiles
-echo "### Updating Vim: ${dir}"
+echo "### Pulling repo and submodules: ${dir}"
 echo
 
 (
     cd ${dir}
-    git submodule foreach git pull -q origin master
+    git pull --recurse-submodules
 )
 
 echo
