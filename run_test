@@ -67,13 +67,22 @@ def rspec(args):
         with cd("server"):
             file_name = sub("server/", "", args.file_name, count=1)
             run(
-                ["time", "./bin/rspec", "-f", "d", f"{file_name}{line}"], verbose=False,
+                ["time", "./bin/rspec", "-f", "d", f"{file_name}{line}"],
+                verbose=False,
             )
     elif path.exists("./server"):
         with cd("server"):
             file_name = sub("server/", "", args.file_name, count=1)
             run(
-                ["time", "bundle", "exec", "rspec", "-f", "d", f"{file_name}{line}",],
+                [
+                    "time",
+                    "bundle",
+                    "exec",
+                    "rspec",
+                    "-f",
+                    "d",
+                    f"{file_name}{line}",
+                ],
                 verbose=False,
             )
     else:
@@ -113,8 +122,17 @@ def javascript(args):
 
 def rake(args):
     run(
-        ["bundle", "exec", "rake", "test", f"TEST={args.file_name}"], verbose=False,
+        ["bundle", "exec", "rake", "test", f"TEST={args.file_name}"],
+        verbose=False,
     )
+
+
+def find_requirements_with_pytest(dirname):
+    requirements_filenames = ["requirements.development.txt", "requirements.txt"]
+    for f in requirements_filenames:
+        path = find_up_tree(dirname, f)
+        if path and file_contains(path, "pytest"):
+            return path
 
 
 def python(args):
@@ -140,8 +158,8 @@ def python(args):
         run(cmd, verbose=False)
         return
 
-    requirements_path = find_up_tree(dirname, "requirements.txt")
-    if requirements_path and file_contains(requirements_path, "pytest"):
+    requirements_path = find_requirements_with_pytest(dirname)
+    if requirements_path:
         with cd(path.dirname(requirements_path)):
             cmd = ["pytest", "-q", file_name_path]
             if args.target:
