@@ -60,14 +60,14 @@ def rspec(args):
 
     if path.exists("./bin/rspec"):
         run(
-            ["time", "./bin/rspec", "-f", "d", f"{args.file_name}{line}"],
+            ["./bin/rspec", "-f", "d", f"{args.file_name}{line}"],
             verbose=False,
         )
     elif path.exists("./server/bin/rspec"):
         with cd("server"):
             file_name = sub("server/", "", args.file_name, count=1)
             run(
-                ["time", "./bin/rspec", "-f", "d", f"{file_name}{line}"],
+                ["./bin/rspec", "-f", "d", f"{file_name}{line}"],
                 verbose=False,
             )
     elif path.exists("./server"):
@@ -75,7 +75,6 @@ def rspec(args):
             file_name = sub("server/", "", args.file_name, count=1)
             run(
                 [
-                    "time",
                     "bundle",
                     "exec",
                     "rspec",
@@ -87,7 +86,7 @@ def rspec(args):
             )
     else:
         run(
-            ["time", "bundle", "exec", "rspec", "-f", "d", f"{args.file_name}{line}"],
+            ["bundle", "exec", "rspec", "-f", "d", f"{args.file_name}{line}"],
             verbose=False,
         )
 
@@ -116,7 +115,7 @@ def javascript(args):
             if not target:
                 raise TestingStrategyNotFound(args.file_name)
 
-            cmd = ["time", "npx"] + target.split()[0:-1] + [abs_file_name]
+            cmd = ["npx"] + target.split()[0:-1] + [abs_file_name]
             run(cmd, verbose=False)
 
 
