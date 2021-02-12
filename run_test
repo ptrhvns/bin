@@ -160,7 +160,7 @@ def python(args):
     requirements_path = find_requirements_with_pytest(dirname)
     if requirements_path:
         with cd(path.dirname(requirements_path)):
-            cmd = ["pytest", "-q", file_name_path]
+            cmd = ["pytest", file_name_path]
             if args.target:
                 cmd.extend(["-m", "focus"])
             run(cmd, verbose=False)
