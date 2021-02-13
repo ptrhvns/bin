@@ -11,5 +11,8 @@ pyenv update
 echo "### Updating rbenv ..."
 rbenv update
 
+echo "### Updating goenv"
+(cd ~/.goenv && git pull)
+
 echo "### Updating rustup ..."
 rustup update
