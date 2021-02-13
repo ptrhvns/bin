@@ -2,7 +2,14 @@
 
 set -euo pipefail
 
+echo "### Updating nodenv ..."
 nodenv update
+
+echo "### Updating pyenv ..."
 pyenv update
+
+echo "### Updating rbenv ..."
 rbenv update
+
+echo "### Updating rustup ..."
 rustup update
