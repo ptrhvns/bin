@@ -127,7 +127,7 @@ def rake(args):
 
 
 def find_requirements_with_pytest(dirname):
-    requirements_filenames = ["requirements.development.txt", "requirements.txt"]
+    requirements_filenames = ["requirements.dev.txt", "requirements.txt"]
     for f in requirements_filenames:
         path = find_up_tree(dirname, f)
         if path and file_contains(path, "pytest"):
