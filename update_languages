@@ -20,9 +20,3 @@ rbenv update
 
 echo "### Updating rubygems ..."
 gem update --system --no-document
-
-echo "### Updating goenv"
-(cd ~/.goenv && git pull)
-
-echo "### Updating rustup ..."
-rustup update
