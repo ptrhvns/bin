@@ -2,21 +2,33 @@
 
 set -euo pipefail
 
+echo
 echo "### Updating nodenv ..."
+echo
 nodenv update
 
+echo
 echo "### Updating npm and yarn ..."
+echo
 npm install --global npm
 npm install --global yarn
 
+echo
 echo "### Updating pyenv ..."
+echo
 pyenv update
 
+echo
 echo "### Updating pip ..."
+echo
 pip install --upgrade pip
 
+echo
 echo "### Updating rbenv ..."
+echo
 rbenv update
 
+echo
 echo "### Updating rubygems ..."
+echo
 gem update --system --no-document
