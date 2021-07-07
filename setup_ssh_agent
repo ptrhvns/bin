@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# This code is only for reference as it should probably be sourced inside a
-# Bash config file.
-
 if [ -r ~/.ssh-agent ]; then
     source ~/.ssh-agent >/dev/null
 else
