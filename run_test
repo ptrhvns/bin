@@ -10,8 +10,8 @@ from re import search, sub
 
 sys.path.append(path.join(environ["HOME"], "lib"))
 
-from output import die
-from shell import cd, run
+from output import die  # isort:skip
+from shell import cd, run  # isort:skip
 
 
 class TestingStrategyNotFound(Exception):
