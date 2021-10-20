@@ -32,3 +32,9 @@ echo
 echo "### Updating rubygems ..."
 echo
 gem update --system --no-document
+
+echo
+echo "### Updating goenv"
+echo
+(cd ~/.goenv && git pull)
+
