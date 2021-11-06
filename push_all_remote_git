@@ -6,7 +6,9 @@ for dir in ~/src/personal/remote/*/; do
     (
         cd "$dir"
         echo "### pushing $(pwd)"
+        echo
         git push origin
+        echo
     )
 done
 
