@@ -22,13 +22,3 @@ echo
 echo "### Updating pip ..."
 echo
 pip install --upgrade pip
-
-echo
-echo "### Updating rbenv ..."
-echo
-rbenv update
-
-echo
-echo "### Updating rubygems ..."
-echo
-gem update --system --no-document
