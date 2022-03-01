@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-set -euo pipefail
-
-curl -H "Accept: text/plain" https://icanhazdadjoke.com; echo
