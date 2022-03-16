@@ -8,10 +8,9 @@ echo
 nodenv update
 
 echo
-echo "### Updating npm and yarn ..."
+echo "### Updating npm ..."
 echo
 npm install --global npm
-npm install --global yarn
 
 echo
 echo "### Updating pyenv ..."
