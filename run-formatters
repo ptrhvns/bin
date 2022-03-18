@@ -1,0 +1,109 @@
+#!/usr/bin/env python
+
+import argparse
+import contextlib
+import os
+import pathlib
+import re
+import subprocess
+import sys
+
+MSG_PREFIX = "###"
+PRETTIER_RE = r"\.(css|html|js|json|md|scss)$"
+PYTHON_PACKAGE_FILES = ["pyproject.toml"]
+PYTHON_RE = r"\.py$"
+
+
+def error(message):
+    print(f"{MSG_PREFIX} ERROR: {message}", file=sys.stderr)
+    sys.exit(1)
+
+
+def warning(message):
+    print(f"{MSG_PREFIX} WARNING: {message}", file=sys.stderr)
+
+
+def file_contains(path, text):
+    with open(path) as f:
+        return True if text in f.read() else False
+
+
+@contextlib.contextmanager
+def cd(directory):
+    save_directory = os.getcwd()
+    os.chdir(directory)
+    yield
+    os.chdir(save_directory)
+
+
+def run(command):
+    subprocess.run(command.split(" "), check=True)
+
+
+def find_up_tree(directory, file):
+    root_visited = False
+
+    while True:
+        if root_visited:
+            return None
+
+        full_path = os.path.join(directory, file)
+
+        if os.path.exists(full_path):
+            return full_path
+        else:
+            directory, _ = os.path.split(directory)
+
+            if directory == "/":
+                root_visited = True
+
+
+def build_cd_directory(package_path):
+    return os.path.dirname(package_path) if package_path else pathlib.Path.home()
+
+
+def format_prettier_file(abs_file_name):
+    package_path = find_up_tree(os.path.dirname(abs_file_name), "package.json")
+    cd_directory = build_cd_directory(package_path)
+
+    with cd(cd_directory):
+        run(f"npx prettier --write {abs_file_name}")
+
+
+def find_python_package_path(abs_file_name):
+    for package_file in PYTHON_PACKAGE_FILES:
+        package_path = find_up_tree(os.path.dirname(abs_file_name), package_file)
+
+        if package_path:
+            return package_path
+
+
+def format_python_file(abs_file_name):
+    package_path = find_python_package_path(abs_file_name)
+    cd_directory = build_cd_directory(package_path)
+
+    with cd(cd_directory):
+        run(f"black {abs_file_name}")
+
+        if package_path:
+            run(f"isort --atomic {abs_file_name}")
+        else:
+            warning("skipping isort - no package file found")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Run code formatters on a given file.")
+    parser.add_argument("file_name", help="name of the file to run formatters on")
+    file_name = parser.parse_args().file_name
+    abs_file_name = os.path.abspath(file_name)
+
+    if re.search(PRETTIER_RE, abs_file_name):
+        format_prettier_file(abs_file_name)
+    elif re.search(PYTHON_RE, abs_file_name) or file_contains(abs_file_name, "python"):
+        format_python_file(abs_file_name)
+    else:
+        error(f"unsupported file type: {file_name}")
+
+
+if __name__ == "__main__":
+    main()
