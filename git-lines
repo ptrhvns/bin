@@ -31,7 +31,7 @@ while getopts h opt; do
 done
 
 author=$(git config --get user.name)
-since=$(date --date="${days} days ago")
+since=$(date --date="${days} days ago" "+%Y-%m-%d")
 
 git log --author="${author}" --numstat --pretty="%H" --since "${since}" |
   awk "
