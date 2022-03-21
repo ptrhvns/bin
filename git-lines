@@ -52,6 +52,6 @@ git log --author="${author}" --numstat --pretty="%H" --since "${since_days_ago}"
       minus += \$2;
     }
     END {
-      printf(\"Since ${days} day(s) ago:\t%d committed, %d deleted, %d net, %d committed / day\n\", plus, minus, plus - minus, plus / ${days})
+      printf(\"Over last ${days} day(s):\t%d committed per day\n\", plus / ${days})
     }
   "
