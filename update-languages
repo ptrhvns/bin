@@ -26,6 +26,6 @@ echo
 echo "### Updating goenv ..."
 echo
 (
-    cd ${GOENV_ROOT}
+    cd "${GOENV_ROOT}"
     git pull
 )
