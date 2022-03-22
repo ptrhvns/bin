@@ -6,4 +6,4 @@ rm -f ~/.ssh-agent
 ssh-agent > ~/.ssh-agent
 source ~/.ssh-agent
 ssh-add -D
-ssh-add $(command ls ~/.ssh/id_* | grep -v '\.pub')
+ssh-add "$(command ls ~/.ssh/id_* | grep -v '\.pub')"
