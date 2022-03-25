@@ -37,7 +37,10 @@ def cd(directory):
 
 
 def run(command):
-    subprocess.run(command.split(" "), check=True)
+    try:
+        subprocess.run(command.split(" "), check=True)
+    except subprocess.CalledProcessError as exc:
+        error(f"command returned status code {exc.returncode}: {command}")
 
 
 def find_up_tree(directory, file):
@@ -87,8 +90,9 @@ def format_python_file(abs_file_name):
 
         if package_path:
             run(f"isort --atomic {abs_file_name}")
+            run(f"flake8 {abs_file_name}")
         else:
-            warning("skipping isort - no package file found")
+            warning("skipping isort and flake8 - no package file found")
 
 
 def main():
