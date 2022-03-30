@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-rm -f ~/.ssh-agent
-ssh-agent > ~/.ssh-agent
-source ~/.ssh-agent
+rm -f "${HOME}/.ssh-agent"
+ssh-agent > "${HOME}/.ssh-agent"
+source "${HOME}/.ssh-agent"
 ssh-add -D
-ssh-add "$(command ls ~/.ssh/id_* | grep -v '\.pub')"
+ssh-add $(find -L "${HOME}/.ssh" -name "id_*" -type f | grep -Ev "\.pub$")
