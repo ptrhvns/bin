@@ -12,7 +12,10 @@ if [ $# -lt 1 ]; then
 fi
 
 directory=$1
-test -d "$directory" || { echo "ERROR: no directory: $directory" 1>&2; exit 1; }
+test -d "$directory" || {
+    echo "ERROR: no directory: $directory" 1>&2
+    exit 1
+}
 
 (
     cd "$directory"

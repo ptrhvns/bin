@@ -11,4 +11,3 @@ for dir in ~/src/personal/remote/*/; do
         echo
     )
 done
-

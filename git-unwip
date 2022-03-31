@@ -6,13 +6,13 @@ username=$(whoami)
 
 while getopts u: opt; do
     case $opt in
-        u)
-            username=$OPTARG
-            ;;
-        *)
-            echo "Invalid flag used"
-            exit 1
-            ;;
+    u)
+        username=$OPTARG
+        ;;
+    *)
+        echo "Invalid flag used"
+        exit 1
+        ;;
     esac
 done
 

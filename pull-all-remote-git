@@ -9,4 +9,3 @@ for dir in ~/src/personal/remote/*/; do
         git pull origin master:master
     )
 done
-

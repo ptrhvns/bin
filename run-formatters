@@ -103,6 +103,11 @@ def format_python_file(abs_file_name: str) -> None:
             run(f"flake8 --ignore=E501 {abs_file_name}")
 
 
+def format_bash_file(abs_file_name: str) -> None:
+    run(f"shfmt -i 4 -s -sr -w {abs_file_name}")
+    run(f"shellcheck {abs_file_name}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run code formatters on a given file.")
     parser.add_argument("file_name", help="name of the file to run formatters on")
@@ -113,6 +118,8 @@ def main() -> None:
         format_prettier_file(abs_file_name)
     elif re.search(PYTHON_RE, abs_file_name) or file_contains(abs_file_name, "python"):
         format_python_file(abs_file_name)
+    elif file_contains(abs_file_name, "#!/usr/bin/env bash"):
+        format_bash_file(abs_file_name)
     else:
         error(f"unsupported file type: {file_name}")
 

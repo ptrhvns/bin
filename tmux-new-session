@@ -13,17 +13,17 @@ fi
 session_name=${1//[^a-zA-Z0-9]/_/g}
 
 if [ -z "${TMUX:-}" ]; then
-    tmux new-session -As "$session_name"
+    tmux new-session -As "${session_name}"
 else
     current_pane=$(tmux display-message -p "#D")
 
-    if [ "$(tmux list-sessions | grep -c \"^$session_name:\")" -lt 1 ]; then
+    if [ "$(tmux list-sessions | grep -c \"^${session_name}:\")" -lt 1 ]; then
         (
             unset TMUX
-            tmux new-session -Ad -s "$session_name"
+            tmux new-session -Ad -s "${session_name}"
         )
     fi
 
-    tmux switch-client -t "$session_name"
-    tmux kill-pane -t "$current_pane"
+    tmux switch-client -t "${session_name}"
+    tmux kill-pane -t "${current_pane}"
 fi

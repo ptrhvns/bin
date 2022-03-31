@@ -5,7 +5,7 @@ set -Eeuo pipefail
 days=${1:-7}
 
 usage() {
-  cat <<EOF
+    cat << EOF
 Usage: $(basename "$0") [-h] [num_days]
 
 Get number of lines committed and deleted.
@@ -15,18 +15,18 @@ Available options:
 -h, --help      Print this help and exit
 num_days        Number of days ago to start from (default 7)
 EOF
-  exit
+    exit
 }
 
 while getopts h opt; do
     case $opt in
-        h)
-            usage
-            ;;
-        *)
-            echo "Invalid flag"
-            exit 1
-            ;;
+    h)
+        usage
+        ;;
+    *)
+        echo "Invalid flag"
+        exit 1
+        ;;
     esac
 done
 
@@ -35,7 +35,7 @@ since_days_ago=$(date --date="${days} days ago" "+%Y-%m-%d")
 since_yesterday=$(date --date="yesterday" "+%Y-%m-%d")
 
 git log --author="${author}" --numstat --pretty="%H" --since "${since_yesterday}" |
-  awk "
+    awk "
     NF==3 {
       plus += \$1;
       minus += \$2;
@@ -46,7 +46,7 @@ git log --author="${author}" --numstat --pretty="%H" --since "${since_yesterday}
   "
 
 git log --author="${author}" --numstat --pretty="%H" --since "${since_days_ago}" |
-  awk "
+    awk "
     NF==3 {
       plus += \$1;
       minus += \$2;
