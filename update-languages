@@ -26,6 +26,18 @@ echo
 echo "### Updating goenv ..."
 echo
 (
-    cd "${GOENV_ROOT}"
+    cd "$(goenv root)"
+    git pull
+)
+
+echo
+echo "### Updating luaenv ..."
+echo
+(
+    cd "$(luaenv root)"
+    git pull
+)
+(
+    cd "$(luaenv root)/plugins/lua-build"
     git pull
 )
