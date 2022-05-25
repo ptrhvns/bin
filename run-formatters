@@ -21,7 +21,11 @@ def error(message: str) -> None:
     sys.exit(1)
 
 
-def warning(message: str) -> None:
+def say(message: str) -> None:
+    print(f"{MSG_PREFIX} {message}", file=sys.stderr)
+
+
+def warn(message: str) -> None:
     print(f"{MSG_PREFIX} WARNING: {message}", file=sys.stderr)
 
 
@@ -90,16 +94,20 @@ def format_python_file(abs_file_name: str) -> None:
     cd_directory = build_cd_directory(package_path)
 
     with cd(cd_directory):
+        say("running black")
         run(f"black {abs_file_name}")
 
         if package_path:
+            say("running isort")
             run(f"isort --atomic {abs_file_name}")
         else:
-            warning("skipping isort: no package file found")
+            warn("skipping isort: no package file found")
 
         if package_path:
+            say("running flake8")
             run(f"flake8 {abs_file_name}")
         else:
+            say("running flake8")
             run(f"flake8 --ignore=E501 {abs_file_name}")
 
 
