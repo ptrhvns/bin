@@ -76,6 +76,7 @@ def format_prettier_file(abs_file_name: str) -> None:
     cd_directory = build_cd_directory(package_path)
 
     with cd(cd_directory):
+        say("Running prettier")
         run(f"npx prettier --write {abs_file_name}")
 
 
@@ -94,25 +95,27 @@ def format_python_file(abs_file_name: str) -> None:
     cd_directory = build_cd_directory(package_path)
 
     with cd(cd_directory):
-        say("running black")
+        say("Running black")
         run(f"black {abs_file_name}")
 
         if package_path:
-            say("running isort")
+            say("Running isort")
             run(f"isort --atomic {abs_file_name}")
         else:
-            warn("skipping isort: no package file found")
+            warn("Skipping isort (no package file found)")
 
         if package_path:
-            say("running flake8")
+            say("Running flake8")
             run(f"flake8 {abs_file_name}")
         else:
-            say("running flake8")
+            say("Running flake8")
             run(f"flake8 --ignore=E501 {abs_file_name}")
 
 
 def format_bash_file(abs_file_name: str) -> None:
+    say("Running shfmt")
     run(f"shfmt -i 4 -s -sr -w {abs_file_name}")
+    say("Running shellcheck")
     run(f"shellcheck {abs_file_name}")
 
 
