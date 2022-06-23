@@ -107,7 +107,7 @@ def format_python_file(abs_file_name):
             run(f"flake8 {abs_file_name}")
         else:
             say("Running flake8")
-            run(f"flake8 --ignore=E501 {abs_file_name}")
+            run(f"flake8 --ignore=E402,E501 {abs_file_name}")
 
 
 def format_bash_file(abs_file_name):
