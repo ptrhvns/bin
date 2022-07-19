@@ -41,7 +41,7 @@ git log --author="${author}" --numstat --pretty="%H" --since "${since_yesterday}
       minus += \$2;
     }
     END {
-      printf(\"Today:\t\t\t%d commit(s), %d delete(s), %d net\n\", plus, minus, plus - minus)
+      printf(\"Today:\t\t\t%d commits, %d deletes, %d net\n\", plus, minus, plus - minus)
     }
   "
 
@@ -52,6 +52,6 @@ git log --author="${author}" --numstat --pretty="%H" --since "${since_days_ago}"
       minus += \$2;
     }
     END {
-      printf(\"Over last ${days} day(s):\t%d commit(s) on average per day\n\", plus / ${days})
+      printf(\"Over last ${days} day(s):\t%d commits per day\n\", plus / ${days})
     }
   "
