@@ -109,6 +109,12 @@ def format_python_file(abs_file_name):
             say("Running flake8")
             run(f"flake8 --ignore=E402,E501 {abs_file_name}")
 
+        if package_path:
+            with open(package_path, mode="r", encoding="utf-8") as f:
+                if re.search("mypy", f.read()):
+                    say("Running mypy")
+                    run("mypy")
+
 
 def format_bash_file(abs_file_name):
     say("Running shfmt")
