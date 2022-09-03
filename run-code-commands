@@ -98,7 +98,7 @@ def format_python_file(abs_file_name):
 
         if package_path:
             say("Running isort")
-            run(f"isort --atomic {abs_file_name}")
+            run(f"isort --profile black --atomic {abs_file_name}")
         else:
             warn("Skipping isort (no package file found)")
 
