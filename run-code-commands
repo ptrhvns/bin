@@ -78,6 +78,14 @@ def format_prettier_file(abs_file_name):
         say("Running prettier")
         run(f"npx prettier --write {abs_file_name}")
 
+        if package_path:
+            with open(package_path, mode="r", encoding="utf-8") as f:
+                contents = f.read()
+
+                if re.search("typescript", contents) and re.search("vite", contents):
+                    say("Running tsc")
+                    run("npx tsc --noEmit")
+
 
 def find_python_package_path(abs_file_name):
     for package_file in PYTHON_PACKAGE_FILES:
