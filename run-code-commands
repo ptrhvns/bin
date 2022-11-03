@@ -78,7 +78,7 @@ def format_prettier_file(abs_file_name):
         say("Running prettier")
         run(f"npx prettier --write {abs_file_name}")
 
-        if package_path:
+        if package_path and re.search(r"\.(ts|tsx)", abs_file_name):
             with open(package_path, mode="r", encoding="utf-8") as f:
                 contents = f.read()
 
