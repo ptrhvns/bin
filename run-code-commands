@@ -9,7 +9,7 @@ import subprocess
 import sys
 
 MSG_PREFIX = "###"
-PRETTIER_RE = r"\.(css|html|js|json|jsx|md|scss|ts|tsx)$"
+PRETTIER_RE = r"\.(cjs|css|html|js|json|jsx|md|scss|ts|tsx)$"
 PYTHON_PACKAGE_FILES = ["pyproject.toml"]
 PYTHON_RE = r"\.py$"
 RUST_RE = r"\.rs$"
@@ -78,13 +78,20 @@ def format_prettier_file(abs_file_name):
         say("Running prettier")
         run(f"npx prettier --write {abs_file_name}")
 
-        if package_path and re.search(r"\.(ts|tsx)", abs_file_name):
-            with open(package_path, mode="r", encoding="utf-8") as f:
-                contents = f.read()
+        if not package_path:
+            return
 
-                if re.search("typescript", contents) and re.search("vite", contents):
+        with open(package_path, mode="r", encoding="utf-8") as f:
+            contents = f.read()
+
+            if re.search(r"\.(ts|tsx)", abs_file_name):
+                if re.search("typescript", contents):
                     say("Running tsc")
                     run("npx tsc --noEmit")
+
+            if re.search("eslint", contents):
+                say("Running eslint")
+                run("npx eslint .")
 
 
 def find_python_package_path(abs_file_name):
