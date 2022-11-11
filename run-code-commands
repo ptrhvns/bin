@@ -91,7 +91,7 @@ def format_prettier_file(abs_file_name):
 
             if re.search("eslint", contents):
                 say("Running eslint")
-                run("npx eslint .")
+                run(f"npx eslint {abs_file_name}")
 
 
 def find_python_package_path(abs_file_name):
