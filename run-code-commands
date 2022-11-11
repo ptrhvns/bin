@@ -78,20 +78,22 @@ def format_prettier_file(abs_file_name):
         say("Running prettier")
         run(f"npx prettier --write {abs_file_name}")
 
-        if not package_path:
-            return
-
-        with open(package_path, mode="r", encoding="utf-8") as f:
-            contents = f.read()
-
-            if re.search(r"\.(ts|tsx)", abs_file_name):
-                if re.search("typescript", contents):
-                    say("Running tsc")
-                    run("npx tsc --noEmit")
-
-            if re.search("eslint", contents):
-                say("Running eslint")
-                run(f"npx eslint {abs_file_name}")
+        # The following commands run too slowly. Save them in case.
+        #
+        # if not package_path:
+        #     return
+        #
+        # with open(package_path, mode="r", encoding="utf-8") as f:
+        #     contents = f.read()
+        #
+        #     if re.search(r"\.(ts|tsx)", abs_file_name):
+        #         if re.search("typescript", contents):
+        #             say("Running tsc")
+        #             run("npx tsc --noEmit")
+        #
+        #     if re.search("eslint", contents):
+        #         say("Running eslint")
+        #         run(f"npx eslint {abs_file_name}")
 
 
 def find_python_package_path(abs_file_name):
