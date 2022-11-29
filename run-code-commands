@@ -135,6 +135,8 @@ def format_python_file(abs_file_name):
 def format_rust_file(abs_file_name):
     say("Running rustfmt")
     run(f"rustfmt {abs_file_name}")
+    say("Running cargo check")
+    run(f"cargo check")
 
 
 def format_bash_file(abs_file_name):
