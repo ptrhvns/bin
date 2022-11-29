@@ -70,7 +70,7 @@ def build_cd_directory(package_path):
     return os.path.dirname(package_path) if package_path else str(pathlib.Path.home())
 
 
-def format_prettier_file(abs_file_name):
+def run_prettier_code_commands(abs_file_name):
     package_path = find_up_tree(os.path.dirname(abs_file_name), "package.json")
     cd_directory = build_cd_directory(package_path)
 
@@ -104,7 +104,7 @@ def find_python_package_path(abs_file_name):
     return None
 
 
-def format_python_file(abs_file_name):
+def run_python_code_commands(abs_file_name):
     package_path = find_python_package_path(abs_file_name)
     cd_directory = build_cd_directory(package_path)
 
@@ -132,14 +132,14 @@ def format_python_file(abs_file_name):
                     run("mypy")
 
 
-def format_rust_file(abs_file_name):
+def run_rust_code_commands(abs_file_name):
     say("Running rustfmt")
     run(f"rustfmt {abs_file_name}")
     say("Running cargo check")
     run(f"cargo check")
 
 
-def format_bash_file(abs_file_name):
+def run_bash_code_commands(abs_file_name):
     say("Running shfmt")
     run(f"shfmt -i 4 -s -sr -w {abs_file_name}")
     say("Running shellcheck")
@@ -153,13 +153,13 @@ def main():
     abs_file_name = os.path.abspath(file_name)
 
     if re.search(PRETTIER_RE, abs_file_name):
-        format_prettier_file(abs_file_name)
+        run_prettier_code_commands(abs_file_name)
     elif re.search(PYTHON_RE, abs_file_name) or file_contains(abs_file_name, "python"):
-        format_python_file(abs_file_name)
+        run_python_code_commands(abs_file_name)
     elif re.search(RUST_RE, abs_file_name):
-        format_rust_file(abs_file_name)
+        run_rust_code_commands(abs_file_name)
     elif file_contains(abs_file_name, "#!/usr/bin/env bash"):
-        format_bash_file(abs_file_name)
+        run_bash_code_commands(abs_file_name)
     else:
         error(f"unsupported file type: {file_name}")
 
