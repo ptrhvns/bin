@@ -79,16 +79,17 @@ def run_prettier_code_commands(abs_file_name):
             package_file_contents = f.read()
 
         with cd(package_dir):
-            if re.search(r"\.(ts|tsx)", abs_file_name):
+            if re.search(r"\.(ts|tsx)$", abs_file_name):
                 if re.search("typescript", package_file_contents):
                     say("Running tsc")
                     run("npx tsc --noEmit")
 
-            if re.search("eslint", package_file_contents):
-                say("Running eslint")
-                run("npx eslint")
+            if re.search(r"\.(js|jsx|ts|tsx)$", abs_file_name):
+                if re.search("eslint", package_file_contents):
+                    say("Running eslint")
+                    run(f"npx eslint {abs_file_name}")
 
-            if re.search(r"\.scss$", abs_file_name):
+            if re.search(r"\.(css|scss)$", abs_file_name):
                 if re.search("stylelint", package_file_contents):
                     say("Running stylelint")
                     run(f"npx stylelint {abs_file_name}")
