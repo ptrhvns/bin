@@ -106,11 +106,10 @@ def find_python_package_path(abs_file_name):
 
 
 def run_python_code_commands(abs_file_name):
-    package_file = find_up_tree(os.path.dirname(abs_file_name), "package.json")
+    package_file = find_python_package_path(abs_file_name)
     package_dir = os.path.dirname(package_file) if package_file else None
-    package_or_home_dir = package_dir or str(pathlib.Path.home())
 
-    with cd(package_or_home_dir):
+    with cd(package_dir or str(pathlib.Path.home())):
         say("Running black")
         run(f"black {abs_file_name}")
 
