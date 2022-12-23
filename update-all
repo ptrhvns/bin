@@ -7,5 +7,6 @@ echo "### Updating OS packages"
 echo
 sudo apt update -y
 sudo apt upgrade -y
+sudo apt autoremove
 
 update-languages
