@@ -122,17 +122,22 @@ def run_python_code_commands(args, abs_file_name):
 
         if not args.format:
             if package_file:
-                say("Running flake8")
-                run(f"flake8 {abs_file_name}")
+                with open(package_file, mode="r", encoding="utf-8") as f:
+                    contents = f.read()
+
+                    if re.search("ruff", contents):
+                        say("Running ruff")
+                        run(f"ruff check {abs_file_name}")
+                    else:
+                        say("Running flake8")
+                        run(f"flake8 {abs_file_name}")
+
+                    if re.search("mypy", contents):
+                        say("Running mypy")
+                        run("mypy")
             else:
                 say("Running flake8")
                 run(f"flake8 --ignore=E402,E501 {abs_file_name}")
-
-            if package_file:
-                with open(package_file, mode="r", encoding="utf-8") as f:
-                    if re.search("mypy", f.read()):
-                        say("Running mypy")
-                        run("mypy")
 
 
 def run_rust_code_commands(args, abs_file_name):
