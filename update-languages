@@ -21,8 +21,3 @@ echo
 echo "### Updating npm ..."
 echo
 npm install --global npm
-
-echo
-echo "### Updating rust ..."
-echo
-rustup update
