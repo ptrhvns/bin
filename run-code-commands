@@ -120,13 +120,14 @@ def run_python_code_commands(args, abs_file_name):
             say("Running ruff")
             run(f"ruff check --fix --fixable I {abs_file_name}")
 
-            if package_file:
-                with open(package_file, mode="r", encoding="utf-8") as f:
-                    contents = f.read()
-
-                    if re.search("mypy", contents):
-                        say("Running mypy")
-                        run("mypy")
+            # TODO Don't run while experimenting with Python language servers.
+            # if package_file:
+            #     with open(package_file, mode="r", encoding="utf-8") as f:
+            #         contents = f.read()
+            #
+            #         if re.search("mypy", contents):
+            #             say("Running mypy")
+            #             run("mypy")
 
 
 def run_bash_code_commands(args, abs_file_name):
