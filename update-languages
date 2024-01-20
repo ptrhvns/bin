@@ -2,35 +2,47 @@
 
 # set -euo pipefail
 
-echo
-echo "### Updating pyenv ..."
-echo
-pyenv update
+if command -v pyenv 1>/dev/null 2>&1; then
+    echo
+    echo "### Updating with pyenv ..."
+    echo
+    pyenv update
+fi
 
-echo
-echo "### Updating pip ..."
-echo
-pip install --upgrade pip
+if command -v pip 1>/dev/null 2>&1; then
+    echo
+    echo "### Updating with pip ..."
+    echo
+    pip install --upgrade pip
+fi
 
-echo
-echo "### Updating nodenv ..."
-echo
-nodenv update
+if command -v nodenv 1>/dev/null 2>&1; then
+    echo
+    echo "### Updating with nodenv ..."
+    echo
+    nodenv update
+fi
 
-echo
-echo "### Updating npm ..."
-echo
-npm install --global npm
+if command -v npm 1>/dev/null 2>&1; then
+    echo
+    echo "### Updating with npm ..."
+    echo
+    npm install --global npm
+fi
 
-echo
-echo "### Updating goenv ..."
-echo
-(
-    cd "$(goenv root)"
-    git pull
-)
+if command -v goenv 1>/dev/null 2>&1; then
+    echo
+    echo "### Updating with goenv ..."
+    echo
+    (
+        cd "$(goenv root)"
+        git pull
+    )
+fi
 
-echo
-echo "### Updating rust ..."
-echo
-rustup update
+if command -v rustup 1>/dev/null 2>&1; then
+    echo
+    echo "### Updating with rustup ..."
+    echo
+    rustup update
+fi
