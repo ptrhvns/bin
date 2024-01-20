@@ -23,6 +23,14 @@ echo
 npm install --global npm
 
 echo
+echo "### Updating goenv ..."
+echo
+(
+    cd "$(goenv root)"
+    git pull
+)
+
+echo
 echo "### Updating rust ..."
 echo
 rustup update
