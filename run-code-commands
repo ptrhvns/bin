@@ -133,7 +133,7 @@ def run_python_code_commands(args, abs_file_name):
 
 def run_go_code_commands(args, abs_file_name):
     say("Running go fmt")
-    run(f"go fmt .")
+    run("go fmt .")
 
 
 def run_bash_code_commands(args, abs_file_name):
