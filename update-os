@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ ! -f "/etc/os-release" ]]; then
+    echo "ERROR: /etc/os-release not found" 1>&2
+    exit 1
+fi
+
+if [[ "$(grep -c 'Ubuntu' /etc/os-release)" -gt 0 ]]; then
+    echo
+    echo "### Updating Ubuntu OS packages ..."
+    echo
+    sudo apt update -y
+    sudo apt upgrade -y
+    sudo apt autoremove -y
+elif [[ "$(grep -c 'Rocky Linux' /etc/os-release)" -gt 0 ]]; then
+    echo
+    echo "### Updating Rocky Linux OS packages ..."
+    echo
+    sudo dnf -y upgrade
+    sudo dnf -y autoremove
+else
+    echo "ERROR: unsupported OS" 1>&2
+    exit 1
+fi

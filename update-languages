@@ -3,6 +3,7 @@
 # set -euo pipefail
 
 if command -v pyenv 1>/dev/null 2>&1; then
+    # Requires pyenv-update plugin.
     echo
     echo "### Updating with pyenv ..."
     echo
@@ -17,6 +18,7 @@ if command -v pip 1>/dev/null 2>&1; then
 fi
 
 if command -v nodenv 1>/dev/null 2>&1; then
+    # Requires nodenv-update plugin.
     echo
     echo "### Updating with nodenv ..."
     echo
