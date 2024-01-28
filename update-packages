@@ -20,6 +20,7 @@ elif [[ "$(grep -c 'Rocky Linux' /etc/os-release)" -gt 0 ]]; then
     echo
     sudo dnf -y upgrade
     sudo dnf -y autoremove
+    sudo dnf clean all
 else
     echo "ERROR: unsupported OS" 1>&2
     exit 1
