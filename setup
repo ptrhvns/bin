@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -Eeuxo pipefail
+
+PWD=$(pwd)
+
+rm -f ~/bin
+ln -s "${PWD}/../bin" ~/bin
