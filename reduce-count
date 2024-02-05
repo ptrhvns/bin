@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Overwrite file, but muiltiply number in first column by 0.75.
+
 set -Eeuo pipefail
 
 if [[ $# -lt 1 ]]; then
