@@ -2,7 +2,7 @@
 
 set -eou pipefail
 
-for dir in ~/src/personal/remote/*/; do
+for dir in ~/depot/remote/*/; do
     (
         cd "$dir"
         echo "### pulling $(pwd)"
