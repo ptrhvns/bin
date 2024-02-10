@@ -14,13 +14,24 @@ if [[ "$(grep -c 'Ubuntu' /etc/os-release)" -gt 0 ]]; then
     sudo apt update -y
     sudo apt upgrade -y
     sudo apt autoremove -y
+elif [[ "$(grep -c 'Fedora Linux' /etc/os-release)" -gt 0 ]]; then
+    echo
+    echo "### Updating Fedora Linux OS packages ..."
+    echo
+    sudo dnf -y upgrade
+    sudo dnf -y autoremove
 elif [[ "$(grep -c 'Rocky Linux' /etc/os-release)" -gt 0 ]]; then
     echo
     echo "### Updating Rocky Linux OS packages ..."
     echo
     sudo dnf -y upgrade
     sudo dnf -y autoremove
-    sudo dnf clean all
+elif [[ "$(grep -c 'Red Hat Enterprise Linux' /etc/os-release)" -gt 0 ]]; then
+    echo
+    echo "### Updating Red Hat Enterprise Linux OS packages ..."
+    echo
+    sudo dnf -y upgrade
+    sudo dnf -y autoremove
 else
     echo "ERROR: unsupported OS" 1>&2
     exit 1
