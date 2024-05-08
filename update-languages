@@ -41,10 +41,3 @@ if command -v goenv 1>/dev/null 2>&1; then
         git pull
     )
 fi
-
-if command -v rustup 1>/dev/null 2>&1; then
-    echo
-    echo "### Updating with rustup ..."
-    echo
-    rustup update
-fi
