@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
-
 session_name=$(basename "$PWD" | sed -e 's/[^a-zA-Z0-9]/_/g')
 
 if [ -z "${TMUX:-}" ]; then

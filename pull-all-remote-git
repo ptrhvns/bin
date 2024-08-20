@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -eou pipefail
-
 for dir in ~/depot/remote/*/; do
     (
         cd "$dir"
