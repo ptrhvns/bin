@@ -120,20 +120,14 @@ def run_python_code_commands(args, abs_file_name):
     working_dir = package_dir or str(pathlib.Path.home())
 
     with cd(working_dir):
-        if re.search("rye", package_file_contents):
-            say("Running rye fmt")
-            run(f"rye fmt {abs_file_name}")
-        elif re.search("ruff", package_file_contents) or shutil.which("ruff"):
+        if re.search("ruff", package_file_contents) or shutil.which("ruff"):
             say("Running ruff format")
             run(f"ruff format {abs_file_name}")
         else:
             say("No formatter found")
 
         if not args.format:
-            if re.search("rye", package_file_contents):
-                say("Running rye lint")
-                run(f"rye lint --fix {abs_file_name}")
-            elif re.search("ruff", package_file_contents) or shutil.which("ruff"):
+            if re.search("ruff", package_file_contents) or shutil.which("ruff"):
                 say("Running ruff check")
                 run(f"ruff check --fix {abs_file_name}")
             else:
