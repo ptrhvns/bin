@@ -4,4 +4,4 @@
 
 set -Eeuo pipefail
 
-tldr "$(compgen -c | fzf)" | $PAGER
+command tldr "$(compgen -c | fzf)" | $PAGER
