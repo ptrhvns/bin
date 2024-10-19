@@ -1,0 +1,13 @@
+!#/usr/bin/env bash
+
+# Use tldr command with fzf.
+
+set -Eeuo pipefail
+
+local SELECTED=$(compgen -c | fzf)
+
+if [[ -z "${SELECTED}" ]]; then
+    exit
+fi
+
+tldr "$SELECTED" | $PAGER

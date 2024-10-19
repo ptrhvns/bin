@@ -1,0 +1,13 @@
+!#/usr/bin/env bash
+
+# Access cheatsheet with curl.
+
+set -Eeuo pipefail
+
+local SELECTED=$(curl -s cht.sh/:list | fzf)
+
+if [[ -z "${SELECTED}" ]]; then
+    exit
+fi
+
+curl -s "cht.sh/${SELECTED}?style=paraiso-dark" | $PAGER
