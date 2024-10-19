@@ -4,7 +4,7 @@
 
 set -Eeuo pipefail
 
-local SELECTED=$(curl -s cht.sh/:list | fzf)
+SELECTED=$(curl -s cht.sh/:list | fzf)
 
 if [[ -z "${SELECTED}" ]]; then
     exit

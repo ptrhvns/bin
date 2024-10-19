@@ -4,7 +4,7 @@
 
 set -Eeuo pipefail
 
-local SELECTED=$(compgen -c | fzf)
+SELECTED=$(compgen -c | fzf)
 
 if [[ -z "${SELECTED}" ]]; then
     exit
