@@ -162,7 +162,7 @@ def main():
 
     if re.search(PRETTIER_RE, abs_file_name):
         run_prettier_code_commands(args, abs_file_name)
-    elif re.search(PYTHON_RE, abs_file_name):
+    elif re.search(PYTHON_RE, abs_file_name) or file_contains(abs_file_name, "#!/usr/bin/env python"):
         run_python_code_commands(args, abs_file_name)
     elif re.search(GO_RE, abs_file_name):
         run_go_code_commands(args, abs_file_name)
