@@ -1,4 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env -S uv run --script --quiet
+# /// script
+# requires-python = ">=3.13"
+# dependencies = []
+# ///
 
 import argparse
 import contextlib
@@ -162,8 +166,10 @@ def main():
 
     if re.search(PRETTIER_RE, abs_file_name):
         run_prettier_code_commands(args, abs_file_name)
-    elif re.search(PYTHON_RE, abs_file_name) or file_contains(
-        abs_file_name, "#!/usr/bin/env python"
+    elif (
+        re.search(PYTHON_RE, abs_file_name)
+        or file_contains(abs_file_name, "#!/usr/bin/env python")
+        or file_contains(abs_file_name, "#!/usr/bin/env -S uv")
     ):
         run_python_code_commands(args, abs_file_name)
     elif re.search(GO_RE, abs_file_name):

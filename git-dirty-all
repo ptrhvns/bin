@@ -1,4 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env -S uv run --script --quiet
+# /// script
+# requires-python = ">=3.13"
+# dependencies = []
+# ///
 
 import contextlib
 import os
@@ -64,7 +68,9 @@ def print_dirty(directories):
                     print(d, "(changes)")
                     continue
                 result = subprocess.run(
-                    ["git", "status"], check=True, stdout=subprocess.PIPE,
+                    ["git", "status"],
+                    check=True,
+                    stdout=subprocess.PIPE,
                 )
                 if b"Your branch is ahead" in result.stdout:
                     print(d, "(ahead)")
