@@ -29,13 +29,3 @@ if command -v npm 1>/dev/null 2>&1; then
     echo
     npm install --global npm
 fi
-
-if command -v goenv 1>/dev/null 2>&1; then
-    echo
-    echo "### Updating with goenv ..."
-    echo
-    (
-        cd "$(goenv root)" || return
-        git pull
-    )
-fi
