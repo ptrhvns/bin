@@ -13,7 +13,6 @@ import shutil
 import subprocess
 import sys
 
-GO_RE = r"\.go$"
 MSG_PREFIX = "###"
 PRETTIER_RE = r"\.(cjs|css|html|js|json|jsx|md|scss|ts|tsx)$"
 PYTHON_PACKAGE_FILES = ["pyproject.toml"]
@@ -138,11 +137,6 @@ def run_python_code_commands(args, abs_file_name):
                 say("No linter found")
 
 
-def run_go_code_commands(args, abs_file_name):
-    say("Running go fmt")
-    run("go fmt .")
-
-
 def run_bash_code_commands(args, abs_file_name):
     say("Running shfmt")
     run(f"shfmt -i 4 -s -sr -w {abs_file_name}")
@@ -172,8 +166,6 @@ def main():
         or file_contains(abs_file_name, "#!/usr/bin/env -S uv")
     ):
         run_python_code_commands(args, abs_file_name)
-    elif re.search(GO_RE, abs_file_name):
-        run_go_code_commands(args, abs_file_name)
     elif file_contains(abs_file_name, "#!/usr/bin/env bash"):
         run_bash_code_commands(args, abs_file_name)
     else:
