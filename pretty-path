@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+pretty-path() {
+    printenv PATH | tr ":" "\n"
+}
