@@ -2,7 +2,7 @@
 
 # Access cheatsheet with curl.
 
-set -Eeuo pipefail
+set -euo pipefail
 
 SELECTED=$(curl -s cht.sh/:list | fzf)
 

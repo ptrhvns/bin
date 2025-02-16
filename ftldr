@@ -2,6 +2,6 @@
 
 # Use tldr command with fzf.
 
-set -Eeuo pipefail
+set -euo pipefail
 
 command tldr "$(compgen -c | fzf)" | $PAGER

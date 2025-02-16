@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 username=$(whoami)
 current_branch=$(git rev-parse --abbrev-ref HEAD)
 wip_name=${current_branch}_wip_${username}
