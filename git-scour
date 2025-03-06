@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -xeou pipefail
+
+git clean -d --force
+git fetch --prune --prune-tags --force
+git pull
+git gc --auto
+
+git submodule forach --recursive git clean -d --force
+git submodule update --init --recursive
+git submodule foreach --recursive git gc --auto
+
+git branch
