@@ -31,7 +31,11 @@ error() {
     say "ERROR: ${1-}"
 }
 
-die () {
+warn() {
+    say "WARNING: ${1-}"
+}
+
+die() {
     error "${1-}"
     exit "${2-1}"
 }
@@ -92,4 +96,3 @@ setup_colors() {
 
 parse_opts "$@"
 setup_colors
-say "Remaining arguments: $*"
