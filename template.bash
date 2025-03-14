@@ -73,7 +73,7 @@ parse_opts() {
 }
 
 setup_colors() {
-    if [[ -t 2 ]] && [[ -z "${USE_COLOR-}" ]] && [[ "${TERM-}" != "dumb" ]]; then
+    if [[ -t 2 ]] && [[ ${USE_COLOR} -eq 1 ]] && [[ "${TERM-}" != "dumb" ]]; then
         BLUE="\033[0;34m]"
         CYAN="\033[0;36m]"
         GREEN="\033[0;32m]"
