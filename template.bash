@@ -68,8 +68,6 @@ parse_opts() {
                 ;;
         esac
     done
-
-    shift $((OPTIND - 1))
 }
 
 setup_colors() {
@@ -95,4 +93,6 @@ setup_colors() {
 }
 
 parse_opts "$@"
+shift $((OPTIND - 1))
+
 setup_colors
