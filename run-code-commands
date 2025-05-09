@@ -32,9 +32,10 @@ def warn(message):
     print(f"{MSG_PREFIX} WARNING: {message}", file=sys.stderr)
 
 
-def file_contains(path, text):
+def first_line_contains(path, text):
     with open(path) as f:
-        return True if text in f.read() else False
+        first_line = f.readline()
+        return True if text in first_line else False
 
 
 @contextlib.contextmanager
@@ -162,11 +163,11 @@ def main():
         run_prettier_code_commands(args, abs_file_name)
     elif (
         re.search(PYTHON_RE, abs_file_name)
-        or file_contains(abs_file_name, "#!/usr/bin/env python")
-        or file_contains(abs_file_name, "#!/usr/bin/env -S uv")
+        or first_line_contains(abs_file_name, "#!/usr/bin/env python")
+        or first_line_contains(abs_file_name, "#!/usr/bin/env -S uv")
     ):
         run_python_code_commands(args, abs_file_name)
-    elif file_contains(abs_file_name, "#!/usr/bin/env bash"):
+    elif first_line_contains(abs_file_name, "#!/usr/bin/env bash"):
         run_bash_code_commands(args, abs_file_name)
     else:
         error(f"unsupported file type: {args.file_name}")
