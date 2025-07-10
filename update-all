@@ -3,4 +3,5 @@
 set -euo pipefail
 
 update-packages
+update-tools
 update-languages
