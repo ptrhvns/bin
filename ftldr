@@ -1,7 +1,60 @@
 #!/usr/bin/env bash
 
-# Use tldr command with fzf.
+set -Eeuo pipefail
 
-set -euo pipefail
+usage() {
+    cat <<EOF
+Usage: $(basename "${BASH_SOURCE[0]}") [OPTIONS]
+
+Use tldr command with fzf for topic selection.
+
+Options:
+    -h      Print this help message and exit
+EOF
+    exit
+}
+
+say() {
+    echo -e "### ${1-}" >&2
+}
+
+error() {
+    say "ERROR: ${1-}"
+}
+
+die() {
+    error "${1-}"
+    exit "${2-1}"
+}
+
+parse_opts() {
+    while getopts ":Cf:hv" optname; do
+        case "${optname}" in
+            h)
+                usage
+                ;;
+            \?)
+                die "Invalid option: ${OPTARG}"
+                ;;
+            :)
+                die "Invalid option: ${OPTARG} requires an argument"
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+}
+
+parse_opts "$@"
+shift $((OPTIND - 1))
+
+if ! command -v fzf &> /dev/null; then
+    die "command not found: fzf"
+fi
+
+if ! command -v tldr &>/dev/null; then
+    die "command not found: tldr"
+fi
 
 command tldr "$(compgen -c | fzf)" | $PAGER
