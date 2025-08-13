@@ -1,37 +1,63 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -Eeuo pipefail
 
-days=${1:-7}
+DEFAULT_NUM_DAYS=7
 
 usage() {
-    cat << EOF
-Usage: $(basename "$0") [-h] [num_days]
+    cat <<EOF
+Usage: $(basename "${BASH_SOURCE[0]}") [OPTIONS] [NUM_DAYS]
 
-Get number of lines committed and deleted.
+Displays a bad measure of productivity: the number of lines committed and
+deleted over NUM_DAYS in the current Git repository. Only includes commits for
+the current user (uses user.name from Git configuration).
 
-Available options:
-
--h, --help      Print this help and exit
-num_days        Number of days ago to start from (default 7)
+Options:
+    -h          Print this help message and exit
+    NUM_DAYS    Number of days ago to start from (default ${DEFAULT_NUM_DAYS})
 EOF
     exit
 }
 
-while getopts h opt; do
-    case $opt in
-    h)
-        usage
-        ;;
-    *)
-        echo "Invalid flag"
-        exit 1
-        ;;
-    esac
-done
+say() {
+    echo -e "### ${1-}" >&2
+}
+
+error() {
+    say "ERROR: ${1-}"
+}
+
+die() {
+    error "${1-}"
+    exit "${2-1}"
+}
+
+parse_opts() {
+    while getopts "h" optname; do
+        case "${optname}" in
+            h)
+                usage
+                ;;
+            \?)
+                die "Invalid option: ${OPTARG}"
+                ;;
+            :)
+                die "Invalid option: ${OPTARG} requires an argument"
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+}
+
+parse_opts "$@"
+shift $((OPTIND - 1))
+
+num_days=${1:-${DEFAULT_NUM_DAYS}}
 
 author=$(git config --get user.name)
-since_days_ago=$(date --date="${days} days ago" "+%Y-%m-%d")
+since_days_ago=$(date --date="${num_days} days ago" "+%Y-%m-%d")
 since_yesterday=$(date --date="yesterday" "+%Y-%m-%d")
 
 git log --author="${author}" --numstat --pretty="%H" --since "${since_yesterday}" |
@@ -52,6 +78,6 @@ git log --author="${author}" --numstat --pretty="%H" --since "${since_days_ago}"
       minus += \$2;
     }
     END {
-      printf(\"Over last ${days} day(s):\t%d lines commited per day\n\", plus / ${days})
+      printf(\"Over last ${num_days} day(s):\t%d lines commited per day\n\", plus / ${num_days})
     }
   "
