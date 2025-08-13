@@ -4,6 +4,7 @@
 # dependencies = []
 # ///
 
+import argparse
 import contextlib
 import os
 import subprocess
@@ -17,12 +18,15 @@ def home(*paths):
 def child_directories(parents):
     """Build paths of child directories."""
     children = []
+
     for p in parents:
         if os.path.isdir(p):
             for d in os.listdir(p):
                 j = os.path.join(p, d)
+
                 if os.path.isdir(j):
                     children.append(j)
+
     return children
 
 
@@ -48,6 +52,7 @@ def cd(directory):
     """Temporarily change directory."""
     savedir = os.getcwd()
     os.chdir(os.path.expanduser(directory))
+
     try:
         yield
     finally:
@@ -64,17 +69,24 @@ def print_dirty(directories):
                     check=True,
                     stdout=subprocess.PIPE,
                 )
+
                 if result.stdout.count(b"\n") > 0:
                     print(d, "(changes)")
                     continue
+
                 result = subprocess.run(
                     ["git", "status"],
                     check=True,
                     stdout=subprocess.PIPE,
                 )
+
                 if b"Your branch is ahead" in result.stdout:
                     print(d, "(ahead)")
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Check for dirty Git repositories in hard-coded locations."
+    )
+    args = parser.parse_args()
     print_dirty(ALL_DIRECTORIES)
