@@ -2,12 +2,6 @@
 
 set -Eeuo pipefail
 
-trap cleanup SIGINT SIGTERM ERR EXIT
-
-cleanup() {
-    trap - SIGINT SIGTERM ERR EXIT
-}
-
 usage() {
     cat <<EOF
 Usage: $(basename "${BASH_SOURCE[0]}") [OPTIONS] <ARG1> [ARG2 ...]
