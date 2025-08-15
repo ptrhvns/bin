@@ -1,23 +1,64 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -Eeuo pipefail
 
-username=$(whoami)
+usage() {
+    cat <<EOF
+Usage: $(basename "${BASH_SOURCE[0]}") [OPTIONS]
 
-while getopts u: opt; do
-    case $opt in
-    u)
-        username=$OPTARG
-        ;;
-    *)
-        echo "Invalid flag used"
-        exit 1
-        ;;
-    esac
-done
+Fetch a remote WIP branch on origin named after the current branch, reset the
+top WIP commit into the current branch, delete the WIP branch, and delete the
+remote WIP branch on origin.
+
+Options:
+    -u USERNAME  Description for flag f with optarg FOO
+    -h           Print this help message and exit
+EOF
+    exit
+}
+
+say() {
+    echo -e "### ${1-}" >&2
+}
+
+error() {
+    say "ERROR: ${1-}"
+}
+
+die() {
+    error "${1-}"
+    exit "${2-1}"
+}
+
+USERNAME=$(whoami)
+
+parse_opts() {
+    while getopts "hu:" optname; do
+        case "${optname}" in
+            h)
+                usage
+                ;;
+            u)
+                USERNAME=${OPTARG}
+                ;;
+            \?)
+                die "Invalid option: ${OPTARG}"
+                ;;
+            :)
+                die "Invalid option: ${OPTARG} requires an argument"
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+}
+
+parse_opts "$@"
+shift $((OPTIND - 1))
 
 current_branch=$(git rev-parse --abbrev-ref HEAD)
-wip_name=${current_branch}_wip_${username}
+wip_name=${current_branch}_wip_${USERNAME}
 
 git fetch --all -p
 git checkout "$wip_name"
@@ -26,6 +67,6 @@ git checkout "$current_branch"
 git branch -d "$wip_name"
 git push origin --delete "$wip_name"
 
-if [ "$current_branch" != "master" ]; then
+if [[ "$current_branch" != "master" && "${current_branch}" != "main" ]]; then
     git push origin --delete "$current_branch"
 fi
