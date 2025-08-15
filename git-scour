@@ -1,13 +1,70 @@
 #!/usr/bin/env bash
 
-set -xeou pipefail
+set -Eeou pipefail
+
+usage() {
+    cat <<EOF
+Usage: $(basename "${BASH_SOURCE[0]}") [OPTIONS]
+
+Clean up a Git repository and get latest changes for the primary branch.
+
+Options:
+    -h      Print this help message and exit
+EOF
+    exit
+}
+
+say() {
+    echo -e "### ${1-}" >&2
+}
+
+error() {
+    say "ERROR: ${1-}"
+}
+
+die() {
+    error "${1-}"
+    exit "${2-1}"
+}
+
+parse_opts() {
+    while getopts ":Cf:hv" optname; do
+        case "${optname}" in
+            h)
+                usage
+                ;;
+            \?)
+                die "Invalid option: ${OPTARG}"
+                ;;
+            :)
+                die "Invalid option: ${OPTARG} requires an argument"
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+}
+
+parse_opts "$@"
+shift $((OPTIND - 1))
+
+primary_branch=$(git branch --format '%(refname:short)' --list master main | paste -s | awk '{print $1}')
+
+if test -z "${primary_branch}"; then
+    die "Failed to identify primary Git branch"
+fi
+
+set -x
+
+git checkout "${primary_branch}"
 
 git clean -d --force
 git fetch --prune --prune-tags --force
-git pull
+git merge --ff-only
 git gc --auto
 
-git submodule forach --recursive git clean -d --force
+git submodule foreach --recursive git clean -d --force
 git submodule update --init --recursive
 git submodule foreach --recursive git gc --auto
 
