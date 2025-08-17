@@ -55,3 +55,10 @@ if command -v uv &>/dev/null; then
     echo
     uv self update
 fi
+
+if command -v claude &> /dev/null; then
+    echo
+    echo "### Updating claude ..."
+    echo
+    claude update
+fi
