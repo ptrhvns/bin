@@ -1,13 +1,59 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -Eeuo pipefail
+
+usage() {
+    cat <<EOF
+Usage: $(basename "${BASH_SOURCE[0]}") [OPTIONS] [SESSION_NAME]
+
+Kills current tmux session and switch to session named general (if available).
+If called inside a tmux session, it will kill the current session. Otherwise,
+the session name must be provided.
+
+Options:
+    -h      Print this help message and exit
+EOF
+    exit
+}
+
+say() {
+    echo -e "### ${1-}" >&2
+}
+
+error() {
+    say "ERROR: ${1-}"
+}
+
+die() {
+    error "${1-}"
+    exit "${2-1}"
+}
+
+parse_opts() {
+    while getopts ":Cf:hv" optname; do
+        case "${optname}" in
+            h)
+                usage
+                ;;
+            \?)
+                die "Invalid option: ${OPTARG}"
+                ;;
+            :)
+                die "Invalid option: ${OPTARG} requires an argument"
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+}
+
+parse_opts "$@"
+shift $((OPTIND - 1))
 
 if [ -z "${TMUX:-}" ]; then
     if [ $# -lt 1 ]; then
-        echo "ERROR: not enough arguments" 1>&2
-        bname=$(basename "$0")
-        echo "usage: $bname <session_name>" 1>&2
-        exit 1
+        die "Session name not provided"
     fi
 
     tmux kill-session -t "$1"

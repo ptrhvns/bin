@@ -1,11 +1,60 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -Eeuo pipefail
 
-pathtype=${1:-}
+usage() {
+    cat <<EOF
+Usage: $(basename "${BASH_SOURCE[0]}") [OPTIONS]
 
-if [[ "-m" == "$pathtype" ]]; then
-    printenv MANPATH | tr ":" "\n"
-else
+Pretty print path (PATH or MANPATH) environment variable.
+
+Options:
+    -h      Print this help message and exit
+    -m      Print MANPATH (otherwise PATH)
+EOF
+    exit
+}
+
+say() {
+    echo -e "### ${1-}" >&2
+}
+
+error() {
+    say "ERROR: ${1-}"
+}
+
+die() {
+    error "${1-}"
+    exit "${2-1}"
+}
+
+parse_opts() {
+    while getopts "hm" optname; do
+        case "${optname}" in
+            h)
+                usage
+                ;;
+            m)
+                PATH_TYPE=true
+                ;;
+            \?)
+                die "Invalid option: ${OPTARG}"
+                ;;
+            :)
+                die "Invalid option: ${OPTARG} requires an argument"
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+}
+
+parse_opts "$@"
+shift $((OPTIND - 1))
+
+if test -z "${PATH_TYPE}"; then
     printenv PATH | tr ":" "\n"
+else
+    printenv MANPATH | tr ":" "\n"
 fi

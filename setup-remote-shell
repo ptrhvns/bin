@@ -1,14 +1,59 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -Eeuo pipefail
+
+usage() {
+    cat <<EOF
+Usage: $(basename "${BASH_SOURCE[0]}") [OPTIONS] <HOST>
+
+Setup a remote shell environment.
+
+Options:
+    -h      Print this help message and exit
+EOF
+    exit
+}
+
+say() {
+    echo -e "### ${1-}" >&2
+}
+
+error() {
+    say "ERROR: ${1-}"
+}
+
+die() {
+    error "${1-}"
+    exit "${2-1}"
+}
+
+parse_opts() {
+    while getopts "h" optname; do
+        case "${optname}" in
+            h)
+                usage
+                ;;
+            \?)
+                die "Invalid option: ${OPTARG}"
+                ;;
+            :)
+                die "Invalid option: ${OPTARG} requires an argument"
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+}
+
+parse_opts "$@"
+shift $((OPTIND - 1))
 
 if [[ $# -lt 1 ]]; then
-    echo "*** ERROR: no remote SSH target provided (user@host)" >&2
-    exit 1
-else
-    HOST=$1
+    die "No remote SSH target provided (user@host)"
 fi
 
+HOST=${1}
 SOURCE_DIR=${HOME}/depot/remote/dotfiles
 
 ssh "${HOST}" "rm -f ~/.bash_profile"

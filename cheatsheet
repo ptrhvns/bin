@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-
-#!/usr/bin/env bash
-
 set -Eeuo pipefail
 
 usage() {
@@ -58,7 +55,7 @@ fi
 
 SELECTED=$(curl -s cht.sh/:list | fzf)
 
-if [[ -z "${SELECTED}" ]]; then
+if test -z "${SELECTED}"; then
     exit
 fi
 

@@ -1,11 +1,73 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -Eeuo pipefail
+
+usage() {
+    cat <<EOF
+Usage: $(basename "${BASH_SOURCE[0]}") [OPTIONS]
+
+Do "git pull origin " for primary branch in all remote Git repositories.
+
+Options:
+    -h      Print this help message and exit
+EOF
+    exit
+}
+
+say() {
+    echo -e "### ${1-}" >&2
+}
+
+error() {
+    say "ERROR: ${1-}"
+}
+
+die() {
+    error "${1-}"
+    exit "${2-1}"
+}
+
+parse_opts() {
+    while getopts ":Cf:hv" optname; do
+        case "${optname}" in
+            f)
+                FOO=${OPTARG}
+                ;;
+            h)
+                usage
+                ;;
+            v)
+                set -x
+                ;;
+            \?)
+                die "Invalid option: ${OPTARG}"
+                ;;
+            :)
+                die "Invalid option: ${OPTARG} requires an argument"
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+}
+
+parse_opts "$@"
+shift $((OPTIND - 1))
 
 for dir in ~/depot/remote/*/; do
     (
         cd "$dir"
-        echo "### pulling $(pwd)"
-        git pull origin master:master
+        primary_branch=$(git branch --format '%(refname:short)' --list master main | paste -s | awk '{print $1}')
+
+        if test -z "${primary_branch}"; then
+            die "Failed to identify primary Git branch in ${dir}"
+        fi
+
+        echo
+        say "Pull $(pwd) ..."
+        echo
+
+        git pull origin "${primary_branch}:${primary_branch}"
     )
 done

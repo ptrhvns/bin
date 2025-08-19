@@ -1,12 +1,56 @@
 #!/usr/bin/env bash
 
-# Overwrite file, but muiltiply number in first column by 0.75.
+set -Eeuo pipefail
 
-set -euo pipefail
+usage() {
+    cat <<EOF
+Usage: $(basename "${BASH_SOURCE[0]}") [OPTIONS]
+
+Muiltiply number in first column of a file, in place, by 0.75.
+
+Options:
+    -h      Print this help message and exit
+EOF
+    exit
+}
+
+say() {
+    echo -e "### ${1-}" >&2
+}
+
+error() {
+    say "ERROR: ${1-}"
+}
+
+die() {
+    error "${1-}"
+    exit "${2-1}"
+}
+
+parse_opts() {
+    while getopts "h" optname; do
+        case "${optname}" in
+            h)
+                usage
+                ;;
+            \?)
+                die "Invalid option: ${OPTARG}"
+                ;;
+            :)
+                die "Invalid option: ${OPTARG} requires an argument"
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+}
+
+parse_opts "$@"
+shift $((OPTIND - 1))
 
 if [[ $# -lt 1 ]]; then
-    echo "### ERROR: no file name provided" >&2
-    exit 1
+    die "No file name provided"
 fi
 
 awk -i inplace 'NF { $1 = sprintf("%d", $1 * 0.75) } 1' "$1"

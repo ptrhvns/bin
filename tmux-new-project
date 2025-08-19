@@ -1,23 +1,61 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -Eeuo pipefail
 
-# Create a new tmux session in a provided directory.
+usage() {
+    cat <<EOF
+Usage: $(basename "${BASH_SOURCE[0]}") [OPTIONS] <DIRECTORY>
 
-if [ $# -lt 1 ]; then
-    echo "ERROR: not enough arguments" 1>&2
-    bname=$(basename "$0")
-    echo "usage: $bname <directory>" 1>&2
-    exit 1
-fi
+Create a new tmux session in a provided directory.
 
-directory=$1
-test -d "$directory" || {
-    echo "ERROR: no directory: $directory" 1>&2
-    exit 1
+Options:
+    -h      Print this help message and exit
+EOF
+    exit
 }
 
+say() {
+    echo -e "### ${1-}" >&2
+}
+
+error() {
+    say "ERROR: ${1-}"
+}
+
+die() {
+    error "${1-}"
+    exit "${2-1}"
+}
+
+parse_opts() {
+    while getopts ":Cf:hv" optname; do
+        case "${optname}" in
+            h)
+                usage
+                ;;
+            \?)
+                die "Invalid option: ${OPTARG}"
+                ;;
+            :)
+                die "Invalid option: ${OPTARG} requires an argument"
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+}
+
+parse_opts "$@"
+shift $((OPTIND - 1))
+
+directory=${1:-}
+
+if ! test -d "$directory"; then
+    die "Invalid directory: $directory"
+fi
+
 (
-    cd "$directory"
+    cd "${directory}"
     tmux_new_session_pwd
 )
