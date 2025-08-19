@@ -28,16 +28,10 @@ die() {
 }
 
 parse_opts() {
-    while getopts ":Cf:hv" optname; do
+    while getopts "h" optname; do
         case "${optname}" in
-            f)
-                FOO=${OPTARG}
-                ;;
             h)
                 usage
-                ;;
-            v)
-                set -x
                 ;;
             \?)
                 die "Invalid option: ${OPTARG}"

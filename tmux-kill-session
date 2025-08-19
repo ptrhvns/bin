@@ -30,7 +30,7 @@ die() {
 }
 
 parse_opts() {
-    while getopts ":Cf:hv" optname; do
+    while getopts "h" optname; do
         case "${optname}" in
             h)
                 usage

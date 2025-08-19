@@ -4,7 +4,7 @@ set -Eeuo pipefail
 
 usage() {
     cat <<EOF
-Usage: $(basename "${BASH_SOURCE[0]}") [OPTIONS]
+Usage: $(basename "${BASH_SOURCE[0]}") [OPTIONS] <FILENAME>
 
 Muiltiply number in first column of a file, in place, by 0.75.
 
