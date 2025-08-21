@@ -1,7 +1,7 @@
 # Personal Scripts Collection
 
-This is a collection of utility scripts for development workflow automation, Git
-operations, tmux session management, and system maintenance.
+Bash an Python automations scripts for development workflow, Git operations, and
+system maintenance (e.g., package updates on Ubuntu 24.04).
 
 ## Requirements
 
