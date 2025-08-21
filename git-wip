@@ -54,9 +54,9 @@ current_branch=$(git rev-parse --abbrev-ref HEAD)
 wip_name=${current_branch}_wip_${username}
 
 git push
-git checkout -b "$wip_name"
+git checkout -b "${wip_name}"
 git add -A :/
 git commit -n -m 'wip'
 git push
-git checkout "$current_branch"
-git branch -D "$wip_name"
+git checkout "${current_branch}"
+git branch -D "${wip_name}"

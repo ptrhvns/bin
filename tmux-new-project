@@ -51,8 +51,8 @@ shift $((OPTIND - 1))
 
 directory=${1:-}
 
-if ! test -d "$directory"; then
-    die "Invalid directory: $directory"
+if ! test -d "${directory}"; then
+    die "Invalid directory: ${directory}"
 fi
 
 (

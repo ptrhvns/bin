@@ -51,7 +51,7 @@ shift $((OPTIND - 1))
 
 for dir in ~/depot/remote/*/; do
     (
-        cd "$dir"
+        cd "${dir}"
         primary_branch=$(git branch --format '%(refname:short)' --list master main | paste -s | awk '{print $1}')
 
         if test -z "${primary_branch}"; then
@@ -59,6 +59,7 @@ for dir in ~/depot/remote/*/; do
         fi
 
         echo
+        # shellcheck disable=SC2312
         say "Pull $(pwd) ..."
         echo
 

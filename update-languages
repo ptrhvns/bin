@@ -84,6 +84,7 @@ if command -v goenv 1>/dev/null 2>&1; then
     echo "### Updating with goenv ..."
     echo
     (
+        # shellcheck disable=SC2312
         cd "$(goenv root)" || return
         git pull
     )

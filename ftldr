@@ -57,4 +57,5 @@ if ! command -v tldr &>/dev/null; then
     die "command not found: tldr"
 fi
 
-command tldr "$(compgen -c | fzf)" | $PAGER
+# shellcheck disable=SC2312
+command tldr "$(compgen -c | fzf)" | ${PAGER:-less}

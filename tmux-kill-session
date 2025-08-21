@@ -51,8 +51,8 @@ parse_opts() {
 parse_opts "$@"
 shift $((OPTIND - 1))
 
-if [ -z "${TMUX:-}" ]; then
-    if [ $# -lt 1 ]; then
+if [[ -z "${TMUX:-}" ]]; then
+    if [[ $# -lt 1 ]]; then
         die "Session name not provided"
     fi
 
@@ -60,9 +60,10 @@ if [ -z "${TMUX:-}" ]; then
 else
     current_session_name=$(tmux display-message -p '#S')
 
-    if [ "$(tmux ls | grep -c '^general:')" -gt 0 ]; then
+    # shellcheck disable=SC2312
+    if [[ "$(tmux ls | grep -c '^general:')" -gt 0 ]]; then
         tmux switch-client -t general
     fi
 
-    tmux kill-session -t "$current_session_name"
+    tmux kill-session -t "${current_session_name}"
 fi

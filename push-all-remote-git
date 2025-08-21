@@ -51,7 +51,8 @@ shift $((OPTIND - 1))
 
 for dir in ~/depot/remote/*/; do
     (
-        cd "$dir"
+        cd "${dir}"
+        # shellcheck disable=SC2312
         say "Pushing $(pwd) ..."
         echo
         git push origin

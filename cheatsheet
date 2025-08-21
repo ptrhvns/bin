@@ -59,4 +59,4 @@ if test -z "${SELECTED}"; then
     exit
 fi
 
-curl -s "cht.sh/${SELECTED}?style=paraiso-dark" | $PAGER
+curl -s "cht.sh/${SELECTED}?style=paraiso-dark" | ${PAGER:-less}
