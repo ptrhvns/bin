@@ -11,7 +11,7 @@ top WIP commit into the current branch, delete the WIP branch, and delete the
 remote WIP branch on origin.
 
 Options:
-    -u USERNAME  Description for flag f with optarg FOO
+    -u USERNAME  Username to use for branch name (defaults to "whoami")
     -h           Print this help message and exit
 EOF
     exit
