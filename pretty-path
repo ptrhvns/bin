@@ -28,6 +28,8 @@ die() {
     exit "${2-1}"
 }
 
+PATH_TYPE="PATH"
+
 parse_opts() {
     while getopts "hm" optname; do
         case "${optname}" in
@@ -35,7 +37,7 @@ parse_opts() {
                 usage
                 ;;
             m)
-                PATH_TYPE=true
+                PATH_TYPE="MANPATH"
                 ;;
             \?)
                 die "Invalid option: ${OPTARG}"
@@ -53,8 +55,4 @@ parse_opts() {
 parse_opts "$@"
 shift $((OPTIND - 1))
 
-if test -z "${PATH_TYPE}"; then
-    printenv PATH | tr ":" "\n"
-else
-    printenv MANPATH | tr ":" "\n"
-fi
+printenv "${PATH_TYPE}" | tr ":" "\n"
