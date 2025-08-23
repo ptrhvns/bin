@@ -1,15 +1,15 @@
-# Personal Scripts Collection
+# Overview
 
 Bash an Python automations scripts for development workflow, Git operations, and
 system maintenance (e.g., package updates on Ubuntu 24.04).
 
-## Requirements
+# Requirements
 
 - Bash 4.0+
 - Git
 - Common Unix utilities (grep, sed, awk, etc.)
 
-### Optional Dependencies
+## Optional Dependencies
 
 Some scripts require additional tools. For example:
 - `fzf` - for interactive selection in `cheatsheet` and `ftldr`
@@ -18,9 +18,9 @@ Some scripts require additional tools. For example:
 - `curl` - for `cheatsheet` script
 - Python 3.13+ with `uv` for Python scripts
 
-## Scripts
+# Scripts
 
-### Development Tools
+## Development Tools
 
 **`cheatsheet`**  
 Access cheatsheet (cht.sh) with curl. Topic selection is done with fzf.
@@ -35,7 +35,7 @@ Git pre-commit hook that prevents commits containing FIXME comments.
 Automatically run appropriate code formatting and linting commands based on file
 types in the current directory.
 
-### Git Operations
+## Git Operations
 
 **`git-dirty-all`** *(Python)*  
 Find all Git repositories with uncommitted changes in a directory tree.
@@ -54,7 +54,7 @@ clean up WIP branches.
 Take current unstaged work and create a WIP branch on remote for temporary
 storage.
 
-### Remote Repository Management
+## Remote Repository Management
 
 **`pull-all-remote-git`**  
 Execute "git pull origin" for the primary branch in all remote Git repositories.
@@ -62,7 +62,7 @@ Execute "git pull origin" for the primary branch in all remote Git repositories.
 **`push-all-remote-git`**  
 Execute "git push origin" in all remote Git repositories.
 
-### Tmux Session Management
+## Tmux Session Management
 
 **`tmux-kill-session`**  
 Kill current tmux session and switch to 'general' session if available.
@@ -76,7 +76,7 @@ Create a new tmux session with a specified name.
 **`tmux-new-session-pwd`**  
 Create a new tmux session based on the current working directory name.
 
-### System Utilities
+## System Utilities
 
 **`pretty-path`**  
 Display PATH environment variable in a readable format with optional filtering.
@@ -93,7 +93,7 @@ Configure remote shell environment.
 **`setup-ssh-agent`**  
 Initialize SSH agent and add SSH keys automatically.
 
-### Update Management
+## Update Management
 
 **`update-all`**  
 Comprehensive system update script that runs all other update scripts.
@@ -107,13 +107,13 @@ Update OS packages for Ubuntu, Fedora, Rocky Linux, and RHEL.
 **`update-tools`**  
 Update development tools and utilities.
 
-### Template
+## Template
 
 **`template.bash`**  
 Template script with standard structure, option parsing, and common functions
 for creating new Bash scripts.
 
-## Code Quality
+# Code Quality
 
 All Bash scripts pass `shellcheck -o all` with appropriate suppressions for
 acceptable patterns. The codebase also tries to follow consistent conventions:
