@@ -54,5 +54,5 @@ ssh-agent > "${HOME}/.ssh-agent"
 # shellcheck disable=SC1091
 source "${HOME}/.ssh-agent"
 ssh-add -D
-# shellcheck disable=SC2312
-ssh-add "$(find -L "${HOME}/.ssh" -name "id_*" -type f | grep -Ev "\.pub$")"
+# shellcheck disable=SC2312,SC2046
+ssh-add $(find -L "${HOME}/.ssh" -name "id_*" -type f | grep -Ev "\.pub$")
