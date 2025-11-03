@@ -50,6 +50,6 @@ parse_opts "$@"
 shift $((OPTIND - 1))
 
 update-packages
+update-vim-plugins
 update-languages
 update-tools
-update-vim-plugins
