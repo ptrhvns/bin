@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+usage() {
+    cat <<EOF
+Usage: $(basename "${BASH_SOURCE[0]}") [OPTIONS] <ARG1> [ARG2 ...]
+
+Update Vim plugins.
+
+Options:
+    -h      Print this help message and exit
+EOF
+    exit
+}
+
+say() {
+    echo -e "### ${1-}" >&2
+}
+
+error() {
+    say "ERROR: ${1-}"
+}
+
+die() {
+    error "${1-}"
+    exit "${2-1}"
+}
+
+parse_opts() {
+    while getopts "h" optname; do
+        case "${optname}" in
+            h)
+                usage
+                ;;
+            \?)
+                die "Invalid option: ${OPTARG}"
+                ;;
+            :)
+                die "Invalid option: ${OPTARG} requires an argument"
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+}
+
+parse_opts "$@"
+shift $((OPTIND - 1))
+
+PACK_DIR="${HOME}/.vim/pack"
+
+for plugin_dir in "${PACK_DIR}"/*/start/* "${PACK_DIR}"/*/opt/*; do
+    if [[ -d "${plugin_dir}/.git" ]]; then
+        echo
+        say "Updating Vim plugin in ${plugin_dir} ..."
+        echo
+        git -C "${plugin_dir}" pull --ff-only
+    fi
+done
