@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -Eeou pipefail
-
 usage() {
     cat <<EOF
 Usage: $(basename "${BASH_SOURCE[0]}") [OPTIONS]

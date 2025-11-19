@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -Eeuo pipefail
-
 DEFAULT_NUM_DAYS=7
 
 usage() {
