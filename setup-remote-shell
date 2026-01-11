@@ -52,7 +52,7 @@ if [[ $# -lt 1 ]]; then
 fi
 
 HOST=${1}
-SOURCE_DIR=${HOME}/depot/remote/dotfiles
+SOURCE_DIR=${HOME}/src/dotfiles
 
 ssh "${HOST}" "rm -f ~/.bash_profile"
 scp "${SOURCE_DIR}/bash_profile" "${HOST}:~/.bash_profile"

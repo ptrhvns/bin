@@ -35,8 +35,7 @@ CHILD_DIRECTORIES = [
 ]
 
 PARENT_DIRECTORIES = [
-    home("depot", "local"),
-    home("depot", "remote"),
+    home("src"),
 ]
 
 ALL_DIRECTORIES = CHILD_DIRECTORIES + child_directories(PARENT_DIRECTORIES)
