@@ -57,3 +57,8 @@ for plugin_dir in "${PACK_DIR}"/*/start/* "${PACK_DIR}"/*/opt/*; do
         git -C "${plugin_dir}" pull --ff-only
     fi
 done
+
+echo
+say "Updating Neovim plugins ..."
+echo
+nvim --headless "+Lazy! sync" +qa
